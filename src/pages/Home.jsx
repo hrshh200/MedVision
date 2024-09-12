@@ -51,10 +51,13 @@ const Home = () => {
               <input
                 className='w-[80%] h-fit outline-none px-[1rem] font-ibm font-[400]  text-[1.1rem] leading-[26px] text-[#163048]'
                 type="text"
-                placeholder='search the docter by name'
+                placeholder='Search by Doctors name'
               />
-              <button className='bg-[#0360D9] py-[.5rem] px-[1rem] rounded-[25px] font-ibm  font-[400]  text-[1.1rem] leading-[26px] text-white'>Search</button>
+              <button className='bg-[#0360D9] py-[.5rem] px-[1rem] rounded-[25px] font-ibm font-[400] text-[1.1rem] leading-[26px] text-white ml-auto'>
+                Search 
+              </button>
             </div>
+
 
           </div>
 
@@ -132,7 +135,7 @@ const Home = () => {
 
 
         {/* footer */}
-        <Footer/>
+        <Footer />
       </div>
     </>
   )
