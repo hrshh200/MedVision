@@ -38,7 +38,7 @@ function Footer() {
                     <div className="">
                         <div className="w-[90%] mx-auto text-[.9rem] flex-row  flex justify-between items-center ">
                             <p className='text-[1.2rem]'>MedVision</p>
-                            <p className='mt-[1.8rem]'>Made with 💛 in the city of Joy</p>
+                            <p className='mt-[1.8rem]'>Made by Harsh, Rohit & Shiwang</p>
                         </div>
 
                         <p className="bg-gray-400 w-[100%] mx-auto h-[.08px] mb-[1rem] "></p>

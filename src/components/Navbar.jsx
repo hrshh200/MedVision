@@ -27,22 +27,22 @@ const Navbar = () => {
             <div className='flex justify-between items-center px-[5rem] py-[1rem] w-full h-fit fixed top-0 z-[1000] bg-[#E1EEFF]'>
                 <p onClick={() => {
                     navigate('/');
-                }} className=' font-ibm text-[#0360D9] font-[600] cursor-pointer text-[2rem] leading-[41.6px]'>MedVision</p>
+                }} className=' font-ibm text-[#0360D9] font-[600] text-[2rem] leading-[41.6px]'>MedVision</p>
 
                 <div className='flex justify-between items-center gap-[2rem]'>
                     <p onClick={() => {
                         navigate('/');
                         scrollToElement('head');
-                    }} className='font-ibm  font-[400] cursor-pointer text-[1.2rem] leading-[26px]'>Home</p>
+                    }} className='font-ibm  font-[400] cursor-pointer text-[1.2rem] leading-[26px] hover:text-blue-500 hover:underline underline-offset-8'>Home</p>
                     <p onClick={() => {
                         navigate('/');
                         scrollToElement('about');
-                    }} className='font-ibm  font-[400] text-[1.2rem] cursor-pointer leading-[26px]'>Our services</p>
-                    <p className='font-ibm  font-[400] text-[1.2rem] cursor-pointer leading-[26px]'>Application</p>
+                    }} className='font-ibm  font-[400] text-[1.2rem] cursor-pointer leading-[26px] hover:text-blue-500 hover:underline underline-offset-8'>Our services</p>
+                    <p className='font-ibm  font-[400] text-[1.2rem] cursor-pointer leading-[26px] hover:text-blue-500 hover:underline underline-offset-8'>Application</p>
                     <p onClick={() => {
                         navigate('/');
                         scrollToElement('feedback');
-                    }} className='font-ibm  font-[400] text-[1.2rem] cursor-pointer leading-[26px]'>Feedbacks</p>
+                    }} className='font-ibm  font-[400] text-[1.2rem] cursor-pointer leading-[26px] hover:text-blue-500 hover:underline underline-offset-8'>Feedbacks</p>
                 </div>
 
                 <div className='flex justify-between items-center gap-[2rem]'>
