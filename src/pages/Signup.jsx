@@ -56,7 +56,7 @@ const Signup = () => {
               <div className='w-full max-w-[60%] shadow-lg h-fit py-[2rem] flex flex-col justify-center items-center rounded-[10px]'>
                 <p className='font-[600] text-[1.8rem] my-[1rem] leading-[42px] text-[#00000099] uppercase'>{isDoctor} SignUp</p>
                 <form onSubmit={submitHandler} className='w-full h-fit flex flex-col gap-[2rem] justify-center items-center'>
-                  {/* regNo */}
+                {isDoctor === 'doctor' && (
                   <div className='w-[50%] h-fit flex justify-between items-center border-b-[2px]  border-[#00000070]'>
                     <input
                       className='w-[90%] h-[3rem] bg-transparent outline-none font-ibm font-[400]  text-[1.1rem] leading-[26px] text-[#163048]'
@@ -68,6 +68,8 @@ const Signup = () => {
                     />
                     <FaUser className='text-[#0078F070] text-[1.4rem]' />
                   </div>
+                )}
+                  {/* regNo */}
                   {/* Name */}
                   <div className='w-[50%] h-fit flex justify-between items-center border-b-[2px]  border-[#00000070]'>
                     <input

@@ -42,6 +42,10 @@ const Login = () => {
           (
             <div className='w-full h-screen flex justify-center items-center bg-[#E1EEFF]'>
               <div className='w-full max-w-[60%] shadow-lg h-[70vh] flex flex-col justify-center items-center rounded-[10px]'>
+                <div className="flex items-center justify-start">
+                  <FaUser className="text-[#0078F070] text-[3.4rem] mr-2" />
+                  {/* Other content here */}
+                </div>
                 <p className='font-[600] text-[1.8rem] my-[1rem] leading-[42px] text-[#00000099] uppercase'>{isDoctor} Login</p>
                 <form onSubmit={submitHandler} className='w-full h-fit flex flex-col gap-[2rem] justify-center items-center'>
                   <div className='w-[50%] h-fit flex justify-between items-center border-b-[2px]  border-[#00000070]'>
