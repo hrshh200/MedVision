@@ -4,17 +4,11 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    host: '0.0.0.0', // Bind to 0.0.0.0 for Render to detect the port
+    port: process.env.PORT || 3000, // Use Render's PORT or fallback to 3000
+  },
   build: {
     outDir: 'build', 
-  },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000', // Replace with your server's URL
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-    },
-  },
+  }
 });
