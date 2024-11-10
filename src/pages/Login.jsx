@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-
-//components
+import toast from 'react-hot-toast';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import LoginSignup from '../components/LoginSignup';
-
-//icons
 import { FaUser } from "react-icons/fa";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 
@@ -16,6 +15,8 @@ const Login = () => {
   });
   console.log(isDoctor);
 
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -25,9 +26,21 @@ const Login = () => {
   };
 
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    //calling the api for the signup form to be sent to the database
+    try {
+      // Sending the formData to the backend
+      const response = await axios.post('http://localhost:5000/api/login', formData);
+      console.log(response);
+      if (response.status === 200) {
+        toast.success('Login successful!');
+        navigate('/');
+      }
+    } catch (error) {
+      toast.error('Login failed. Please try again.');
+      console.error(error);
+    }
   }
 
   return (

@@ -1,15 +1,11 @@
 
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-
-
-//components
 import LoginSignup from '../components/LoginSignup';
-
-
-//icons
 import { FaUser } from "react-icons/fa";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
 
@@ -25,6 +21,7 @@ const Signup = () => {
   });
   console.log(isDoctor);
 
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -34,13 +31,25 @@ const Signup = () => {
   };
 
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     if (formData?.password !== formData?.confirmPassword) {
       toast.error('Password do not match');
       return;
     }
-    console.log(formData);
+    //calling the api for the signup form to be sent to the database
+    try {
+      // Sending the formData to the backend
+      const response = await axios.post('http://localhost:5000/api/signup', formData);
+      console.log(response);
+      if (response.status === 201) {
+        toast.success('Signup successful!');
+        navigate('/');
+      }
+    } catch (error) {
+      toast.error('Signup failed. Please try again.');
+      console.error(error);
+    }
   }
   return (
     <>
@@ -56,19 +65,19 @@ const Signup = () => {
               <div className='w-full max-w-[60%] shadow-lg h-fit py-[2rem] flex flex-col justify-center items-center rounded-[10px]'>
                 <p className='font-[600] text-[1.8rem] my-[1rem] leading-[42px] text-[#00000099] uppercase'>{isDoctor} SignUp</p>
                 <form onSubmit={submitHandler} className='w-full h-fit flex flex-col gap-[2rem] justify-center items-center'>
-                {isDoctor === 'doctor' && (
-                  <div className='w-[50%] h-fit flex justify-between items-center border-b-[2px]  border-[#00000070]'>
-                    <input
-                      className='w-[90%] h-[3rem] bg-transparent outline-none font-ibm font-[400]  text-[1.1rem] leading-[26px] text-[#163048]'
-                      type="text"
-                      placeholder='Registration Number'
-                      value={formData.regNo}
-                      name='regNo'
-                      onChange={handleChange}
-                    />
-                    <FaUser className='text-[#0078F070] text-[1.4rem]' />
-                  </div>
-                )}
+                  {isDoctor === 'doctor' && (
+                    <div className='w-[50%] h-fit flex justify-between items-center border-b-[2px]  border-[#00000070]'>
+                      <input
+                        className='w-[90%] h-[3rem] bg-transparent outline-none font-ibm font-[400]  text-[1.1rem] leading-[26px] text-[#163048]'
+                        type="text"
+                        placeholder='Registration Number'
+                        value={formData.regNo}
+                        name='regNo'
+                        onChange={handleChange}
+                      />
+                      <FaUser className='text-[#0078F070] text-[1.4rem]' />
+                    </div>
+                  )}
                   {/* regNo */}
                   {/* Name */}
                   <div className='w-[50%] h-fit flex justify-between items-center border-b-[2px]  border-[#00000070]'>
