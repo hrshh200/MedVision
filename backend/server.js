@@ -27,7 +27,7 @@ app.use(cors({
     }
   }));
 app.use(express.json());
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use("/api", authRouter);
 
 // const port = process.env.PORT || 5000;
