@@ -5,11 +5,18 @@ const app = express();
 const connectDB = require("./config/config"); //connecting to the database
 const authRouter = require("./routes/auth");
 
-var cors = require("cors");
+const cors = require("cors");
+
+const corsOptions = {
+    origin: 'https://medvision-1.onrender.com', // Frontend URL
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // Include cookies in requests if needed
+  };
 
 // Middleware to parse JSON bodiescls
 app.use(cors());
 app.use(express.json());
+app.use(cors(corsOptions));
 app.use("/api", authRouter);
 
 // const port = process.env.PORT || 5000;
