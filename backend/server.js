@@ -7,14 +7,25 @@ const authRouter = require("./routes/auth");
 
 const cors = require("cors");
 
-const corsOptions = {
-    origin: 'https://medvision-1.onrender.com', // Frontend URL
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true, // Include cookies in requests if needed
-  };
+const allowedOrigins = ['http://localhost:3000', 'https://medvision-1.onrender.com'];
+// const corsOptions = {
+//     origin: 'https://medvision-1.onrender.com', // Frontend URL
+//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//     credentials: true, // Include cookies in requests if needed
+//   };
 
 // Middleware to parse JSON bodiescls
-app.use(cors());
+app.use(cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin, like mobile apps or curl
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    }
+  }));
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use("/api", authRouter);
