@@ -31,7 +31,7 @@ const Login = () => {
     //calling the api for the signup form to be sent to the database
     try {
       // Sending the formData to the backend
-      const response = await axios.post('https://med-vision-8me0410xn-harsh-sharmas-projects-32241233.vercel.app/api/login', formData);
+      const response = await axios.post('https://med-vision-pied.vercel.app/api/login', formData);
       console.log(response);
       if (response.status === 200) {
         toast.success('Login successful!');
