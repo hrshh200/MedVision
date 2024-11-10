@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api", authRouter);
 
-const port = process.env.PORT || 5000;
+// const port = process.env.PORT || 5000;
 const start = async () => {
     try {
         const dbconnectstatus = await connectDB(process.env.MONGO_URL);
@@ -22,9 +22,9 @@ const start = async () => {
         else {
             console.log("Error connecting to database");
         }
-        app.listen(port, () => {
-            console.log(`Server is running on port ${port}`);
-        });
+        app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
+            console.log(`Server is running on port ${process.env.PORT || 3000}`);
+          });
     } catch (error) {
         console.log("error =>", error);
     }
