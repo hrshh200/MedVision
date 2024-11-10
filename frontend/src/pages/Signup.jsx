@@ -40,7 +40,7 @@ const Signup = () => {
     //calling the api for the signup form to be sent to the database
     try {
       // Sending the formData to the backend
-      const response = await axios.post('http://localhost:5000/api/signup', formData);
+      const response = await axios.post('https://medvision-szb6.onrender.com/api/signup', formData);
       console.log(response);
       if (response.status === 201) {
         toast.success('Signup successful!');
