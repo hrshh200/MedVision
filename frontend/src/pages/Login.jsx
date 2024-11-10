@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import LoginSignup from '../components/LoginSignup';
 import { FaUser } from "react-icons/fa";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
+import Loader from '../components/Loader';
 
 const Login = () => {
   const [isDoctor, setIsDoctor] = useState(''); // check user is doctor or not
@@ -13,6 +14,7 @@ const Login = () => {
     email: '',
     password: '',
   });
+  const [loading, setLoading] = useState(false);
   console.log(isDoctor);
 
   const navigate = useNavigate();
@@ -28,6 +30,7 @@ const Login = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setLoading(true);
     //calling the api for the signup form to be sent to the database
     try {
       // Sending the formData to the backend
@@ -40,14 +43,17 @@ const Login = () => {
     } catch (error) {
       toast.error('Login failed. Please try again.');
       console.error(error);
+    }finally {
+      setLoading(false); // Stop loading
     }
   }
 
   return (
     <>
 
-      {
-        isDoctor === '' ?
+      {loading?(
+        <Loader />
+      ) : isDoctor === '' ?
           (<div className='w-full h-screen flex justify-center items-center bg-[#E1EEFF]'>
             <LoginSignup title="Login" isDoctor={isDoctor} setIsDoctor={setIsDoctor} />
           </div>)
