@@ -3,26 +3,26 @@ const bcrypt = require("bcrypt");
 const doctorSchema = new mongoose.Schema({
   regNo:{
     type: Number,
-    require: true,
-    unique: true
+   //  require: true,
+   //  unique: true
   },
   name: {
      type: String,
-     require: true,
-     unique: true,
+   //   require: true,
+   //   unique: true,
   },
   email: {
      type: String,
-     require: true,
-     unique: true,
+   //   require: true,
+   //   unique: true,
   },
   password: {
     type: String,
-    require: true
+   //  require: true
  },
   hash_password: {
      type: String,
-     require: true
+   //   require: true
   },
 },{ timestamps: true });
 //For get fullName from when we get data from database
