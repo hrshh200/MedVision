@@ -71,7 +71,7 @@ const signUp = async (req, res) => {
 
 const signIn = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { isDoctor, email, password } = req.body;
 
         // Check if email and password are provided
         if (!email || !password) {
@@ -80,8 +80,14 @@ const signIn = async (req, res) => {
             });
         }
 
+        let user;
         // Find the user by email
-        const user = await User.findOne({ email });
+        if(isDoctor === false){
+            user = await User.findOne({ email });
+        }
+        else{
+            user = await Doctor.findOne({ email });
+        }
 
         if (!user) {
             return res.status(StatusCodes.BAD_REQUEST).json({
