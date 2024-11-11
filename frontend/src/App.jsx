@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import SearchDoctor from './pages/SearchDoctor';
 import OnlinePharmacy from './pages/OnlinePharmacy';
+import Dashboard from './pages/Dashboard';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
           <Route path='searchdoctor' element={<SearchDoctor />} />
+          <Route path='dashboard' element={<Dashboard />} />
           <Route path='onlinepharmacy' element={<OnlinePharmacy />} />
         </Route>
       </Routes>

@@ -6,6 +6,7 @@ import LoginSignup from '../components/LoginSignup';
 import { FaUser } from "react-icons/fa";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import Loader from '../components/Loader';
+import { baseURL } from '../main';
 
 const Login = () => {
   const [isDoctor, setIsDoctor] = useState(''); // check if user is doctor or not
@@ -34,14 +35,15 @@ const Login = () => {
 
     try {
       // Update formData with the correct isDoctor value
-      const dataToSend = { ...formData, isDoctor: isDoctor === 'Doctor' };
+      const dataToSend = { ...formData, isDoctor: isDoctor === 'doctor' };
 
       // Sending the formData to the backend
-      const response = await axios.post('https://medvision-szb6.onrender.com/api/login', dataToSend);
+      const response = await axios.post(`${baseURL}/login`, dataToSend);
       console.log(response);
       if (response.status === 200) {
         toast.success('Login successful!');
-        navigate('/');
+        localStorage.setItem('medVisionToken', response.data.token);
+        navigate('/dashboard');
       }
     } catch (error) {
       toast.error('Login failed. Please try again.');
