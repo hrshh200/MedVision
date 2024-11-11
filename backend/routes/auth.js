@@ -1,20 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { signUp, signIn } = require("../controllers/auth");
-// const {  
-//   isRequestValidated,
-//   validateSignUpRequest,
-//   validateSignIpRequest,
-// } = require("../validators/auth");
-const app = express();
+const { signUp, signIn, fetchData } = require("../controllers/auth");
 
-app.use(express.json());
-
-
-router.route("/login").post(signIn);
-
-
-router.route("/signup").post(signUp);
-
+// Define routes for authentication
+router.post("/login", signIn);
+router.post("/signup", signUp);
+router.get("/fetchdata", fetchData);
 
 module.exports = router;

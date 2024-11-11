@@ -82,12 +82,15 @@ const signIn = async (req, res) => {
         }
 
         let user;
+        let role;
         // Find the user by email
         if(isDoctor === false){
             user = await User.findOne({ email });
+            role = 'User';
         }
         else{
             user = await Doctor.findOne({ email });
+            role = 'Doctor';
         }
 
         if (!user) {
@@ -118,7 +121,7 @@ const signIn = async (req, res) => {
 
         // If password matches, generate the JWT token
         const token = jwt.sign(
-            { _id: user._id, role: user.role },
+            { _id: user._id, role: role },
             process.env.JWT_SECRET,
             { expiresIn: "30d" }
         );
@@ -140,4 +143,52 @@ const signIn = async (req, res) => {
     }
 };
 
-module.exports = { signUp, signIn };
+
+
+
+const fetchData = async (req, res) => {
+    
+    try {
+        // Get token from the Authorization header
+        const JWT_SECRET = process.env.JWT_SECRET;
+        const token = req.header('Authorization')?.split(' ')[1];
+        //  console.log(token);
+        if (!token) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+                message: "Access token is missing or invalid",
+            });
+        }
+
+        // Verify and decode the token
+        const decoded = jwt.verify(token, JWT_SECRET);
+        // console.log("hhh", decoded);
+
+        // Check if the user is a doctor or not based on their role
+        const userModel = decoded.role === 'Doctor' ? Doctor : User;
+
+        // Find user or doctor by their ID
+        const userData = await userModel.findById(decoded._id).select('-hash_password'); // Exclude sensitive fields
+
+        if (!userData) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                message: "User not found",
+            });
+        }
+
+        // Respond with user or doctor data
+        res.status(StatusCodes.OK).json({
+            success: true,
+            userData,
+        });
+
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: "An error occurred while fetching data",
+            error: error.message,
+        });
+    }
+};
+
+
+module.exports = { signUp, signIn, fetchData };

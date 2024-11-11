@@ -1,16 +1,22 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
-//commponents
+// Components
 import Navbar from '../components/Navbar';
 
 const Layout = () => {
+    const location = useLocation();
+
+    // Define the routes where Navbar should be shown
+    const showNavbarRoutes = ['/dashboard', '/searchdoctor', '/onlinepharmacy', '/login', '/signup'];
+
     return (
         <div>
-            <Navbar/>
+            {/* Render Navbar only if the current route is in showNavbarRoutes */}
+            {!showNavbarRoutes.includes(location.pathname) && <Navbar />}
             <Outlet />
         </div>
-    )
-}
+    );
+};
 
-export default Layout
+export default Layout;

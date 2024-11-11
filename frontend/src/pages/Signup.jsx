@@ -7,6 +7,7 @@ import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
+import { baseURL } from '../main';
 
 const Signup = () => {
 
@@ -45,7 +46,7 @@ const Signup = () => {
     try {
       // Sending the formData to the backend
       console.log(formData);
-      const response = await axios.post('https://medvision-szb6.onrender.com/api/signup', formData);
+      const response = await axios.post(`${baseURL}/signup`, formData);
       console.log(response);
       if (response.status === 201) {
         toast.success('Signup successful!');
