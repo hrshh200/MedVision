@@ -18,9 +18,14 @@ const Home = () => {
 
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleClickSearch = () => {
     navigate('/searchdoctor');
     console.log("Clicked on Search Doctor");
+  }
+
+  const handleOnlinePharmacy = () => {
+    navigate('/onlinepharmacy');
+    console.log("Clicked on Online Pharmacy");
   }
 
   return (
@@ -86,14 +91,14 @@ const Home = () => {
 
             <div className='w-[90%] mx-auto h-fit flex flex-wrap justify-between gap-[1rem] items-center mt-[2rem] z-[100]'>
               {/* Search */}
-              <div onClick={handleClick} className='bg-[#FFFFFF] w-fit max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
+              <div onClick={handleClickSearch} className='bg-[#FFFFFF] w-fit max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
                 <img src={search} alt="doctor" className='h-[80px] aspect-auto' />
                 <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>Search doctor</p>
                 <p className='text-[#7D7987] text-[.9rem]'>Choose your doctor from thousands of specialist, general, and trusted hospitals</p>
               </div>
 
               {/* Online pharmacy */}
-              <div className='bg-[#FFFFFF] w-fit max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
+              <div onClick={handleOnlinePharmacy} className='bg-[#FFFFFF] w-fit max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
                 <img src={pharm} alt="pharm" className='h-[80px] aspect-auto' />
                 <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>Online pharmacy</p>
                 <p className='text-[#7D7987] text-[.9rem]'>Buy  your medicines with our mobile application with a simple delivery system</p>
