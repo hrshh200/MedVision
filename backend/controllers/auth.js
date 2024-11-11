@@ -1,12 +1,13 @@
 const { StatusCodes } = require("http-status-codes");
 const User = require("../models/user");
+const Doctor = require("../models/doctor");
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 // const shortid = require("shortid");
 
 
 const signUp = async (req, res) => {
-    const { name, email, password, confirmPassword } = req.body;
+    const { regNo, name, email, password, confirmPassword } = req.body;
 
     // Check if required fields are provided
     if (!name || !email || !password) {
@@ -20,23 +21,46 @@ const signUp = async (req, res) => {
         const hash_password = await bcrypt.hash(password, 10);
 
         // Check if user already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(StatusCodes.BAD_REQUEST).json({
-                message: "User already registered",
-            });
+        if (regNo === "") {
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+                return res.status(StatusCodes.BAD_REQUEST).json({
+                    message: "User already registered",
+                });
+            }
+
+            // Create new user data
+            const userData = {
+                name,
+                email,
+                hash_password,
+            };
+
+            // Save the new user
+            const newUser = await User.create(userData);
+            res.status(StatusCodes.CREATED).json({ message: "User created successfully" });
         }
 
-        // Create new user data
-        const userData = {
-            name,
-            email,
-            hash_password,
-        };
+        else {
+            const existingUser = await Doctor.findOne({ email });
+            if (existingUser) {
+                return res.status(StatusCodes.BAD_REQUEST).json({
+                    message: "User already registered",
+                });
+            }
 
-        // Save the new user
-        const newUser = await User.create(userData);
-        res.status(StatusCodes.CREATED).json({ message: "User created successfully" });
+            // Create new user data
+            const doctorData = {
+                regNo,
+                name,
+                email,
+                hash_password,
+            };
+
+            // Save the new user
+            const newUser = await Doctor.create(doctorData);
+            res.status(StatusCodes.CREATED).json({ message: "Doctor added successfully" });
+        }
 
     } catch (error) {
         // Catch any other errors
