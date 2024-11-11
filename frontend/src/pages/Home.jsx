@@ -1,7 +1,4 @@
 import React from 'react';
-
-
-//image
 import arrow from '../assets/arrow.png';
 import semicircle from '../assets/semicircle.png';
 import doctor from '../assets/doctor.png';
@@ -13,15 +10,19 @@ import info from '../assets/info.png';
 import consultation from '../assets/consultation.png';
 import tracking from '../assets/tracking.png';
 import feedback from '../assets/feedback.png';
-
-
-//icons
 import { FaUserCircle } from "react-icons/fa";
-
-//components
 import Footer from '../components/Footer';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/searchdoctor');
+    console.log("Clicked on Search Doctor");
+  }
+
   return (
     <>
       <div className='w-full h-fit'>
@@ -85,7 +86,7 @@ const Home = () => {
 
             <div className='w-[90%] mx-auto h-fit flex flex-wrap justify-between gap-[1rem] items-center mt-[2rem] z-[100]'>
               {/* Search */}
-              <div className='bg-[#FFFFFF] w-fit max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
+              <div onClick={handleClick} className='bg-[#FFFFFF] w-fit max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
                 <img src={search} alt="doctor" className='h-[80px] aspect-auto' />
                 <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>Search doctor</p>
                 <p className='text-[#7D7987] text-[.9rem]'>Choose your doctor from thousands of specialist, general, and trusted hospitals</p>

@@ -6,6 +6,7 @@ import Layout from './pages/Layout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import SearchDoctor from './pages/SearchDoctor';
 
 
 function App() {
@@ -15,10 +16,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-
-          {/* login and signup */}
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
+          <Route path='searchdoctor' element={<SearchDoctor />} />
         </Route>
       </Routes>
     </>
