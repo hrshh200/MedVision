@@ -10,7 +10,7 @@ const doctors = [
     specialty: 'Cardiologist',
     rating: 4.9,
     experience: '15 years exp',
-    location: 'New York Medical Center',
+    location: 'National Medical Center',
     image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=300&h=300',
     nextAvailable: 'Today, 2:00 PM',
   },
@@ -49,7 +49,7 @@ const SearchDoctor = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="mt-[12vh] min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex items-center gap-3 mb-8">
           <Stethoscope className="w-8 h-8 text-blue-600" />
