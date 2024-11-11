@@ -34,7 +34,7 @@ const Login = () => {
 
     try {
       // Update formData with the correct isDoctor value
-      const dataToSend = { ...formData, isDoctor: isDoctor === 'Doctor' };
+      const dataToSend = { ...formData, isDoctor: isDoctor === 'doctor' };
 
       // Sending the formData to the backend
       const response = await axios.post('https://medvision-szb6.onrender.com/api/login', dataToSend);

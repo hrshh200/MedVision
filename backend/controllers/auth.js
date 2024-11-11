@@ -72,6 +72,7 @@ const signUp = async (req, res) => {
 const signIn = async (req, res) => {
     try {
         const { isDoctor, email, password } = req.body;
+        console.log(req.body);
 
         // Check if email and password are provided
         if (!email || !password) {
