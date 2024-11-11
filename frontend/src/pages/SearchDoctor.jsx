@@ -10,7 +10,7 @@ const doctors = [
     specialty: 'Cardiologist',
     rating: 4.9,
     experience: '15 years exp',
-    location: 'New York Medical Center',
+    location: 'National Medical Center',
     image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=300&h=300',
     nextAvailable: 'Today, 2:00 PM',
     fee : 200
