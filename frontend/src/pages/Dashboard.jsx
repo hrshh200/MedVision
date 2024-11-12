@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaNotesMedical, FaUserMd, FaFilePrescription, FaHistory, FaVideo, FaUser, FaEnvelope, FaPhone, FaCalendar, FaMapMarkerAlt, FaIdCard, FaGraduationCap, FaHospital, FaWeight, FaRulerVertical } from 'react-icons/fa';
+import { FaNotesMedical, FaUserMd, FaHome, FaFilePrescription, FaHistory, FaVideo, FaUser, FaEnvelope, FaPhone, FaCalendar, FaMapMarkerAlt, FaIdCard, FaGraduationCap, FaHospital, FaWeight, FaRulerVertical } from 'react-icons/fa';
 import { LineChart, Line, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { baseURL } from '../main';
 
@@ -54,44 +54,45 @@ const Dashboard = () => {
         fetchDataFromApi();
     }, []);
 
-    const sidebarItems = userData?.isDoctor
+    const sidebarItems = userData?.regNo
         ? [
             { icon: FaUserMd, text: "Assigned Patients", onClick: () => { } },
             { icon: FaVideo, text: "Virtual Video Call", onClick: () => navigate('/virtual-video-call') },
         ]
         : [
+            { icon: FaHome, text: "Home", onClick: () => navigate('/') },
             { icon: FaNotesMedical, text: "Health Data Records", onClick: () => { } },
             { icon: FaUserMd, text: "See Doctor List", onClick: () => navigate('/searchdoctor') },
             { icon: FaFilePrescription, text: "Search Medicine", onClick: () => navigate('/onlinepharmacy') },
-            { icon: FaHistory, text: "Recent Transactions", onClick: () => setShowRecentTransactions(true) },
+            { icon: FaHistory, text: "Recent Transactions", onClick: () => setShowRecentTransactions(true) }
         ];
 
     const renderUserInfo = () => {
-        if (userData?.isDoctor) {
+        if (userData?.regNo) {
             return (
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="flex items-center space-x-2">
-                        <FaUser className="text-teal-600" />
+                        <FaUser className="text-blue-600" />
                         <span>Dr. {userData?.name || 'N/A'}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <FaEnvelope className="text-teal-600" />
+                        <FaEnvelope className="text-blue-600" />
                         <span>{userData?.email || 'N/A'}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <FaPhone className="text-teal-600" />
+                        <FaPhone className="text-blue-600" />
                         <span>{userData?.phone || '+91 9020326676'}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <FaIdCard className="text-teal-600" />
+                        <FaIdCard className="text-blue-600" />
                         <span>License: {userData?.licenseNumber || 'MD12345'}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <FaGraduationCap className="text-teal-600" />
+                        <FaGraduationCap className="text-blue-600" />
                         <span>Specialty: {userData?.specialty || 'Cardiology'}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <FaHospital className="text-teal-600" />
+                        <FaHospital className="text-blue-600" />
                         <span>Hospital: {userData?.hospital || 'City General Hospital'}</span>
                     </div>
                 </div>
@@ -100,31 +101,31 @@ const Dashboard = () => {
             return (
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="flex items-center space-x-2">
-                        <FaUser className="text-teal-600" />
+                        <FaUser className="text-blue-600" />
                         <span>{userData?.name || 'N/A'}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <FaEnvelope className="text-teal-600" />
+                        <FaEnvelope className="text-blue-600" />
                         <span>{userData?.email || 'N/A'}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <FaPhone className="text-teal-600" />
+                        <FaPhone className="text-blue-600" />
                         <span>{userData?.phone || '+91 9020326676'}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <FaCalendar className="text-teal-600" />
+                        <FaCalendar className="text-blue-600" />
                         <span>DOB: {userData?.dateOfBirth || '1990-01-01'}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <FaWeight className="text-teal-600" />
+                        <FaWeight className="text-blue-600" />
                         <span>Weight: {userData?.weight || '75'} kg</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <FaRulerVertical className="text-teal-600" />
+                        <FaRulerVertical className="text-blue-600" />
                         <span>Height: {userData?.height || '175'} cm</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <FaMapMarkerAlt className="text-teal-600" />
+                        <FaMapMarkerAlt className="text-blue-600" />
                         <span>{userData?.address || '123 Main Street, Cityville, USA'}</span>
                     </div>
                 </div>
@@ -135,13 +136,13 @@ const Dashboard = () => {
     return (
         <div className="flex min-h-screen bg-gray-100">
             {/* Left Sidebar */}
-            <aside className="w-64 p-6 text-white bg-teal-700">
+            <aside className="w-64 p-6 text-white bg-sky-700">
                 <h2 className="mb-6 text-2xl font-bold">Dashboard</h2>
                 <nav className="space-y-2">
                     {sidebarItems.map((item, index) => (
                         <button
                             key={index}
-                            className="flex items-center w-full px-4 py-2 space-x-2 text-left transition-colors rounded hover:bg-teal-600"
+                            className="flex items-center w-full px-4 py-2 space-x-2 text-left transition-colors rounded hover:bg-blue-600"
                             onClick={item.onClick}
                         >
                             <item.icon className="w-5 h-5" />
@@ -154,26 +155,26 @@ const Dashboard = () => {
             {/* Main Content Area */}
             <main className="flex-1 p-8">
                 <div className="max-w-6xl mx-auto">
-                    <h1 className="mb-6 text-3xl font-semibold text-teal-700">
-                        {userData?.isDoctor ? "Doctor Dashboard" : "Patient Dashboard"}
+                    <h1 className="mb-6 text-3xl font-semibold text-blue-700">
+                        {userData?.regNo ? "Doctor Dashboard" : "Patient Dashboard"}
                     </h1>
 
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                         <div className="space-y-8">
                             {/* User Info */}
                             <div className="p-6 bg-white rounded-lg shadow">
-                                <h2 className="mb-4 text-xl font-semibold text-teal-700">User Information</h2>
+                                <h2 className="mb-4 text-xl font-semibold text-blue-700">User Information</h2>
                                 {renderUserInfo()}
                             </div>
 
                             {/* Health Data Graph (for patients) or Appointments (for doctors) */}
-                            {!userData?.isDoctor ? (
+                            {!userData?.regNo ? (
                                 <div className="p-6 bg-white rounded-lg shadow">
-                                    <h2 className="mb-4 text-xl font-semibold text-teal-700">Health Data Over Time</h2>
+                                    <h2 className="mb-4 text-xl font-semibold text-blue-700">Health Data Over Time</h2>
                                     <div className="h-64">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <LineChart data={healthData}>
-                                                <Line type="monotone" dataKey="value" stroke="#0D9488" strokeWidth={2} />
+                                                <Line type="monotone" dataKey="value" stroke="blue" strokeWidth={2} />
                                                 <CartesianGrid stroke="#E5E7EB" />
                                                 <XAxis dataKey="date" />
                                                 <YAxis />
@@ -184,7 +185,7 @@ const Dashboard = () => {
                                 </div>
                             ) : (
                                 <div className="p-6 bg-white rounded-lg shadow">
-                                    <h2 className="mb-4 text-xl font-semibold text-teal-700">Upcoming Appointments</h2>
+                                    <h2 className="mb-4 text-xl font-semibold text-blue-700">Upcoming Appointments</h2>
                                     <ul className="space-y-2">
                                         <li className="flex items-center justify-between">
                                             <span>John Doe</span>
@@ -204,22 +205,22 @@ const Dashboard = () => {
 
                             {/* Recent Transactions */}
                             <div className="p-6 bg-white rounded-lg shadow">
-                                <h2 className="mb-4 text-xl font-semibold text-teal-700">Recent Transactions</h2>
+                                <h2 className="mb-4 text-xl font-semibold text-blue-700">Recent Transactions</h2>
                                 <div className="mb-4 space-y-4">
                                     {recentTransactions.map((transaction) => (
                                         <div key={transaction.id} className="flex items-center justify-between py-2 border-b border-gray-200 last:border-b-0">
                                             <div>
-                                                <p className="font-medium text-teal-700">{transaction.description}</p>
+                                                <p className="font-medium text-blue-700">{transaction.description}</p>
                                                 <p className="text-sm text-gray-500">{transaction.date}</p>
                                             </div>
-                                            <span className="px-2 py-1 text-sm font-medium text-teal-700 bg-teal-100 rounded">
+                                            <span className="px-2 py-1 text-sm font-medium text-blue-700 bg-blue-100 rounded">
                                                 ${transaction.amount}
                                             </span>
                                         </div>
                                     ))}
                                 </div>
                                 <button
-                                    className="w-full px-4 py-2 text-white transition-colors bg-teal-600 rounded hover:bg-teal-700"
+                                    className="w-full px-4 py-2 text-white transition-colors bg-blue-600 rounded hover:bg-blue-700"
                                     onClick={() => setShowAllTransactions(true)}
                                 >
                                     View All Transactions
@@ -231,22 +232,22 @@ const Dashboard = () => {
                         <div className="space-y-8">
                             {showAllTransactions && (
                                 <div className="p-6 bg-white rounded-lg shadow">
-                                    <h2 className="mb-4 text-xl font-semibold text-teal-700">All Transactions</h2>
+                                    <h2 className="mb-4 text-xl font-semibold text-blue-700">All Transactions</h2>
                                     <div className="mb-4 space-y-4 overflow-y-auto max-h-96">
                                         {allTransactions.map((transaction) => (
                                             <div key={transaction.id} className="flex items-center justify-between py-2 border-b border-gray-200 last:border-b-0">
                                                 <div>
-                                                    <p className="font-medium text-teal-700">{transaction.description}</p>
+                                                    <p className="font-medium text-blue-700">{transaction.description}</p>
                                                     <p className="text-sm text-gray-500">{transaction.date}</p>
                                                 </div>
-                                                <span className="px-2 py-1 text-sm font-medium text-teal-700 bg-teal-100 rounded">
+                                                <span className="px-2 py-1 text-sm font-medium text-blue-700 bg-blue-100 rounded">
                                                     ${transaction.amount}
                                                 </span>
                                             </div>
                                         ))}
                                     </div>
                                     <div className="mt-6">
-                                        <h3 className="mb-2 text-lg font-semibold text-teal-700">Transaction History</h3>
+                                        <h3 className="mb-2 text-lg font-semibold text-blue-700">Transaction History</h3>
                                         <div className="h-64">
                                             <ResponsiveContainer width="100%" height="100%">
                                                 <BarChart data={allTransactions}>
@@ -254,7 +255,7 @@ const Dashboard = () => {
                                                     <XAxis dataKey="date" />
                                                     <YAxis />
                                                     <Tooltip />
-                                                    <Bar dataKey="amount" fill="#0D9488" />
+                                                    <Bar dataKey="amount" fill="#0000FF" />
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </div>
@@ -264,22 +265,22 @@ const Dashboard = () => {
 
                             {showRecentTransactions && (
                                 <div className="p-6 bg-white rounded-lg shadow">
-                                    <h2 className="mb-4 text-xl font-semibold text-teal-700">Recent Transactions</h2>
+                                    <h2 className="mb-4 text-xl font-semibold text-blue-700">Recent Transactions</h2>
                                     <div className="mb-4 space-y-4">
                                         {recentTransactions.map((transaction) => (
                                             <div key={transaction.id} className="flex items-center justify-between py-2 border-b border-gray-200 last:border-b-0">
                                                 <div>
-                                                    <p className="font-medium text-teal-700">{transaction.description}</p>
+                                                    <p className="font-medium text-blue-700">{transaction.description}</p>
                                                     <p className="text-sm text-gray-500">{transaction.date}</p>
                                                 </div>
-                                                <span className="px-2 py-1 text-sm font-medium text-teal-700 bg-teal-100 rounded">
+                                                <span className="px-2 py-1 text-sm font-medium text-blue-700 bg-blue-100 rounded">
                                                     ${transaction.amount}
                                                 </span>
                                             </div>
                                         ))}
                                     </div>
                                     <div className="mt-6">
-                                        <h3 className="mb-2 text-lg font-semibold text-teal-700">Recent Transaction History</h3>
+                                        <h3 className="mb-2 text-lg font-semibold text-blue-700">Recent Transaction History</h3>
                                         <div className="h-64">
                                             <ResponsiveContainer width="100%" height="100%">
                                                 <BarChart data={recentTransactions}>
@@ -287,7 +288,7 @@ const Dashboard = () => {
                                                     <XAxis dataKey="date" />
                                                     <YAxis />
                                                     <Tooltip />
-                                                    <Bar dataKey="amount" fill="#0D9488" />
+                                                    <Bar dataKey="amount" fill="#0000FF" />
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </div>
