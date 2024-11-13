@@ -4,6 +4,7 @@ import axios from 'axios';
 import { FaNotesMedical, FaUserMd, FaHome, FaFilePrescription, FaHistory, FaVideo, FaUser, FaEnvelope, FaPhone, FaCalendar, FaMapMarkerAlt, FaIdCard, FaGraduationCap, FaHospital, FaWeight, FaRulerVertical } from 'react-icons/fa';
 import { LineChart, Line, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { baseURL } from '../main';
+import { FaPerson } from 'react-icons/fa6';
 
 
 // const baseURL = 'https://api.example.com'; // Replace with your actual API base URL
@@ -56,6 +57,9 @@ const Dashboard = () => {
 
     const sidebarItems = userData?.regNo
         ? [
+            { icon: FaHome, text: "Home", onClick: () => navigate('/') },
+            { icon: FaPerson, text: "Profile", onClick: () => navigate('/doctorProfile') },
+            { icon: FaUserMd, text: "Assigned Patients", onClick: () => { } },
             { icon: FaUserMd, text: "Assigned Patients", onClick: () => { } },
             { icon: FaVideo, text: "Virtual Video Call", onClick: () => navigate('/virtual-video-call') },
         ]

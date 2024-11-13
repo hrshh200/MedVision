@@ -144,7 +144,30 @@ const signIn = async (req, res) => {
 };
 
 
-
+const UpdateDoctorProfile = async (req, res) => {
+    try {
+      const { regNo, address, fees, specialist, experience, location } = req.body;
+  
+      // Find and update the doctor's profile based on the registration number
+      const updatedDoctor = await Doctor.findOneAndUpdate(
+        { regNo }, 
+        { address, fees, specialist, experience, location }, 
+        { new: true, runValidators: true } // Options: return the updated document and run validation
+      );
+  
+      if (!updatedDoctor) {
+        return res.status(404).json({ message: 'Doctor not found' });
+      }
+  
+      res.status(200).json({
+        message: 'Doctor profile updated successfully',
+        doctor: updatedDoctor,
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Error updating doctor profile', error });
+    }
+  };
+  
 
 const fetchData = async (req, res) => {
     
@@ -191,4 +214,4 @@ const fetchData = async (req, res) => {
 };
 
 
-module.exports = { signUp, signIn, fetchData };
+module.exports = { signUp, signIn, fetchData, UpdateDoctorProfile };
