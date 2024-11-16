@@ -94,6 +94,8 @@ const Navbar = () => {
                             <Link to="/login" className='font-ibm text-[#0360D9] border-2 border-[#0360D9] px-[1.5rem] py-[.5rem] rounded-[25px] font-[500] text-[1.1rem] leading-[26px]'>Login</Link>
 
                             <Link to="/signup" className='font-ibm text-white bg-[#0360D9] border-2 border-[#0360D9] px-[1rem] py-[.5rem] rounded-[25px] font-[500] text-[1.1rem] leading-[26px]'>Sign Up</Link>
+
+                            <Link to="/admin" className='font-ibm text-white bg-[#0360D9] border-2 border-[#0360D9] px-[1rem] py-[.5rem] rounded-[25px] font-[500] text-[1.1rem] leading-[26px]'>Admin Login</Link>
                         </div>
                         :
                         <div className='flex justify-between items-center gap-[2rem]'>

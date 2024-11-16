@@ -1,6 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const User = require("../models/user");
 const Doctor = require("../models/doctor");
+const Admin = require("../models/admin");
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 // const shortid = require("shortid");
@@ -214,4 +215,50 @@ const fetchData = async (req, res) => {
 };
 
 
-module.exports = { signUp, signIn, fetchData, UpdateDoctorProfile };
+const adminsignIn = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        console.log(req.body);
+
+        // Check if email and password are provided
+        if (!email || !password) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                message: "Please enter email and password",
+            });
+        }
+
+        const user = await Admin.findOne({ email });
+        
+        if (!user) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                message: "User does not exist..!",
+            });
+        }
+
+
+        // If password matches, generate the JWT token
+        const token = jwt.sign(
+            { _id: user._id, role: role },
+            process.env.JWT_SECRET,
+            { expiresIn: "30d" }
+        );
+
+        const { _id, name, email: userEmail } = user;
+
+        // Send the token and user info back to the client
+        return res.status(StatusCodes.OK).json({
+            token,
+            user: { _id, name, email: userEmail },
+        });
+
+    } catch (error) {
+        console.error("Sign-in error: ", error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: "An error occurred during sign-in",
+            error: error.message,
+        });
+    }
+};
+
+
+module.exports = { signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn };
