@@ -1,7 +1,7 @@
 import React from 'react';
 import { Star, Clock, MapPin, Phone } from 'lucide-react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+// import axios from 'axios';
+// import { useNavigate } from 'react-router-dom';
 
 
 
@@ -17,79 +17,79 @@ const DoctorCard = ({
 }) => {
 
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
 
 
-  function loadScript(src) {
-    return new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.onload = () => {
-        resolve(true);
-      };
-      script.onerror = () => {
-        resolve(false);
-      };
-      document.body.appendChild(script);
-    });
-  }
+  // function loadScript(src) {
+  //   return new Promise((resolve) => {
+  //     const script = document.createElement("script");
+  //     script.src = src;
+  //     script.onload = () => {
+  //       resolve(true);
+  //     };
+  //     script.onerror = () => {
+  //       resolve(false);
+  //     };
+  //     document.body.appendChild(script);
+  //   });
+  // }
 
-  const handlePayment = async (e) => {
-    e.preventDefault();
-    console.log(fee)
-    const res = await loadScript(
-      "https://checkout.razorpay.com/v1/checkout.js"
-    );
+  // const handlePayment = async (e) => {
+  //   e.preventDefault();
+  //   console.log(fee)
+  //   const res = await loadScript(
+  //     "https://checkout.razorpay.com/v1/checkout.js"
+  //   );
 
-    try {
-      const { data } = await axios.post(
-        "https://newmodel-backend.onrender.com/api/PlusCare/Home/orderCreate",
-        { amount: fee * 100 }
-      );
-      const options = {
-        key: "rzp_test_dPJR7d6F2fDtPm",
-        amount: data.amount,
-        currency: data.currency,
-        name: "MedVision",
-        description: "consultation fee",
-        order_id: data.id,
-        handler: async (response) => {
+  //   try {
+  //     const { data } = await axios.post(
+  //       "https://newmodel-backend.onrender.com/api/PlusCare/Home/orderCreate",
+  //       { amount: fee * 100 }
+  //     );
+  //     const options = {
+  //       key: "rzp_test_dPJR7d6F2fDtPm",
+  //       amount: data.amount,
+  //       currency: data.currency,
+  //       name: "MedVision",
+  //       description: "consultation fee",
+  //       order_id: data.id,
+  //       handler: async (response) => {
 
-          try {
-            const verifyUrl = "https://newmodel-backend.onrender.com/api/PlusCare/Home/payment/paymentverify";
-            const { data } = await axios.post(verifyUrl, {
-            });
-            console.log(data);
+  //         try {
+  //           const verifyUrl = "https://newmodel-backend.onrender.com/api/PlusCare/Home/payment/paymentverify";
+  //           const { data } = await axios.post(verifyUrl, {
+  //           });
+  //           console.log(data);
 
 
-          } catch (error) {
-            console.log(error);
-          }
-        },
-        prefill: {
-          name: "Gaurav Kumar",
-          email: "gaurav.kumar@example.com",
-          contact: "9000090000",
-        },
-        theme: {
-          color: "#3399cc",
-        }
-      };
-      const rzp1 = new window.Razorpay(options);
-      rzp1.open();
+  //         } catch (error) {
+  //           console.log(error);
+  //         }
+  //       },
+  //       prefill: {
+  //         name: "Gaurav Kumar",
+  //         email: "gaurav.kumar@example.com",
+  //         contact: "9000090000",
+  //       },
+  //       theme: {
+  //         color: "#3399cc",
+  //       }
+  //     };
+  //     const rzp1 = new window.Razorpay(options);
+  //     rzp1.open();
 
-        window.open('https://www.videosdk.live/prebuilt/demo')
+  //       window.open('https://www.videosdk.live/prebuilt/demo')
      
 
 
 
 
 
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
 
 
@@ -128,7 +128,7 @@ const DoctorCard = ({
           </div>
         </div>
         <div className="flex flex-col items-end justify-between">
-          <div onClick={handlePayment}
+          <div 
             className="flex items-center text-sm text-gray-600 cursor-pointer">
             <Phone className="w-4 h-4 mr-1 text-blue-500" />
             <span>Book Now</span>

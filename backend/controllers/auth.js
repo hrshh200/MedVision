@@ -146,12 +146,12 @@ const signIn = async (req, res) => {
 
 const UpdateDoctorProfile = async (req, res) => {
     try {
-      const { regNo, address, fees, specialist, experience, location } = req.body;
+      const { regNo, address, fees, specialist, experience, location, assign, status  } = req.body;
   
       // Find and update the doctor's profile based on the registration number
       const updatedDoctor = await Doctor.findOneAndUpdate(
         { regNo }, 
-        { address, fees, specialist, experience, location }, 
+        { address, fees, specialist, experience, location, assign, status }, 
         { new: true, runValidators: true } // Options: return the updated document and run validation
       );
   

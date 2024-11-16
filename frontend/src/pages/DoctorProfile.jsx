@@ -5,6 +5,7 @@ import { baseURL } from '../main';
 
 const DoctorProfile = () => {
   const [status, setStatus] = useState('pending'); // 'approved', 'rejected', or 'pending'
+  const [assign, setAssign] = useState(false);
   const [showstatus, setShowStatus] = useState(false);
   const [formData, setFormData] = useState({
     photo: null,
@@ -14,7 +15,9 @@ const DoctorProfile = () => {
     specialist: '',
     experience: '',
     location: '',
+    applicationstatus: ''
   });
+  const [userData, setUserData] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -24,23 +27,62 @@ const DoctorProfile = () => {
     });
   };
 
+  useEffect(() => {
+    const fetchDataFromApi = async () => {
+      try {
+        const token = localStorage.getItem('medVisionToken');
+        const response = await axios.get(`${baseURL}/fetchdata`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const fetchedUserData = response.data.userData;
+        setUserData(fetchedUserData);
+
+        // Persist user data in local storage
+        localStorage.setItem('userData', JSON.stringify(fetchedUserData));
+
+        // Update assign state based on fetched data
+        if (fetchedUserData?.assign === true) {
+          setAssign(true);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error.message);
+      }
+    };
+
+    // Check if data exists in local storage on initial load
+    const savedUserData = JSON.parse(localStorage.getItem('userData'));
+    if (savedUserData?.assign === true) {
+      setAssign(true);
+    } else {
+      // Fetch data if not available in local storage
+      fetchDataFromApi();
+    }
+  }, []);
+
   const submitHandler = async (e) => {
     e.preventDefault();
-    //calling the api for the profile form to be sent to the database
     try {
-      // Sending the formData to the backend
-      console.log(formData);
-      const response = await axios.post(`${baseURL}/profile`, formData);
-      console.log(response);
+      const dataToSubmit = {
+        ...formData,
+        assign: true,
+        status: status
+      };
+
+      // Sending the updated formData to the backend
+      const response = await axios.post(`${baseURL}/profile`, dataToSubmit);
       if (response.status === 200) {
-        toast.success('Profile Updated SuccessFully and intiated application!');
+        toast.success('Profile Updated Successfully and initiated application!');
         setShowStatus(true);
       }
     } catch (error) {
       toast.error('Error updating profile');
       console.error(error);
     }
-  }
+  };
+
 
 
   return (
@@ -169,7 +211,7 @@ const DoctorProfile = () => {
               </div>
 
               {/* Status Banner */}
-              {showstatus && (
+              {(showstatus || assign) && (
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">Application Status</h2>
 

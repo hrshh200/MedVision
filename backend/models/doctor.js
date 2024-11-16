@@ -26,6 +26,12 @@ const doctorSchema = new mongoose.Schema({
   experience: {
     type: Number,
   },
+  assign:{
+    type:Boolean,
+  },
+  status:{
+    type:String
+  },
   email: {
     type: String,
     //   require: true,
