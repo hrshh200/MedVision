@@ -319,6 +319,17 @@ const doctorListAssigned = async (req, res) => {
     }
 };
 
+const fetchupdateddoctors = async (req, res) => {
+    try {
+        // Query to find all doctors with assign value as "assign"
+        const acceptedDoctors = await Doctor.find({ assign: 'false' });
+        res.status(200).json({ success: true, doctors: acceptedDoctors });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
 const updatedoctorstatus = async (req, res) => {
     try {
         const { regno, assign, status } = req.body; // Extract data from request body
@@ -344,4 +355,6 @@ const updatedoctorstatus = async (req, res) => {
 };
 
 
-module.exports = { signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus };
+module.exports = { signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus
+    ,fetchupdateddoctors
+ };
