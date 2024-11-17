@@ -167,7 +167,7 @@ const Dashboard = () => {
 
             {/* Main Content Area */}
             <main className="flex-1 p-8">
-                {userData?.status === "accepted" && (
+                {userData?.regNo && userData?.status === "accepted" && (
                     <div className="max-w-6xl mx-auto">
                         <h1 className="mb-6 text-3xl font-semibold text-blue-700">
                             {userData?.regNo ? "Doctor Dashboard" : "Patient Dashboard"}
@@ -279,7 +279,7 @@ const Dashboard = () => {
                         </div>
                     </div>
                 )}
-                {userData?.status === "pending" && (
+                {userData?.regNo && userData?.status === "pending" && (
                     <div className="flex items-center justify-center h-24">
                         <div className="border-2 border-yellow-600 bg-yellow-100 text-yellow-800 p-4 rounded-lg shadow-md text-center">
                             <h2 className="font-semibold text-lg">Verification Pending</h2>
@@ -287,13 +287,125 @@ const Dashboard = () => {
                         </div>
                     </div>
                 )}
-                {!userData?.status && (
+                {userData?.regNo && !userData?.status && (
                     <div className="flex items-center justify-center h-24">
                         <div className="border-2 border-red-600 bg-red-100 text-red-800 p-4 rounded-lg shadow-md text-center">
                             <h2 className="font-semibold text-lg">Verification Not Initiated!</h2>
                             <p className="mt-1">Dear Doctor, your verification is not initiated. Kindly complete your profile and fill necessary details in profile section.</p>
                         </div>
                     </div>
+                )}
+                {!userData?.regNo && (
+                    <div className="max-w-6xl mx-auto">
+                    <h1 className="mb-6 text-3xl font-semibold text-blue-700">
+                        {userData?.regNo ? "Doctor Dashboard" : "Patient Dashboard"}
+                    </h1>
+
+                    <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                        <div className="space-y-8">
+                            {/* User Info */}
+                            <div className="p-6 bg-white rounded-lg shadow">
+                                <h2 className="mb-4 text-xl font-semibold text-blue-700">User Information</h2>
+                                {renderUserInfo()}
+                            </div>
+
+                            {/* Health Data Graph (for patients) or Appointments (for doctors) */}
+                            {!userData?.regNo ? (
+                                <div className="p-6 bg-white rounded-lg shadow">
+                                    <h2 className="mb-4 text-xl font-semibold text-blue-700">Health Data Over Time</h2>
+                                    <div className="h-64">
+                                        <ResponsiveContainer width="100%" height="100%">
+                                            <LineChart data={healthData}>
+                                                <Line type="monotone" dataKey="value" stroke="blue" strokeWidth={2} />
+                                                <CartesianGrid stroke="#E5E7EB" />
+                                                <XAxis dataKey="date" />
+                                                <YAxis />
+                                                <Tooltip />
+                                            </LineChart>
+                                        </ResponsiveContainer>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="p-6 bg-white rounded-lg shadow">
+                                    <h2 className="mb-4 text-xl font-semibold text-blue-700">Upcoming Appointments</h2>
+                                    <ul className="space-y-2">
+                                        <li className="flex items-center justify-between">
+                                            <span>John Doe</span>
+                                            <span className="text-gray-500">2024-11-05 10:00 AM</span>
+                                        </li>
+                                        <li className="flex items-center justify-between">
+                                            <span>Jane Smith</span>
+                                            <span className="text-gray-500">2024-11-05 11:30 AM</span>
+                                        </li>
+                                        <li className="flex items-center justify-between">
+                                            <span>Bob Johnson</span>
+                                            <span className="text-gray-500">2024-11-05 2:00 PM</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            )}
+
+                            {/* Recent Transactions */}
+                            <div className="p-6 bg-white rounded-lg shadow">
+                                <h2 className="mb-4 text-xl font-semibold text-blue-700">Recent Transactions</h2>
+                                <div className="mb-4 space-y-4">
+                                    {recentTransactions.map((transaction) => (
+                                        <div key={transaction.id} className="flex items-center justify-between py-2 border-b border-gray-200 last:border-b-0">
+                                            <div>
+                                                <p className="font-medium text-blue-700">{transaction.description}</p>
+                                                <p className="text-sm text-gray-500">{transaction.date}</p>
+                                            </div>
+                                            <span className="px-2 py-1 text-sm font-medium text-blue-700 bg-blue-100 rounded">
+                                                ${transaction.amount}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                                <button
+                                    className="w-full px-4 py-2 text-white transition-colors bg-blue-600 rounded hover:bg-blue-700"
+                                    onClick={() => setShowAllTransactions(true)}
+                                >
+                                    View All Transactions
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="space-y-8">
+                            {showAllTransactions && (
+                                <div className="p-6 bg-white rounded-lg shadow">
+                                    <h2 className="mb-4 text-xl font-semibold text-blue-700">All Transactions</h2>
+                                    <div className="mb-4 space-y-4 overflow-y-auto max-h-96">
+                                        {allTransactions.map((transaction) => (
+                                            <div key={transaction.id} className="flex items-center justify-between py-2 border-b border-gray-200 last:border-b-0">
+                                                <div>
+                                                    <p className="font-medium text-blue-700">{transaction.description}</p>
+                                                    <p className="text-sm text-gray-500">{transaction.date}</p>
+                                                </div>
+                                                <span className="px-2 py-1 text-sm font-medium text-blue-700 bg-blue-100 rounded">
+                                                    ${transaction.amount}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="mt-6">
+                                        <h3 className="mb-2 text-lg font-semibold text-blue-700">Transaction History</h3>
+                                        <div className="h-64">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <BarChart data={allTransactions}>
+                                                    <CartesianGrid strokeDasharray="3 3" />
+                                                    <XAxis dataKey="date" />
+                                                    <YAxis />
+                                                    <Tooltip />
+                                                    <Bar dataKey="amount" fill="#0000FF" />
+                                                </BarChart>
+                                            </ResponsiveContainer>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
                 )}
             </main>
 

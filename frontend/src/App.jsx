@@ -11,6 +11,7 @@ import OnlinePharmacy from './pages/OnlinePharmacy';
 import Dashboard from './pages/Dashboard';
 import DoctorProfile from './pages/DoctorProfile';
 import AdminLogin from './components/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Route path="signup" element={<Signup />} />
           <Route path='searchdoctor' element={<SearchDoctor />} />
           <Route path='dashboard' element={<Dashboard />} />
+          <Route path='admindashboard' element={<AdminDashboard />}/>
           <Route path='onlinepharmacy' element={<OnlinePharmacy />} />
           <Route path='doctorProfile' element={<DoctorProfile />} />
           <Route path='admin' element={<AdminLogin />} />

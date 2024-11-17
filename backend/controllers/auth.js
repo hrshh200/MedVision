@@ -235,20 +235,25 @@ const adminsignIn = async (req, res) => {
             });
         }
 
+        if (user.password !== password) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+                message: "Invalid email or password",
+            });
+        }
 
         // If password matches, generate the JWT token
         const token = jwt.sign(
-            { _id: user._id, role: role },
+            { _id: user._id, role: "admin" },
             process.env.JWT_SECRET,
             { expiresIn: "30d" }
         );
 
-        const { _id, name, email: userEmail } = user;
+        const { _id, email: userEmail } = user;
 
         // Send the token and user info back to the client
         return res.status(StatusCodes.OK).json({
             token,
-            user: { _id, name, email: userEmail },
+            user: { _id, email: userEmail },
         });
 
     } catch (error) {
@@ -260,5 +265,49 @@ const adminsignIn = async (req, res) => {
     }
 };
 
+const AdminfetchData = async (req, res) => {
+    
+    try {
+        // Get token from the Authorization header
+        const JWT_SECRET = process.env.JWT_SECRET;
+        const token = req.header('Authorization')?.split(' ')[1];
+        //  console.log(token);
+        if (!token) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+                message: "Access token is missing or invalid",
+            });
+        }
 
-module.exports = { signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn };
+        // Verify and decode the token
+        const decoded = jwt.verify(token, JWT_SECRET);
+        // console.log("hhh", decoded);
+
+        // Check if the user is a doctor or not based on their role
+        const adminModel = Admin;
+
+        // Find user or doctor by their ID
+        const adminData = await adminModel.findById(decoded._id).select('-password'); // Exclude sensitive fields
+
+        if (!adminData) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                message: "User not found",
+            });
+        }
+
+        // Respond with user or doctor data
+        res.status(StatusCodes.OK).json({
+            success: true,
+            adminData,
+        });
+
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: "An error occurred while fetching data",
+            error: error.message,
+        });
+    }
+};
+
+
+module.exports = { signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData };

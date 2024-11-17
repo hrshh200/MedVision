@@ -9,6 +9,7 @@ const Navbar = () => {
     const token = localStorage.getItem('medVisionToken');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState(null);
+    const [adminData, setAdminData] = useState(null);
     // console.log(medVisionToken);
 
 
@@ -49,12 +50,31 @@ const Navbar = () => {
         }
     };
 
+    const fetchadminDataFromApi = async () => {
+        try {
+            const response = await axios.get(`${baseURL}/adminfetchdata`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            // Returning the fetched data
+            // console.log(response.data);
+            setAdminData(response.data.adminData);
+            localStorage.setItem('adminData', JSON.stringify(response.data.adminData));
+        } catch (error) {
+            console.error("Error fetching data from API:", error.message);
+            throw error;
+        }
+    };
+
 
     useEffect(() => {
         if (token) {
             fetchDataFromApi();
+            fetchadminDataFromApi();
         }
-        if (localStorage.getItem('userData')) {
+        if (localStorage.getItem('userData') || localStorage.getItem('adminData')) {
             setIsLoggedIn(true);
         }
     }, [token]);
@@ -62,6 +82,7 @@ const Navbar = () => {
     const handleLogout = () => {
         localStorage.removeItem('medVisionToken');
         localStorage.removeItem('userData');
+        localStorage.removeItem('adminData');
         setIsLoggedIn(false);
         navigate('/');
     };
@@ -88,22 +109,29 @@ const Navbar = () => {
                         scrollToElement('feedback');
                     }} className='font-ibm  font-[400] text-[1.2rem] cursor-pointer leading-[26px] hover:text-blue-500 hover:underline underline-offset-8'>Feedbacks</p>
                 </div>
-                {
-                    !isLoggedIn ?
-                        <div className='flex justify-between items-center gap-[2rem]'>
-                            <Link to="/login" className='font-ibm text-[#0360D9] border-2 border-[#0360D9] px-[1.5rem] py-[.5rem] rounded-[25px] font-[500] text-[1.1rem] leading-[26px]'>Login</Link>
-
-                            <Link to="/signup" className='font-ibm text-white bg-[#0360D9] border-2 border-[#0360D9] px-[1rem] py-[.5rem] rounded-[25px] font-[500] text-[1.1rem] leading-[26px]'>Sign Up</Link>
-
-                            <Link to="/admin" className='font-ibm text-white bg-[#0360D9] border-2 border-[#0360D9] px-[1rem] py-[.5rem] rounded-[25px] font-[500] text-[1.1rem] leading-[26px]'>Admin Login</Link>
-                        </div>
-                        :
-                        <div className='flex justify-between items-center gap-[2rem]'>
-                            <Link to="/dashboard" className='font-ibm text-white bg-[#0360D9] border-2 border-[#0360D9] px-[1rem] py-[.5rem] rounded-[25px] font-[500] text-[1.1rem] leading-[26px]'>Dashboard</Link>
-                            <button onClick={handleLogout} className='font-ibm bg-white text-[#0360D9] border-2 border-[#0360D9] px-[1rem] py-[.5rem] rounded-[25px] font-[500] text-[1.1rem] leading-[26px]'>Logout</button>
-                        </div>
-                }
-
+                {!isLoggedIn ? (
+                    <div className='flex justify-between items-center gap-[2rem]'>
+                        <Link to="/login" className='font-ibm text-[#0360D9] border-2 border-[#0360D9] px-[1.5rem] py-[.5rem] rounded-[25px] font-[500] text-[1.1rem] leading-[26px]'>Login</Link>
+                        <Link to="/signup" className='font-ibm text-white bg-[#0360D9] border-2 border-[#0360D9] px-[1rem] py-[.5rem] rounded-[25px] font-[500] text-[1.1rem] leading-[26px]'>Sign Up</Link>
+                        <Link to="/admin" className='font-ibm text-white bg-[#0360D9] border-2 border-[#0360D9] px-[1rem] py-[.5rem] rounded-[25px] font-[500] text-[1.1rem] leading-[26px]'>Admin Login</Link>
+                    </div>
+                ) : (
+                    <div className='flex justify-between items-center gap-[2rem]'>
+                        <button
+                            onClick={() => {
+                                if (adminData) {
+                                    navigate('/admindashboard');
+                                } else if (userData) {
+                                    navigate('/dashboard');
+                                }
+                            }}
+                            className='font-ibm text-white bg-[#0360D9] border-2 border-[#0360D9] px-[1rem] py-[.5rem] rounded-[25px] font-[500] text-[1.1rem] leading-[26px]'
+                        >
+                            Dashboard
+                        </button>
+                        <button onClick={handleLogout} className='font-ibm bg-white text-[#0360D9] border-2 border-[#0360D9] px-[1rem] py-[.5rem] rounded-[25px] font-[500] text-[1.1rem] leading-[26px]'>Logout</button>
+                    </div>
+                )}
             </div>
         </>
     )

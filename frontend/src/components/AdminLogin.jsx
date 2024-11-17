@@ -17,6 +17,7 @@ const AdminLogin = ()=> {
     password: ''
   });
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
 
   const handleChange = (e) => {
@@ -39,7 +40,7 @@ const AdminLogin = ()=> {
       if (response.status === 200) {
         toast.success('Login successful!');
         localStorage.setItem('medVisionToken', response.data.token);
-        navigate('/dashboard');
+        navigate('/admindashboard');
       }
     } catch (error) {
       toast.error('Login failed. Please try again.');

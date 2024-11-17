@@ -2,11 +2,6 @@ const mongoose = require("mongoose");
 
 
 const adminSchema = new mongoose.Schema({
-  regNo: {
-    type: Number,
-    //  require: true,
-    //  unique: true
-  },
   name: {
     type: String,
     //   require: true,
@@ -21,10 +16,10 @@ const adminSchema = new mongoose.Schema({
     type: String,
     //  require: true
   },
-  doctors:{
-    type:String
-  }
-});
+  doctors: {
+    type: Number,
+  },
+},{ collection: "admin" });
 
 
 
