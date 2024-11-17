@@ -20,6 +20,9 @@ const doctorSchema = new mongoose.Schema({
   fees: {
     type: Number,
   },
+  hospital : {
+
+  },
   specialist: {
     type: String,
   },

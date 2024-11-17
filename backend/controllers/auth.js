@@ -147,12 +147,12 @@ const signIn = async (req, res) => {
 
 const UpdateDoctorProfile = async (req, res) => {
     try {
-      const { regNo, address, fees, specialist, experience, location, assign, status  } = req.body;
+      const { regNo, address, fees, hospital, specialist, experience, location, assign, status  } = req.body;
   
       // Find and update the doctor's profile based on the registration number
       const updatedDoctor = await Doctor.findOneAndUpdate(
         { regNo }, 
-        { address, fees, specialist, experience, location, assign, status }, 
+        { address, fees, hospital, specialist, experience, location, assign, status }, 
         { new: true, runValidators: true } // Options: return the updated document and run validation
       );
   
@@ -213,7 +213,6 @@ const fetchData = async (req, res) => {
         });
     }
 };
-
 
 const adminsignIn = async (req, res) => {
     try {
@@ -309,5 +308,40 @@ const AdminfetchData = async (req, res) => {
     }
 };
 
+const doctorListAssigned = async (req, res) => {
+    try {
+        // Query to find all doctors with assign value as "assign"
+        const assignedDoctors = await Doctor.find({ assign: 'true' });
+        res.status(200).json({ success: true, doctors: assignedDoctors });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
 
-module.exports = { signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData };
+const updatedoctorstatus = async (req, res) => {
+    try {
+        const { regno, assign, status } = req.body; // Extract data from request body
+
+        const updatedDoctor = await Doctor.findOneAndUpdate(
+            { regNo: regno }, // Match doctor by regno
+            { assign, status }, // Update these fields
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedDoctor) {
+            return res.status(404).json({ message: "Doctor not found" });
+        }
+
+        res.status(200).json({ 
+            message: "Doctor accepted successfully", 
+            doctor: updatedDoctor 
+        });
+    } catch (error) {
+        console.error("Error updating doctor:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+module.exports = { signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus };

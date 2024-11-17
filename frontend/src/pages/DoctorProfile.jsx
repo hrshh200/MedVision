@@ -12,6 +12,7 @@ const DoctorProfile = () => {
     regNo: '',
     address: '',
     fees: '',
+    hospital: '',
     specialist: '',
     experience: '',
     location: '',
@@ -151,6 +152,20 @@ const DoctorProfile = () => {
                       onChange={handleChange}
                       className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md"
                       placeholder="0.00"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="fees" className="block text-sm font-medium text-gray-700">
+                      Hospital
+                    </label>
+                    <input
+                      type="text"
+                      name="hospital"
+                      id="hospital"
+                      value={formData.hospital}
+                      onChange={handleChange}
+                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md"
+                      placeholder="Hospital name"
                     />
                   </div>
                   <div>
