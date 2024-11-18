@@ -354,7 +354,54 @@ const updatedoctorstatus = async (req, res) => {
     }
 };
 
+const updateavailability = async (req, res) => {
+    try {
+        const { regno, slots } = req.body;
+
+        // Find doctor by regno and update the available field
+        const updatedDoctor = await Doctor.findOneAndUpdate(
+            { regNo : regno }, // Match the regno
+            { $set: { available: slots } }, // Update the available field
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedDoctor) {
+            return res.status(404).json({ success: false, message: 'Doctor not found' });
+        }
+
+        res.status(200).json({ success: true, doctor: updatedDoctor });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+const fetchavailableslots = async (req, res) => {
+    try {
+        const { regno } = req.body;
+
+        // Find doctor by regno
+        const doctor = await Doctor.findOne({ regNo: regno });
+
+        if (!doctor) {
+            return res.status(404).json({ success: false, message: 'Doctor not found' });
+        }
+
+        // Return the available array
+        res.status(200).json({
+            success: true,
+            available: doctor.available, // Include the available array
+        });
+    } catch (error) {
+        console.error("Error fetching available slots:", error.message);
+        res.status(500).json({
+            success: false,
+            message: 'Server error',
+        });
+    }
+};
+
 
 module.exports = { signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus
-    ,fetchupdateddoctors
+    ,fetchupdateddoctors, updateavailability,fetchavailableslots
  };

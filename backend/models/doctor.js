@@ -40,6 +40,9 @@ const doctorSchema = new mongoose.Schema({
     //   require: true,
     //   unique: true,
   },
+  available: {
+    type: [String],
+  },
   password: {
     type: String,
     //  require: true

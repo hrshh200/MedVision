@@ -3,6 +3,7 @@ import { Star, MapPin, Clock, IndianRupee } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const DoctorCard = ({
+  regNo,
   id,
   name,
   specialist,
@@ -67,7 +68,7 @@ const DoctorCard = ({
             {/* Conditional Book Now Button */}
             <div className="relative group">
               <button
-                onClick={() => isBook && navigate(`/book/${id}`)}
+                onClick={() => isBook && navigate(`/book/${regNo}`)}
                 disabled={!isBook} // Disable if not logged in
                 className={`px-6 py-2 rounded-lg font-medium transition-colors duration-200 ${
                   isBook
