@@ -20,6 +20,15 @@ const userSchema = new mongoose.Schema({
       type: String,
       require: true
    },
+   confirm: {
+      type: [
+          {
+              confirm: { type: Boolean, required: true },
+              regNo: { type: Number, required: true }
+          }
+      ],
+      default: []
+  },
    link: [
       {
          link: { type: String, required: true }, // URL of the link
@@ -35,9 +44,6 @@ const userSchema = new mongoose.Schema({
       }]],
       default: [] // Initialize as an empty array
    },
-   confirm: {
-      type: Boolean,
-   }
 }, { timestamps: true });
 //For get fullName from when we get data from database
 

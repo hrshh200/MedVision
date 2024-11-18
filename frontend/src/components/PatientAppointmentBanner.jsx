@@ -6,11 +6,12 @@ import { baseURL } from "../main";
 export function PatientAppointmentBanner({ appointments }) {
     const [appointmentDetails, setAppointmentDetails] = useState([]);
     const [expandedAppointment, setExpandedAppointment] = useState(null);
+    const [isMeetingBlocked, setIsMeetingBlocked] = useState(false);
     const [userData, setUserData] = useState(null);
 
     const fetchDataFromApi = async () => {
         try {
-            const token = localStorage.getItem('medVisionToken');
+            const token = localStorage.getItem("medVisionToken");
             const response = await axios.get(`${baseURL}/fetchdata`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -18,7 +19,7 @@ export function PatientAppointmentBanner({ appointments }) {
             });
             const fetchedData = response.data.userData;
             setUserData(fetchedData);
-            localStorage.setItem('userData', JSON.stringify(fetchedData));
+            localStorage.setItem("userData", JSON.stringify(fetchedData));
         } catch (error) {
             console.error("Error fetching data:", error.message);
         }
@@ -27,6 +28,15 @@ export function PatientAppointmentBanner({ appointments }) {
     useEffect(() => {
         fetchDataFromApi();
     }, []);
+
+    useEffect(() => {
+        // Check if `regNo` exists in `userData.confirm`
+        if (userData?.confirm?.regNo) {
+            setIsMeetingBlocked(true);
+        } else {
+            setIsMeetingBlocked(false);
+        }
+    }, [userData]);
 
     useEffect(() => {
         const fetchPatientNames = async () => {
@@ -38,16 +48,14 @@ export function PatientAppointmentBanner({ appointments }) {
                     return map;
                 }, {});
 
-                // Create maps for video links and medicines by regNo
                 const linkMap = (userData?.link || []).reduce((map, linkItem) => {
                     map[linkItem.regNo] = linkItem.link;
                     return map;
                 }, {});
 
-                // Handle the nested array structure of medicines
                 const medicineMap = {};
                 if (userData?.medicines) {
-                    userData.medicines.forEach((medicineGroup, index) => {
+                    userData.medicines.forEach((medicineGroup) => {
                         if (Array.isArray(medicineGroup) && medicineGroup.length > 0) {
                             const regNo = medicineGroup[0].regNo;
                             if (!medicineMap[regNo]) {
@@ -58,12 +66,11 @@ export function PatientAppointmentBanner({ appointments }) {
                     });
                 }
 
-                // Combine all data
                 const combinedData = appointments.map((appointment) => ({
                     ...appointment,
                     name: nameMap[appointment.regNo] || "Unknown",
                     videoLink: linkMap[appointment.regNo] || null,
-                    medicines: medicineMap[appointment.regNo] || []
+                    medicines: medicineMap[appointment.regNo] || [],
                 }));
 
                 setAppointmentDetails(combinedData);
@@ -76,7 +83,9 @@ export function PatientAppointmentBanner({ appointments }) {
     }, [appointments, userData]);
 
     const handleJoinMeeting = (videoLink) => {
-        window.open(videoLink, '_blank');
+        if (!isMeetingBlocked) {
+            window.open(videoLink, "_blank");
+        }
     };
 
     const toggleExpand = (index) => {
@@ -120,7 +129,12 @@ export function PatientAppointmentBanner({ appointments }) {
                                         {appointment.videoLink ? (
                                             <button
                                                 onClick={() => handleJoinMeeting(appointment.videoLink)}
-                                                className="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors gap-2"
+                                                disabled={isMeetingBlocked}
+                                                className={`inline-flex items-center px-4 py-2 rounded-md transition-colors gap-2 ${
+                                                    isMeetingBlocked
+                                                        ? "bg-gray-400 text-white cursor-not-allowed"
+                                                        : "bg-green-500 text-white hover:bg-green-600"
+                                                }`}
                                             >
                                                 <Video className="w-4 h-4" />
                                                 Join Meeting
@@ -131,7 +145,7 @@ export function PatientAppointmentBanner({ appointments }) {
                                                 Meeting link not available yet
                                             </span>
                                         )}
-                                        
+
                                         {appointment.medicines?.length > 0 && (
                                             <button
                                                 onClick={() => toggleExpand(index)}
@@ -139,29 +153,33 @@ export function PatientAppointmentBanner({ appointments }) {
                                             >
                                                 <Pill className="w-4 h-4 mr-1" />
                                                 Medicines
-                                                {expandedAppointment === index ? 
-                                                    <ChevronUp className="w-4 h-4 ml-1" /> : 
+                                                {expandedAppointment === index ? (
+                                                    <ChevronUp className="w-4 h-4 ml-1" />
+                                                ) : (
                                                     <ChevronDown className="w-4 h-4 ml-1" />
-                                                }
+                                                )}
                                             </button>
                                         )}
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Medicines Section */}
                             {expandedAppointment === index && appointment.medicines?.length > 0 && (
                                 <div className="border-t border-gray-100 bg-gray-50 p-4">
-                                    <h4 className="text-sm font-medium text-gray-700 mb-3">Prescribed Medicines</h4>
+                                    <h4 className="text-sm font-medium text-gray-700 mb-3">
+                                        Prescribed Medicines
+                                    </h4>
                                     <div className="space-y-3">
                                         {appointment.medicines.map((medicine, medIndex) => (
-                                            <div 
+                                            <div
                                                 key={medicine._id || medIndex}
                                                 className="bg-white p-3 rounded-md border border-gray-200"
                                             >
                                                 <div className="flex justify-between items-start">
                                                     <div>
-                                                        <h5 className="font-medium text-gray-800">{medicine.name}</h5>
+                                                        <h5 className="font-medium text-gray-800">
+                                                            {medicine.name}
+                                                        </h5>
                                                         <span className="inline-block px-2 py-1 text-xs rounded bg-blue-100 text-blue-700 mt-1">
                                                             {medicine.type}
                                                         </span>

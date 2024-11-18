@@ -525,9 +525,40 @@ const uploadpres = async (req, res) => {
     }
 };
 
+const confirmstatus = async (req, res) => {
+    const { regNo, patientName } = req.body;
+
+    // Check if the required fields are provided
+    try {   
+        // Find the patient by name
+        console.log(req.body);
+        const user = await User.findOne({ name: patientName });
+        const doctor = await Doctor.findOne( { regNo: regNo });
+
+        // Check if the user exists
+        if (!user || !doctor) {
+            return res.status(404).json({ success: false, message: 'Patient not found' });
+        }
+
+
+        // Update the `link` field by appending the new video link and regNo
+        user.confirm.push({ confirm: true, regNo: regNo });
+        doctor.confirm.push({ confirm: true, name: patientName });
+
+        // Save the updated user
+        await user.save();
+        await doctor.save();
+
+        // Send a success response
+        return res.status(200).json({ success: true, message: 'confirm status  updated successfully' });
+    } catch (error) {
+        console.error('Error updating confirm status:', error);
+        return res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
 
 
 module.exports = {
     signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus
-    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres
+    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus
 };

@@ -20,7 +20,7 @@ const doctorSchema = new mongoose.Schema({
   fees: {
     type: Number,
   },
-  hospital : {
+  hospital: {
 
   },
   specialist: {
@@ -29,11 +29,11 @@ const doctorSchema = new mongoose.Schema({
   experience: {
     type: Number,
   },
-  assign:{
-    type:Boolean,
+  assign: {
+    type: Boolean,
   },
-  status:{
-    type:String
+  status: {
+    type: String
   },
   appointments: [{ patientName: String, slot: String }],
   email: {
@@ -41,6 +41,15 @@ const doctorSchema = new mongoose.Schema({
     //   require: true,
     //   unique: true,
   },
+  confirm: {
+    type: [
+        {
+            confirm: { type: Boolean, required: true },
+            name: { type: String, required: true }
+        }
+    ],
+    default: []
+},
   available: {
     type: [String],
   },

@@ -46,11 +46,11 @@ const Dashboard = () => {
             console.error("Error fetching data:", error.message);
         }
     };
-    
+
     useEffect(() => {
         fetchDataFromApi();
     }, []);
-    
+
     useEffect(() => {
         if (userData) {
             setAppointmentData(userData.appointments);
@@ -193,84 +193,21 @@ const Dashboard = () => {
                             {userData?.regNo ? "Doctor Dashboard" : "Patient Dashboard"}
                         </h1>
 
-                        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                            <div className="space-y-8">
-                                {/* User Info */}
-                                <div className="p-6 bg-white rounded-lg shadow">
-                                    <h2 className="mb-4 text-xl font-semibold text-blue-700">User Information</h2>
-                                    {renderUserInfo()}
-                                </div>
-
-                                {/* Health Data Graph (for patients) or Appointments (for doctors) */}
-                                {!userData?.regNo && (
-                                      <div className=" bg-gray-50 p-1">
-                                      <div>
-                                          <PatientAppointmentBanner appointments={appointmentData} />
-                                      </div>
-                                  </div>
-                                )}
-
-                                {/* Recent Transactions */}
-                                {/* <div className="p-6 bg-white rounded-lg shadow">
-                                    <h2 className="mb-4 text-xl font-semibold text-blue-700">Recent Transactions</h2>
-                                    <div className="mb-4 space-y-4">
-                                        {recentTransactions.map((transaction) => (
-                                            <div key={transaction.id} className="flex items-center justify-between py-2 border-b border-gray-200 last:border-b-0">
-                                                <div>
-                                                    <p className="font-medium text-blue-700">{transaction.description}</p>
-                                                    <p className="text-sm text-gray-500">{transaction.date}</p>
-                                                </div>
-                                                <span className="px-2 py-1 text-sm font-medium text-blue-700 bg-blue-100 rounded">
-                                                    ${transaction.amount}
-                                                </span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <button
-                                        className="w-full px-4 py-2 text-white transition-colors bg-blue-600 rounded hover:bg-blue-700"
-                                        onClick={() => setShowAllTransactions(true)}
-                                    >
-                                        View All Transactions
-                                    </button>
-                                </div> */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {/* User Info */}
+                            <div className="p-6 bg-white rounded-lg shadow">
+                                <h2 className="mb-4 text-xl font-semibold text-blue-700">User Information</h2>
+                                {renderUserInfo()}
                             </div>
 
-                            {/* <div className="space-y-8">
-                                {showAllTransactions && (
-                                    <div className="p-6 bg-white rounded-lg shadow">
-                                        <h2 className="mb-4 text-xl font-semibold text-blue-700">All Transactions</h2>
-                                        <div className="mb-4 space-y-4 overflow-y-auto max-h-96">
-                                            {allTransactions.map((transaction) => (
-                                                <div key={transaction.id} className="flex items-center justify-between py-2 border-b border-gray-200 last:border-b-0">
-                                                    <div>
-                                                        <p className="font-medium text-blue-700">{transaction.description}</p>
-                                                        <p className="text-sm text-gray-500">{transaction.date}</p>
-                                                    </div>
-                                                    <span className="px-2 py-1 text-sm font-medium text-blue-700 bg-blue-100 rounded">
-                                                        ${transaction.amount}
-                                                    </span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <div className="mt-6">
-                                            <h3 className="mb-2 text-lg font-semibold text-blue-700">Transaction History</h3>
-                                            <div className="h-64">
-                                                <ResponsiveContainer width="100%" height="100%">
-                                                    <BarChart data={allTransactions}>
-                                                        <CartesianGrid strokeDasharray="3 3" />
-                                                        <XAxis dataKey="date" />
-                                                        <YAxis />
-                                                        <Tooltip />
-                                                        <Bar dataKey="amount" fill="#0000FF" />
-                                                    </BarChart>
-                                                </ResponsiveContainer>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div> */}
+                            {/* Appointments Banner */}
+                            <div className="p-6 bg-white rounded-lg shadow">
+                                <h2 className="mb-4 text-xl font-semibold text-blue-700">Your Appointments</h2>
+                                <PatientAppointmentBanner appointments={appointmentData} userData={userData} />
+                            </div>
                         </div>
                     </div>
+
                 )}
             </main>
 

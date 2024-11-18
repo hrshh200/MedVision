@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Video, Pill, X } from 'lucide-react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { baseURL } from '../main';
 import toast from 'react-hot-toast';
 
-export const AppointmentBanner = ({ appointments, regNo }) => {
+export const AppointmentBanner = ({ appointments, regNo, userData }) => {
     const [showPrescribeModal, setShowPrescribeModal] = useState(false);
     const [selectedAppointment, setSelectedAppointment] = useState(null);
     const [medicines, setMedicines] = useState([]);
@@ -19,6 +19,17 @@ export const AppointmentBanner = ({ appointments, regNo }) => {
     const [joinedAppointments, setJoinedAppointments] = useState([]);
 
     const [prescribedAppointments, setPrescribedAppointments] = useState([]);
+
+    const [blockedNames, setBlockedNames] = useState([]);
+
+    useEffect(() => {
+        if (userData?.confirm) {
+            const blocked = userData.confirm.map((entry) => entry.name);
+            setBlockedNames(blocked);
+        } else {
+            setBlockedNames([]);
+        }
+    }, [userData]);
 
     const handleJoin = async (appointment) => {
         const videoLink = 'https://www.videosdk.live/prebuilt/demo';
@@ -86,47 +97,72 @@ export const AppointmentBanner = ({ appointments, regNo }) => {
         setShowPrescribeModal(false); // Close the modal after saving
     };
 
+    const logPrescriptionAction = async () => {
+        try {
+            // Sending the prescription to the backend
+            const response = await axios.post(`${baseURL}/confirmstatus`, {
+                regNo,
+                patientName: selectedAppointment?.patientName
+            });
+
+            if (response.status === 200) {
+                console.log('Confirm status updated successfully');
+            }
+        } catch (error) {
+            console.error('Error updating confirm status to the backend:', error);
+        }
+    };
+    
+
     return (
         <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6">Upcoming Appointments</h2>
 
             <div className="space-y-4">
-                {appointments?.map((appointment) => (
-                    <div key={appointment.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                        <div className="flex justify-between items-center">
-                            <div>
-                                <h3 className="font-semibold text-lg">{appointment.patientName}</h3>
-                                <p className="text-gray-600">
-                                    {appointment.date} at {appointment.slot}
-                                </p>
-                            </div>
-                            <div className="space-x-3">
-                                <button
-                                    onClick={() => handleJoin(appointment)}
-                                    className={`inline-flex items-center px-4 py-2 rounded-md transition-colors ${joinedAppointments.includes(appointment.id)
-                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                            : 'bg-green-500 text-white hover:bg-green-600'
+                {appointments?.map((appointment) => {
+                    const isBlocked = blockedNames.includes(appointment.patientName);
+                    const isJoined = joinedAppointments.includes(appointment.id);
+                    const isPrescribed = prescribedAppointments.includes(appointment.id);
+
+                    return (
+                        <div key={appointment.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                            <div className="flex justify-between items-center">
+                                <div>
+                                    <h3 className="font-semibold text-lg">{appointment.patientName}</h3>
+                                    <p className="text-gray-600">
+                                        {appointment.date} at {appointment.slot}
+                                    </p>
+                                </div>
+                                <div className="space-x-3">
+                                    <button
+                                        onClick={() => handleJoin(appointment)}
+                                        className={`inline-flex items-center px-4 py-2 rounded-md transition-colors ${
+                                            isJoined || isBlocked
+                                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                                : 'bg-green-500 text-white hover:bg-green-600'
                                         }`}
-                                    disabled={joinedAppointments.includes(appointment.id)}
-                                >
-                                    <Video className="w-4 h-4 mr-2" />
-                                    {joinedAppointments.includes(appointment.id) ? 'Joined' : 'Join'}
-                                </button>
-                                <button
-                                    onClick={() => handlePrescribe(appointment)}
-                                    className={`inline-flex items-center px-4 py-2 bg-yellow-400 text-gray-800 rounded-md hover:bg-yellow-500 transition-colors ${prescribedAppointments.includes(appointment.id)
-                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                            : ''
+                                        disabled={isJoined || isBlocked}
+                                    >
+                                        <Video className="w-4 h-4 mr-2" />
+                                        {isJoined ? 'Joined' : 'Join'}
+                                    </button>
+                                    <button
+                                        onClick={() => handlePrescribe(appointment)}
+                                        className={`inline-flex items-center px-4 py-2 bg-yellow-400 text-gray-800 rounded-md hover:bg-yellow-500 transition-colors ${
+                                            isPrescribed || isBlocked
+                                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                                : ''
                                         }`}
-                                    disabled={prescribedAppointments.includes(appointment.id)}
-                                >
-                                    <Pill className="w-4 h-4 mr-2" />
-                                    {prescribedAppointments.includes(appointment.id) ? 'Prescribed' : 'Prescribe'}
-                                </button>
+                                        disabled={isPrescribed || isBlocked}
+                                    >
+                                        <Pill className="w-4 h-4 mr-2" />
+                                        {isPrescribed ? 'Prescribed' : 'Prescribe'}
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
 
             {/* Prescribe Modal */}
@@ -234,7 +270,10 @@ export const AppointmentBanner = ({ appointments, regNo }) => {
                                     Cancel
                                 </button>
                                 <button
-                                    onClick={savePrescription}
+                                    onClick={() => {
+                                        savePrescription();
+                                        logPrescriptionAction();
+                                    }}
                                     className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                                 >
                                     Save Prescription
