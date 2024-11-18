@@ -33,7 +33,7 @@ const DoctorDashboard = ({ userData }) => {
                     {/* Appointments */}
                     <div className="min-h-screen bg-gray-50 p-8">
                         <div className="max-w-2xl mx-auto">
-                            <AppointmentBanner appointments={userData?.appointments} />
+                            <AppointmentBanner appointments={userData?.appointments} regNo = {userData?.regNo} />
                         </div>
                     </div>
                 </div>

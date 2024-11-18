@@ -1,69 +1,191 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, Clock, User } from "lucide-react";
+import { Calendar, Clock, User, Video, ExternalLink, Pill, ChevronDown, ChevronUp } from "lucide-react";
 import axios from "axios";
 import { baseURL } from "../main";
 
 export function PatientAppointmentBanner({ appointments }) {
-  const [appointmentDetails, setAppointmentDetails] = useState([]);
+    const [appointmentDetails, setAppointmentDetails] = useState([]);
+    const [expandedAppointment, setExpandedAppointment] = useState(null);
+    const [userData, setUserData] = useState(null);
 
-  useEffect(() => {
-    const fetchPatientNames = async () => {
-      try {
-        // Extract regNos from appointments
-        const regNos = appointments.map((appointment) => appointment.regNo);
-
-        // Send the array of regNos to the backend
-        const response = await axios.post(`${baseURL}/getnames`, { regNos });
-
-        // Create a map from the response, where the key is regNo and value is name
-        const nameMap = response.data.reduce((map, doctor) => {
-          map[doctor.regNo] = doctor.name;
-          return map;
-        }, {});
-
-        // Combine appointments data with fetched names based on regNo
-        const combinedData = appointments.map((appointment) => ({
-          ...appointment,
-          name: nameMap[appointment.regNo] || "Unknown", // Match regNo and get the name
-        }));
-
-        setAppointmentDetails(combinedData);
-      } catch (error) {
-        console.error("Error fetching patient names:", error);
-      }
+    const fetchDataFromApi = async () => {
+        try {
+            const token = localStorage.getItem('medVisionToken');
+            const response = await axios.get(`${baseURL}/fetchdata`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const fetchedData = response.data.userData;
+            setUserData(fetchedData);
+            localStorage.setItem('userData', JSON.stringify(fetchedData));
+        } catch (error) {
+            console.error("Error fetching data:", error.message);
+        }
     };
 
-    if (appointments?.length) fetchPatientNames();
-  }, [appointments]);
+    useEffect(() => {
+        fetchDataFromApi();
+    }, []);
 
-  return (
-    <div className="border-2 border-red-500 p-6 bg-white rounded-lg shadow-lg">
-      <div className="flex items-center gap-2 mb-4">
-        <Calendar className="w-5 h-5 text-blue-600" />
-        <h2 className="text-xl font-semibold text-blue-700">Booked Appointments</h2>
-      </div>
-      
-      <ul className="space-y-3">
-        {appointmentDetails.map((appointment, index) => (
-          <li 
-            key={index}
-            className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors border border-gray-100"
-          >
-            <div className="flex items-center gap-3">
-              <User className="w-4 h-4 text-gray-500" />
-              <span className="font-medium text-gray-800">{appointment.name}</span>
+    useEffect(() => {
+        const fetchPatientNames = async () => {
+            try {
+                const regNos = appointments.map((appointment) => appointment.regNo);
+                const response = await axios.post(`${baseURL}/getnames`, { regNos });
+                const nameMap = response.data.reduce((map, doctor) => {
+                    map[doctor.regNo] = doctor.name;
+                    return map;
+                }, {});
+
+                // Create maps for video links and medicines by regNo
+                const linkMap = (userData?.link || []).reduce((map, linkItem) => {
+                    map[linkItem.regNo] = linkItem.link;
+                    return map;
+                }, {});
+
+                // Handle the nested array structure of medicines
+                const medicineMap = {};
+                if (userData?.medicines) {
+                    userData.medicines.forEach((medicineGroup, index) => {
+                        if (Array.isArray(medicineGroup) && medicineGroup.length > 0) {
+                            const regNo = medicineGroup[0].regNo;
+                            if (!medicineMap[regNo]) {
+                                medicineMap[regNo] = [];
+                            }
+                            medicineMap[regNo].push(...medicineGroup);
+                        }
+                    });
+                }
+
+                // Combine all data
+                const combinedData = appointments.map((appointment) => ({
+                    ...appointment,
+                    name: nameMap[appointment.regNo] || "Unknown",
+                    videoLink: linkMap[appointment.regNo] || null,
+                    medicines: medicineMap[appointment.regNo] || []
+                }));
+
+                setAppointmentDetails(combinedData);
+            } catch (error) {
+                console.error("Error fetching patient names:", error);
+            }
+        };
+
+        if (appointments?.length) fetchPatientNames();
+    }, [appointments, userData]);
+
+    const handleJoinMeeting = (videoLink) => {
+        window.open(videoLink, '_blank');
+    };
+
+    const toggleExpand = (index) => {
+        setExpandedAppointment(expandedAppointment === index ? null : index);
+    };
+
+    return (
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-6">
+                <div className="flex items-center gap-2">
+                    <Calendar className="w-6 h-6 text-blue-600" />
+                    <h2 className="text-2xl font-semibold text-gray-800">Your Appointments</h2>
+                </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-gray-400" />
-              <button 
-                className="px-3 py-1 bg-blue-500 text-white rounded-full text-sm hover:bg-blue-600 transition-all"
-              >
-                {appointment.slot || "No Slot Available"}
-              </button>
+
+            <div className="p-6">
+                <div className="space-y-4">
+                    {appointmentDetails.map((appointment, index) => (
+                        <div
+                            key={index}
+                            className="bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-200"
+                        >
+                            <div className="p-4">
+                                <div className="flex items-center justify-between flex-wrap gap-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="bg-blue-100 p-2 rounded-full">
+                                            <User className="w-5 h-5 text-blue-600" />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-gray-800">
+                                                {appointment.name}
+                                            </h3>
+                                            <div className="flex items-center gap-2 text-sm text-gray-500">
+                                                <Clock className="w-4 h-4" />
+                                                <span>{appointment.slot || "No Slot Available"}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-3">
+                                        {appointment.videoLink ? (
+                                            <button
+                                                onClick={() => handleJoinMeeting(appointment.videoLink)}
+                                                className="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors gap-2"
+                                            >
+                                                <Video className="w-4 h-4" />
+                                                Join Meeting
+                                                <ExternalLink className="w-3 h-3 ml-1" />
+                                            </button>
+                                        ) : (
+                                            <span className="text-sm text-gray-500 italic">
+                                                Meeting link not available yet
+                                            </span>
+                                        )}
+                                        
+                                        {appointment.medicines?.length > 0 && (
+                                            <button
+                                                onClick={() => toggleExpand(index)}
+                                                className="inline-flex items-center px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
+                                            >
+                                                <Pill className="w-4 h-4 mr-1" />
+                                                Medicines
+                                                {expandedAppointment === index ? 
+                                                    <ChevronUp className="w-4 h-4 ml-1" /> : 
+                                                    <ChevronDown className="w-4 h-4 ml-1" />
+                                                }
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Medicines Section */}
+                            {expandedAppointment === index && appointment.medicines?.length > 0 && (
+                                <div className="border-t border-gray-100 bg-gray-50 p-4">
+                                    <h4 className="text-sm font-medium text-gray-700 mb-3">Prescribed Medicines</h4>
+                                    <div className="space-y-3">
+                                        {appointment.medicines.map((medicine, medIndex) => (
+                                            <div 
+                                                key={medicine._id || medIndex}
+                                                className="bg-white p-3 rounded-md border border-gray-200"
+                                            >
+                                                <div className="flex justify-between items-start">
+                                                    <div>
+                                                        <h5 className="font-medium text-gray-800">{medicine.name}</h5>
+                                                        <span className="inline-block px-2 py-1 text-xs rounded bg-blue-100 text-blue-700 mt-1">
+                                                            {medicine.type}
+                                                        </span>
+                                                        <p className="text-sm text-gray-600 mt-2">
+                                                            {medicine.description}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+
+                    {appointmentDetails.length === 0 && (
+                        <div className="text-center py-8 text-gray-500">
+                            <Calendar className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+                            <p className="text-lg">No appointments scheduled</p>
+                        </div>
+                    )}
+                </div>
             </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+        </div>
+    );
 }

@@ -19,18 +19,18 @@ const Dashboard = () => {
     const [appointmentData, setAppointmentData] = useState([]);
     const navigate = useNavigate();
 
-    const allTransactions = [
-        { id: 1, date: "2024-11-01", amount: 120, description: "Consultation Fee" },
-        { id: 2, date: "2024-11-02", amount: 80, description: "Prescription Purchase" },
-        { id: 3, date: "2024-11-05", amount: 150, description: "Lab Tests" },
-        { id: 4, date: "2024-11-10", amount: 200, description: "Specialist Consultation" },
-        { id: 5, date: "2024-11-15", amount: 90, description: "Follow-up Appointment" },
-        { id: 6, date: "2024-11-20", amount: 60, description: "Medication Refill" },
-        { id: 7, date: "2024-11-25", amount: 180, description: "Physical Therapy Session" },
-        { id: 8, date: "2024-11-30", amount: 110, description: "Dental Checkup" },
-    ];
+    // const allTransactions = [
+    //     { id: 1, date: "2024-11-01", amount: 120, description: "Consultation Fee" },
+    //     { id: 2, date: "2024-11-02", amount: 80, description: "Prescription Purchase" },
+    //     { id: 3, date: "2024-11-05", amount: 150, description: "Lab Tests" },
+    //     { id: 4, date: "2024-11-10", amount: 200, description: "Specialist Consultation" },
+    //     { id: 5, date: "2024-11-15", amount: 90, description: "Follow-up Appointment" },
+    //     { id: 6, date: "2024-11-20", amount: 60, description: "Medication Refill" },
+    //     { id: 7, date: "2024-11-25", amount: 180, description: "Physical Therapy Session" },
+    //     { id: 8, date: "2024-11-30", amount: 110, description: "Dental Checkup" },
+    // ];
 
-    const recentTransactions = allTransactions.slice(0, 4);
+    // const recentTransactions = allTransactions.slice(0, 4);
 
 
     const fetchDataFromApi = async () => {
@@ -211,7 +211,7 @@ const Dashboard = () => {
                                 )}
 
                                 {/* Recent Transactions */}
-                                <div className="p-6 bg-white rounded-lg shadow">
+                                {/* <div className="p-6 bg-white rounded-lg shadow">
                                     <h2 className="mb-4 text-xl font-semibold text-blue-700">Recent Transactions</h2>
                                     <div className="mb-4 space-y-4">
                                         {recentTransactions.map((transaction) => (
@@ -232,10 +232,10 @@ const Dashboard = () => {
                                     >
                                         View All Transactions
                                     </button>
-                                </div>
+                                </div> */}
                             </div>
 
-                            <div className="space-y-8">
+                            {/* <div className="space-y-8">
                                 {showAllTransactions && (
                                     <div className="p-6 bg-white rounded-lg shadow">
                                         <h2 className="mb-4 text-xl font-semibold text-blue-700">All Transactions</h2>
@@ -268,7 +268,7 @@ const Dashboard = () => {
                                         </div>
                                     </div>
                                 )}
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 )}

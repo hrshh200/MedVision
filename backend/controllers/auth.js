@@ -449,8 +449,85 @@ const getnames = async (req, res) => {
     }
 };
 
+const linkgiven = async (req, res) => {
+    const { regNo, videoLink, patientName } = req.body;
+
+    // Check if the required fields are provided
+    if (!videoLink || !patientName || !regNo) {
+        return res.status(400).json({ success: false, message: 'Missing required fields' });
+    }
+
+    try {
+        // Find the patient by name
+        const user = await User.findOne({ name: patientName });
+
+        // Check if the user exists
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Patient not found' });
+        }
+
+        // Check if the regNo and link are not null/undefined
+        if (typeof regNo !== 'number' || typeof videoLink !== 'string') {
+            return res.status(400).json({ success: false, message: 'Invalid data type for regNo or videoLink' });
+        }
+
+        // Update the `link` field by appending the new video link and regNo
+        user.link.push({ link: videoLink, regNo: regNo });
+
+        // Save the updated user
+        await user.save();
+
+        // Send a success response
+        return res.status(200).json({ success: true, message: 'Video link updated successfully' });
+    } catch (error) {
+        console.error('Error updating video link:', error);
+        return res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+
+const uploadpres = async (req, res) => {
+    const { medicines, regNo, patientName } = req.body;
+
+    // Check if required fields are present
+    if (!medicines || !patientName || !regNo) {
+        return res.status(400).json({ success: false, message: 'Missing required fields' });
+    }
+
+    try {
+        // Search for the patient in the User Schema
+        const user = await User.findOne({ name: patientName });
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Patient not found' });
+        }
+
+        // Iterate over the medicines array and add regNo to each medicine entry
+        const medicinesWithRegNo = medicines.map(medicine => ({
+            ...medicine,
+            regNo: regNo  // Add regNo to each medicine object
+        }));
+
+        // Push the medicines array (with regNo included) to the user.medicines field
+        user.medicines.push(...medicinesWithRegNo);
+
+        // Save the updated user
+        await user.save();
+
+        return res.status(200).json({ 
+            success: true, 
+            message: 'Prescription uploaded successfully', 
+            user 
+        });
+    } catch (error) {
+        console.error('Error uploading prescription:', error);
+        return res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+
 
 module.exports = {
     signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus
-    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames
+    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres
 };
