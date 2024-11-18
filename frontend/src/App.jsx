@@ -15,6 +15,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import DiseasePrediction from './pages/DiseasePrediction';
 import BookingPage from './pages/BookingPage';
 import ConfirmationPage from './pages/ConfirmationPage';
+import HeartPrediction from './pages/HeartPrediction';
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
           <Route path='admin' element={<AdminLogin />} />
           <Route path="/book/:id" element={<BookingPage />} />
           <Route path="/confirm/:id" element={<ConfirmationPage />} />
+          <Route path="/heart-disease" element={<HeartPrediction />} />
         </Route>
       </Routes>
     </>

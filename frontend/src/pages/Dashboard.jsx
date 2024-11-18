@@ -68,7 +68,7 @@ const Dashboard = () => {
             { icon: FaHome, text: "Home", onClick: () => navigate('/'), disabled: false },
             { icon: FaPerson, text: "Profile", onClick: () => navigate('/doctorProfile'), disabled: false },
             { icon: FaUserMd, text: "Assigned Patients", onClick: () => { }, disabled: (userData?.status === 'pending' || !userData.status) },
-            { icon: FaVideo, text: "Virtual Video Call", onClick: () => navigate('/virtual-video-call'), disabled: (userData?.status === 'pending' || !userData.status) },
+            { icon: FaUserMd, text: "Check for diseases", onClick: () => navigate('/disease') }
         ]
         : [
             { icon: FaHome, text: "Home", onClick: () => navigate('/') },
