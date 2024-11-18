@@ -35,6 +35,7 @@ const doctorSchema = new mongoose.Schema({
   status:{
     type:String
   },
+  appointments: [{ patientName: String, slot: String }],
   email: {
     type: String,
     //   require: true,

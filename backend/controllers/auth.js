@@ -85,11 +85,11 @@ const signIn = async (req, res) => {
         let user;
         let role;
         // Find the user by email
-        if(isDoctor === false){
+        if (isDoctor === false) {
             user = await User.findOne({ email });
             role = 'User';
         }
-        else{
+        else {
             user = await Doctor.findOne({ email });
             role = 'Doctor';
         }
@@ -147,31 +147,31 @@ const signIn = async (req, res) => {
 
 const UpdateDoctorProfile = async (req, res) => {
     try {
-      const { regNo, address, fees, hospital, specialist, experience, location, assign, status  } = req.body;
-  
-      // Find and update the doctor's profile based on the registration number
-      const updatedDoctor = await Doctor.findOneAndUpdate(
-        { regNo }, 
-        { address, fees, hospital, specialist, experience, location, assign, status }, 
-        { new: true, runValidators: true } // Options: return the updated document and run validation
-      );
-  
-      if (!updatedDoctor) {
-        return res.status(404).json({ message: 'Doctor not found' });
-      }
-  
-      res.status(200).json({
-        message: 'Doctor profile updated successfully',
-        doctor: updatedDoctor,
-      });
+        const { regNo, address, fees, hospital, specialist, experience, location, assign, status } = req.body;
+
+        // Find and update the doctor's profile based on the registration number
+        const updatedDoctor = await Doctor.findOneAndUpdate(
+            { regNo },
+            { address, fees, hospital, specialist, experience, location, assign, status },
+            { new: true, runValidators: true } // Options: return the updated document and run validation
+        );
+
+        if (!updatedDoctor) {
+            return res.status(404).json({ message: 'Doctor not found' });
+        }
+
+        res.status(200).json({
+            message: 'Doctor profile updated successfully',
+            doctor: updatedDoctor,
+        });
     } catch (error) {
-      res.status(500).json({ message: 'Error updating doctor profile', error });
+        res.status(500).json({ message: 'Error updating doctor profile', error });
     }
-  };
-  
+};
+
 
 const fetchData = async (req, res) => {
-    
+
     try {
         // Get token from the Authorization header
         const JWT_SECRET = process.env.JWT_SECRET;
@@ -227,7 +227,7 @@ const adminsignIn = async (req, res) => {
         }
 
         const user = await Admin.findOne({ email });
-        
+
         if (!user) {
             return res.status(StatusCodes.BAD_REQUEST).json({
                 message: "User does not exist..!",
@@ -265,7 +265,7 @@ const adminsignIn = async (req, res) => {
 };
 
 const AdminfetchData = async (req, res) => {
-    
+
     try {
         // Get token from the Authorization header
         const JWT_SECRET = process.env.JWT_SECRET;
@@ -344,9 +344,9 @@ const updatedoctorstatus = async (req, res) => {
             return res.status(404).json({ message: "Doctor not found" });
         }
 
-        res.status(200).json({ 
-            message: "Doctor accepted successfully", 
-            doctor: updatedDoctor 
+        res.status(200).json({
+            message: "Doctor accepted successfully",
+            doctor: updatedDoctor
         });
     } catch (error) {
         console.error("Error updating doctor:", error);
@@ -360,7 +360,7 @@ const updateavailability = async (req, res) => {
 
         // Find doctor by regno and update the available field
         const updatedDoctor = await Doctor.findOneAndUpdate(
-            { regNo : regno }, // Match the regno
+            { regNo: regno }, // Match the regno
             { $set: { available: slots } }, // Update the available field
             { new: true } // Return the updated document
         );
@@ -401,7 +401,56 @@ const fetchavailableslots = async (req, res) => {
     }
 };
 
+const confirmslot = async (req, res) => {
+    const { regNo, name, slot } = req.body;
 
-module.exports = { signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus
-    ,fetchupdateddoctors, updateavailability,fetchavailableslots
- };
+    try {
+        const doctor = await Doctor.findOne({ regNo });
+        const user = await User.findOne({ name });
+
+
+        if (!doctor) return res.status(404).json({ success: false, message: "Doctor not found" });
+        if (!user) return res.status(404).json({ success: false, message: "User not found" });
+
+
+        const slotIndex = doctor.available.indexOf(slot);
+        if (slotIndex === -1) {
+            return res.status(400).json({ success: false, message: "Slot not available" });
+        }
+
+        // Remove the slot from the available slots
+        doctor.available.splice(slotIndex, 1);
+
+        doctor.appointments.push({ patientName: name, slot });
+        user.appointments.push({ regNo, slot });
+
+        await doctor.save();
+        await user.save();
+
+        res.status(200).json({ success: true, message: "Slot confirmed successfully" });
+    } catch (error) {
+        console.error("Error:", error.message);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+};
+
+const getnames = async (req, res) => {
+    const regNos = req.body.regNos;
+    try {
+        // Fetch names based on regNo from the database
+        console.log(regNos); // Logs regNos to check what is being received
+        const doctors = await Doctor.find({ regNo: { $in: regNos } }, 'regNo name');
+        
+        // Send the response back to the client
+        res.status(200).json(doctors);  // Use res.json to send the data as JSON
+    } catch (error) {
+        console.error("Error:", error.message);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+};
+
+
+module.exports = {
+    signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus
+    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames
+};

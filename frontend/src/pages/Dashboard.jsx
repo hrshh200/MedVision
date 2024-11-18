@@ -6,6 +6,7 @@ import { LineChart, Line, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, R
 import { baseURL } from '../main';
 import { FaPerson } from 'react-icons/fa6';
 import DoctorDashboard from './DoctorDashboard';
+import { PatientAppointmentBanner } from '../components/PatientAppointmentBanner';
 
 
 // const baseURL = 'https://api.example.com'; // Replace with your actual API base URL
@@ -15,6 +16,7 @@ const Dashboard = () => {
     const [showAllTransactions, setShowAllTransactions] = useState(false);
     const [showRecentTransactions, setShowRecentTransactions] = useState(false);
     const [status, setStatus] = useState(true);
+    const [appointmentData, setAppointmentData] = useState([]);
     const navigate = useNavigate();
 
     const allTransactions = [
@@ -30,13 +32,6 @@ const Dashboard = () => {
 
     const recentTransactions = allTransactions.slice(0, 4);
 
-    const healthData = [
-        { date: "2024-10-01", value: 72 },
-        { date: "2024-10-15", value: 75 },
-        { date: "2024-11-01", value: 70 },
-        { date: "2024-11-15", value: 73 },
-        { date: "2024-12-01", value: 71 },
-    ];
 
     const fetchDataFromApi = async () => {
         try {
@@ -47,15 +42,20 @@ const Dashboard = () => {
                 },
             });
             setUserData(response.data.userData);
-            localStorage.setItem('userData', JSON.stringify(response.data.userData));
         } catch (error) {
             console.error("Error fetching data:", error.message);
         }
     };
-
+    
     useEffect(() => {
         fetchDataFromApi();
     }, []);
+    
+    useEffect(() => {
+        if (userData) {
+            setAppointmentData(userData.appointments);
+        }
+    }, [userData]);
 
     // useEffect(() => {
     //     if (userData) {
@@ -67,7 +67,6 @@ const Dashboard = () => {
         ? [
             { icon: FaHome, text: "Home", onClick: () => navigate('/'), disabled: false },
             { icon: FaPerson, text: "Profile", onClick: () => navigate('/doctorProfile'), disabled: false },
-            { icon: FaUserMd, text: "Assigned Patients", onClick: () => { }, disabled: (userData?.status === 'pending' || !userData.status) },
             { icon: FaUserMd, text: "Assigned Patients", onClick: () => { }, disabled: (userData?.status === 'pending' || !userData.status) },
             { icon: FaVideo, text: "Virtual Video Call", onClick: () => navigate('/virtual-video-call'), disabled: (userData?.status === 'pending' || !userData.status) },
         ]
@@ -170,7 +169,7 @@ const Dashboard = () => {
             {/* Main Content Area */}
             <main className="flex-1 p-8">
                 {userData?.regNo && userData?.status === "accepted" && (
-                    <DoctorDashboard userData={userData}/>
+                    <DoctorDashboard userData={userData} />
                 )}
                 {userData?.regNo && userData?.status === "pending" && (
                     <div className="flex items-center justify-center h-24">
@@ -203,39 +202,12 @@ const Dashboard = () => {
                                 </div>
 
                                 {/* Health Data Graph (for patients) or Appointments (for doctors) */}
-                                {!userData?.regNo ? (
-                                    <div className="p-6 bg-white rounded-lg shadow">
-                                        <h2 className="mb-4 text-xl font-semibold text-blue-700">Health Data Over Time</h2>
-                                        <div className="h-64">
-                                            <ResponsiveContainer width="100%" height="100%">
-                                                <LineChart data={healthData}>
-                                                    <Line type="monotone" dataKey="value" stroke="blue" strokeWidth={2} />
-                                                    <CartesianGrid stroke="#E5E7EB" />
-                                                    <XAxis dataKey="date" />
-                                                    <YAxis />
-                                                    <Tooltip />
-                                                </LineChart>
-                                            </ResponsiveContainer>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="p-6 bg-white rounded-lg shadow">
-                                        <h2 className="mb-4 text-xl font-semibold text-blue-700">Upcoming Appointments</h2>
-                                        <ul className="space-y-2">
-                                            <li className="flex items-center justify-between">
-                                                <span>John Doe</span>
-                                                <span className="text-gray-500">2024-11-05 10:00 AM</span>
-                                            </li>
-                                            <li className="flex items-center justify-between">
-                                                <span>Jane Smith</span>
-                                                <span className="text-gray-500">2024-11-05 11:30 AM</span>
-                                            </li>
-                                            <li className="flex items-center justify-between">
-                                                <span>Bob Johnson</span>
-                                                <span className="text-gray-500">2024-11-05 2:00 PM</span>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                {!userData?.regNo && (
+                                      <div className=" bg-gray-50 p-1">
+                                      <div>
+                                          <PatientAppointmentBanner appointments={appointmentData} />
+                                      </div>
+                                  </div>
                                 )}
 
                                 {/* Recent Transactions */}

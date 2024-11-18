@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Calendar, Clock, ChevronLeft } from 'lucide-react';
 import axios from 'axios';
 import { baseURL } from '../main';
+import toast from 'react-hot-toast';
 
 const BookingPage = () => {
   const { id } = useParams();
@@ -11,12 +12,14 @@ const BookingPage = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedSlot, setSelectedSlot] = useState('');
   const [availableslots, setSlotsAvailable] = useState([]);
+  const [userData, setUserData] = useState([]);
 
   // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split('T')[0];
 
   // Automatically set today's date as selected
   useEffect(() => {
+    fetchDataFromApi();
     setSelectedDate(today);
     fetchAvailableSlots(id); // Fetch available slots for today
   }, [id]);
@@ -27,7 +30,6 @@ const BookingPage = () => {
       const response = await axios.post(`${baseURL}/fetchslots`, { regno });
       if (response.data.success) {
         setSlotsAvailable(response.data.available);
-        console.log(response);
       } else {
         console.error(response.data.message);
       }
@@ -37,13 +39,50 @@ const BookingPage = () => {
   };
 
   // Handling confirmation page
-  const handleConfirm = () => {
-    if (selectedDate && selectedSlot) {
-      navigate(`/confirm/${id}`, {
-        state: { date: selectedDate, time: selectedSlot },
-      });
+  const handleConfirm = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        regNo: id,
+        name: userData?.name, // Explicitly define the key
+        slot: selectedSlot,   // Explicitly define the key
+      };
+      const response = await axios.post(`${baseURL}/confirmslots`, payload);
+  
+      if (response.data.success) {
+        toast.success('Slots confirmed for today!');
+        console.log(response);
+      } else {
+        toast.error('Error confirming slots for today!');
+        console.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error confirming slots:", error.message);
     }
+  
+    // if (selectedDate && selectedSlot) {
+    //   navigate(`/confirm/${id}`, {
+    //     state: { date: selectedDate, time: selectedSlot },
+    //   });
+    // }
   };
+  
+
+  const fetchDataFromApi = async () => {
+    try {
+        const token = localStorage.getItem('medVisionToken');
+        const response = await axios.get(`${baseURL}/fetchdata`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const fetchedData = response.data.userData;
+        setUserData(fetchedData);
+        localStorage.setItem('userData', JSON.stringify(fetchedData));
+    } catch (error) {
+        console.error("Error fetching data:", error.message);
+    }
+};
 
   // Time slots
   const timeSlots = [

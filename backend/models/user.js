@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     require: true
  },
+ appointments: [{ regNo: String, slot: String }],
   hash_password: {
      type: String,
      require: true
