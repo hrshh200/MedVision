@@ -580,7 +580,27 @@ const UpdatePatientProfile = async (req, res) => {
     }
 };
 
+const fetchDoctors = async (req, res) => {
+    const { name, location } = req.body;
+
+    try {
+        // Query to find a doctor with the given name and location
+        console.log(name, location);
+        const doctorExists = await Doctor.findOne({ name, address: location });
+
+        if (doctorExists) {
+            res.status(200).json({ success: true, message: 'Doctor found', doctor: doctorExists });
+        } else {
+            res.status(404).json({ success: false, message: 'No doctor found with the given name and location' });
+        }
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+
 module.exports = {
     signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus
-    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile
+    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors
 };

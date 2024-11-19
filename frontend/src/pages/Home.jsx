@@ -13,6 +13,9 @@ import feedback from '../assets/feedback.png';
 import { FaUserCircle } from "react-icons/fa";
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { baseURL } from '../main';
+import axios from 'axios';
 
 const Home = () => {
 
@@ -23,12 +26,11 @@ const Home = () => {
   });
   // const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
-    const { name, value } = e.target;
     setFormData({
-      ...formData,
-      [name]: value,
+        ...formData,
+        [e.target.name]: e.target.value,
     });
-  };
+};
 
   const handleClickSearch = () => {
     navigate('/searchdoctor');
@@ -50,11 +52,22 @@ const Home = () => {
     console.log("Clicked on predicted ML");
   }
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    //calling the api for the signup form to be sent to the database
-    console.log("Doctor name and location")
-  }
+  const submitHandler = async () => {
+    event.preventDefault(e);
+    try {
+        const response = await axios.post(`${baseURL}/fetchdoctors`, formData);
+        if(response === 200){
+          console.log("Data fetched successfully:", response.data);
+          toast.success('Doctor Found!')
+        }
+        else{
+          toast.error('Error founding doctor');
+        }
+    } catch (error) {
+        console.error("Error fetching data:", error.message);
+    }
+};
+
 
   return (
     <>
