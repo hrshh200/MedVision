@@ -16,6 +16,8 @@ import DiseasePrediction from './pages/DiseasePrediction';
 import BookingPage from './pages/BookingPage';
 import ConfirmationPage from './pages/ConfirmationPage';
 import HeartPrediction from './pages/HeartPrediction';
+import PatientProfile from './pages/PatientProfile';
+import EmergencyCare from './pages/EmergencyCare';
 
 
 function App() {
@@ -33,10 +35,12 @@ function App() {
           <Route path='admindashboard' element={<AdminDashboard />} />
           <Route path='onlinepharmacy' element={<OnlinePharmacy />} />
           <Route path='doctorProfile' element={<DoctorProfile />} />
+          <Route path='patientProfile' element={<PatientProfile />} />
           <Route path='admin' element={<AdminLogin />} />
           <Route path="/book/:id" element={<BookingPage />} />
           <Route path="/confirm/:id" element={<ConfirmationPage />} />
           <Route path="/heart-disease" element={<HeartPrediction />} />
+          <Route path="/emergencyguidelines" element={<EmergencyCare />} />
         </Route>
       </Routes>
     </>

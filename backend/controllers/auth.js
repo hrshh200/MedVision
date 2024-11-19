@@ -531,7 +531,6 @@ const confirmstatus = async (req, res) => {
     // Check if the required fields are provided
     try {   
         // Find the patient by name
-        console.log(req.body);
         const user = await User.findOne({ name: patientName });
         const doctor = await Doctor.findOne( { regNo: regNo });
 
@@ -557,8 +556,31 @@ const confirmstatus = async (req, res) => {
     }
 };
 
+const UpdatePatientProfile = async (req, res) => {
+    try {
+        const { name, address, mobile, weight, dob, height, sex, bloodgroup } = req.body;
+
+        // Find and update the doctor's profile based on the registration number
+        const updatedPatient = await User.findOneAndUpdate(
+            { name },
+            { address, mobile, weight, dob, height, sex, bloodgroup },
+            { new: true, runValidators: true } // Options: return the updated document and run validation
+        );
+
+        if (!updatedPatient) {
+            return res.status(404).json({ message: 'Doctor not found' });
+        }
+
+        res.status(200).json({
+            message: 'Patient profile updated successfully',
+            user: updatedPatient,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating patient profile', error });
+    }
+};
 
 module.exports = {
     signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus
-    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus
+    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile
 };

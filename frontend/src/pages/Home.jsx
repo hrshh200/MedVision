@@ -40,6 +40,16 @@ const Home = () => {
     console.log("Clicked on Online Pharmacy");
   }
 
+  const handleMLPharmacy = () => {
+    navigate('/disease');
+    console.log("Clicked on predicted ML");
+  }
+
+  const handleEmergencyPharmacy = () => {
+    navigate('/emergencyguidelines');
+    console.log("Clicked on predicted ML");
+  }
+
   const submitHandler = async (e) => {
     e.preventDefault();
     //calling the api for the signup form to be sent to the database
@@ -137,13 +147,13 @@ const Home = () => {
                 <p className='text-[#7D7987] text-[.9rem]'>Free consultation with our trusted doctors and get the best recomendations</p>
               </div>
               {/* Details info */}
-              <div className='bg-[#FFFFFF] w-fit  max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
+              <div onClick={handleMLPharmacy} className='bg-[#FFFFFF] w-fit  max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
                 <img src={info} alt="info" className='h-[80px] aspect-auto' />
-                <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>Details info</p>
-                <p className='text-[#7D7987] text-[.9rem]'>Free consultation with our trusted doctors and get the best recomendations</p>
+                <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>Predict with ML</p>
+                <p className='text-[#7D7987] text-[.9rem]'>We have many ML models traied to predict various diseases</p>
               </div>
               {/* Details info */}
-              <div className='bg-[#FFFFFF] w-fit  max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
+              <div onClick={handleEmergencyPharmacy} className='bg-[#FFFFFF] w-fit  max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
                 <img src={emergency} alt="emergency" className='h-[80px] aspect-auto' />
                 <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>Emergency care</p>
                 <p className='text-[#7D7987] text-[.9rem]'>You can get 24/7 urgent care for yourself or your children and your lovely family</p>

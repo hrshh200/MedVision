@@ -72,7 +72,8 @@ const Dashboard = () => {
         ]
         : [
             { icon: FaHome, text: "Home", onClick: () => navigate('/') },
-            { icon: FaNotesMedical, text: "Health Data Records", onClick: () => { } },
+            // { icon: FaNotesMedical, text: "Health Data Records", onClick: () => { } },
+            { icon: FaPerson, text: "Profile", onClick: () => navigate('/patientProfile'), disabled: false },
             { icon: FaUserMd, text: "Book Appointments", onClick: () => navigate('/searchdoctor') },
             { icon: FaFilePrescription, text: "Search Medicine", onClick: () => navigate('/onlinepharmacy') },
             { icon: FaHistory, text: "Recent Transactions", onClick: () => setShowRecentTransactions(true) },
@@ -122,11 +123,11 @@ const Dashboard = () => {
                     </div>
                     <div className="flex items-center space-x-2">
                         <FaPhone className="text-blue-600" />
-                        <span>{userData?.phone || '+91 9020326676'}</span>
+                        <span>{userData?.mobile || '+91 9020326676'}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                         <FaCalendar className="text-blue-600" />
-                        <span>DOB: {userData?.dateOfBirth || '1990-01-01'}</span>
+                        <span>DOB: {userData?.dob || '1990-01-01'}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                         <FaWeight className="text-blue-600" />
@@ -134,7 +135,7 @@ const Dashboard = () => {
                     </div>
                     <div className="flex items-center space-x-2">
                         <FaRulerVertical className="text-blue-600" />
-                        <span>Height: {userData?.height || '175'} cm</span>
+                        <span>Height: {userData?.height || '175'} foot</span>
                     </div>
                     <div className="flex items-center space-x-2">
                         <FaMapMarkerAlt className="text-blue-600" />

@@ -11,6 +11,41 @@ const userSchema = new mongoose.Schema({
       require: true,
       unique: true,
    },
+   address: {
+      type: String,
+      require: true,
+      unique: true,
+   },
+   mobile: {
+      type: Number,
+      require: true,
+      unique: true,
+   },
+   weight: {
+      type: Number,
+      require: true,
+      unique: true,
+   },
+   dob: {
+      type: String,
+      require: true,
+      unique: true,
+   },
+   height: {
+      type: Number,
+      require: true,
+      unique: true,
+   },
+   sex: {
+      type: String,
+      require: true,
+      unique: true,
+   },
+   bloodgroup: {
+      type: String,
+      require: true,
+      unique: true,
+   },
    password: {
       type: String,
       require: true
@@ -22,13 +57,13 @@ const userSchema = new mongoose.Schema({
    },
    confirm: {
       type: [
-          {
-              confirm: { type: Boolean, required: true },
-              regNo: { type: Number, required: true }
-          }
+         {
+            confirm: { type: Boolean, required: true },
+            regNo: { type: Number, required: true }
+         }
       ],
       default: []
-  },
+   },
    link: [
       {
          link: { type: String, required: true }, // URL of the link

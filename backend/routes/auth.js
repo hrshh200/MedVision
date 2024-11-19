@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { signUp, signIn, fetchData, AdminfetchData, UpdateDoctorProfile, adminsignIn, doctorListAssigned, updatedoctorstatus,fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus } = require("../controllers/auth");
+const { signUp, signIn, fetchData, AdminfetchData, UpdateDoctorProfile, adminsignIn, doctorListAssigned, updatedoctorstatus,fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile } = require("../controllers/auth");
 
 // Define routes for authentication
 router.post("/login", signIn);
 router.post("/signup", signUp);
 router.post("/profile", UpdateDoctorProfile);
+router.post("/patientprofile", UpdatePatientProfile);
 router.post("/updateslots", updateavailability);
 router.post("/admin", adminsignIn);
 router.get("/fetchdata", fetchData);
