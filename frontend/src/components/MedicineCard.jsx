@@ -1,7 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Pill, Package, ShoppingCart } from 'lucide-react';
 
 const MedicineCard = ({ name, manufacturer, dosage, price, stock, type, onAddToCart }) => {
+
+  const [amountbutton, setamountButton] = useState(true);
+  const [medcount, setMedCount] = useState(0);
+
+  const addmedicine = () => {
+    setamountButton(false);
+    setMedCount(medcount + 1);
+  }
+
+  const amountincrease = () => {
+    setMedCount(medcount + 1);
+  }
+
+  const amountdecrease = () => {
+    setMedCount(medcount - 1);
+  }
+
   return (
     <div className="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow w-full">
       <div className="flex flex-col">
@@ -20,18 +37,64 @@ const MedicineCard = ({ name, manufacturer, dosage, price, stock, type, onAddToC
             {stock > 0 ? 'In Stock' : 'Out of Stock'}
           </div>
         </div>
-        <button
-          onClick={stock > 0 ? onAddToCart : undefined}
-          disabled={stock === 0}
-          className={`mt-3 w-full py-2 px-4 rounded-lg flex items-center justify-center gap-2 text-sm font-medium
+        {amountbutton ? (
+          <button
+            // onClick={stock > 0 ? onAddToCart : undefined}
+            onClick={addmedicine}
+            disabled={stock === 0}
+            className={`mt-3 w-full py-2 px-4 rounded-lg flex items-center justify-center gap-2 text-sm font-medium
             transform transition-all duration-200
-            ${stock > 0 
-              ? 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95 hover:scale-[1.02]' 
-              : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
-        >
-          <ShoppingCart className="w-4 h-4" />
-          Add to Cart
-        </button>
+            ${stock > 0
+                ? 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95 hover:scale-[1.02]'
+                : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+          >
+            <ShoppingCart className="w-4 h-4" />
+            Add to Cart
+          </button>
+        ) : (
+          <div className="mt-3 w-full flex items-center justify-evenly  py-2 px-4">
+            <button
+              onClick={amountdecrease}
+              disabled={medcount === 0}
+              className={`py-2 px-4 rounded-lg text-sm font-medium 
+      transform transition-all duration-200 
+      ${medcount > 0
+                  ? 'bg-red-500 text-white hover:bg-red-600 active:scale-95'
+                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+            >
+              -
+            </button>
+
+            <div className="text-center text-sm font-medium text-gray-700">
+              {medcount}
+            </div>
+
+            <button
+              onClick={amountincrease}
+              disabled={stock === 0}
+              className={`py-2 px-4 rounded-lg text-sm font-medium 
+      transform transition-all duration-200 
+      ${stock > 0
+                  ? 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95'
+                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+            >
+              +
+            </button>
+            <button
+              // onClick={amountincrease}
+              disabled={stock === 0}
+              className={`py-2 px-4 rounded-lg text-sm font-medium 
+      transform transition-all duration-200 
+      ${stock > 0
+                  ? 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95'
+                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+            >
+  
+               Add to Cart
+            </button>
+          </div>
+
+        )}
       </div>
     </div>
   );
