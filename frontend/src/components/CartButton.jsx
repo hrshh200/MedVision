@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ShoppingCart } from 'lucide-react';
+import { Trash } from 'lucide-react';
 
 const CartButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,6 +15,10 @@ const CartButton = () => {
 
   const closeCartModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleDeleteMedicines = (id) => {
+    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
   return (
@@ -44,27 +49,47 @@ const CartButton = () => {
           >
             <h2 className="text-xl font-bold mb-4">Your Cart</h2>
             {cartItems.length > 0 ? (
-              <ul>
-                {cartItems.map((item) => (
-                  <li
-                    key={item.id}
-                    className="flex justify-between items-center border-b py-2"
-                  >
-                    <div>
-                      <h3 className="font-medium">{item.name}</h3>
-                      <p className="text-sm text-gray-500">
-                        Quantity: {item.quantity}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium">${item.price}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              <div>
+                <ul>
+                  {cartItems.map((item) => (
+                    <li
+                      key={item.id}
+                      className="flex justify-between items-center border-b py-2"
+                    >
+                      <div>
+                        <h3 className="font-medium">{item.name}</h3>
+                        <p className="text-sm text-gray-500">
+                          Quantity: {item.quantity}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-medium">${item.price}</p>
+                      </div>
+                      <div className="text-right">
+                        <button
+                          onClick={() => handleDeleteMedicines(item.id)}
+                          className="text-red-600 hover:text-red-800 transition-colors"
+                          aria-label="Delete"
+                        >
+                          <Trash className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Total Price */}
+                <div className="mt-4 flex justify-between items-center border-t pt-4">
+                  <h3 className="text-lg font-medium">Total</h3>
+                  <p className="text-lg font-medium">
+                    ${cartItems.reduce((total, item) => total + item.price * item.quantity, 0)}
+                  </p>
+                </div>
+              </div>
             ) : (
               <p className="text-gray-500">Your cart is empty.</p>
             )}
+
             <button
               onClick={closeCartModal}
               className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
