@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { Trash } from 'lucide-react';
 
-const CartButton = ({name, quantity, price}) => {
+const CartButton = ({ id, name, price }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]); // Sample cart items
 
@@ -15,31 +15,29 @@ const CartButton = ({name, quantity, price}) => {
   };
 
   useEffect(() => {
-    if (name && quantity && price) {
+    if (id && name && price) {
       setCartItems((prevItems) => {
-        // Check if the item already exists in the cart
-        const itemExists = prevItems.some((item) => item.name === name);
+        const itemIndex = prevItems.findIndex((item) => item.id === id);
   
-        if (itemExists) {
-          // Update the quantity of the existing item
-          return prevItems.map((item) =>
-            item.name === name
-              ? { ...item, quantity: item.quantity}
-              : item
-          );
+        if (itemIndex === -1) {
+          // Add new item
+          return [...prevItems, { id, name, price, quantity: 1 }];
         } else {
-          // Add the new item to the cart
-          return [...prevItems, { id: prevItems.length + 1, name, quantity, price }];
+          // Update quantity for existing item
+          const updatedItems = [...prevItems];
+          return updatedItems;
         }
       });
     }
-  }, [name, quantity, price]);
+  }, [id, name, price]);
   
+
+
 
   const handleDeleteMedicines = (id) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
-  
+
 
   return (
     <>
@@ -79,7 +77,7 @@ const CartButton = ({name, quantity, price}) => {
                       <div>
                         <h3 className="font-medium">{item.name}</h3>
                         <p className="text-sm text-gray-500">
-                          Quantity: {item.quantity}
+                          Quantity: {item.quantity || 1}
                         </p>
                       </div>
                       <div className="text-right">
@@ -102,7 +100,7 @@ const CartButton = ({name, quantity, price}) => {
                 <div className="mt-4 flex justify-between items-center border-t pt-4">
                   <h3 className="text-lg font-medium">Total</h3>
                   <p className="text-lg font-medium">
-                    ${cartItems.reduce((total, item) => total + item.price * item.quantity, 0)}
+                    ${cartItems.reduce((total, item) => total + item.price * (item.quantity || 1), 0)}
                   </p>
                 </div>
               </div>
