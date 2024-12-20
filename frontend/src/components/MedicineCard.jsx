@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Pill, Package, ShoppingCart } from 'lucide-react';
+import CartButton from './CartButton';
 
 const MedicineCard = ({ name, manufacturer, dosage, price, stock, type, onAddToCart }) => {
 
   const [amountbutton, setamountButton] = useState(true);
   const [medcount, setMedCount] = useState(0);
+  const [addcart, setAddCart] = useState(false);
 
   const addmedicine = () => {
     setamountButton(false);
@@ -17,6 +19,11 @@ const MedicineCard = ({ name, manufacturer, dosage, price, stock, type, onAddToC
 
   const amountdecrease = () => {
     setMedCount(medcount - 1);
+  }
+  
+  const handleaddtocart = () =>{
+    console.log(`${name} added to cart with quantity ${medcount} price is ${price* medcount}`);
+    setAddCart(true);
   }
 
   return (
@@ -81,7 +88,7 @@ const MedicineCard = ({ name, manufacturer, dosage, price, stock, type, onAddToC
               +
             </button>
             <button
-              // onClick={amountincrease}
+              onClick={()=>handleaddtocart()}
               disabled={stock === 0}
               className={`py-2 px-4 rounded-lg text-sm font-medium 
       transform transition-all duration-200 
@@ -90,8 +97,9 @@ const MedicineCard = ({ name, manufacturer, dosage, price, stock, type, onAddToC
                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
             >
   
-               Add to Cart
+               Add to cart
             </button>
+            {addcart && <CartButton name={name} quantity={medcount} price={price }/>}
           </div>
 
         )}

@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { Trash } from 'lucide-react';
 
-const CartButton = () => {
+const CartButton = ({name, quantity, price}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: 'Paracetamol', quantity: 2, price: 10 },
-    { id: 2, name: 'Ibuprofen', quantity: 1, price: 15 },
-  ]); // Sample cart items
+  const [cartItems, setCartItems] = useState([]); // Sample cart items
 
   const viewCartModal = () => {
     setIsModalOpen(true);
@@ -17,9 +14,32 @@ const CartButton = () => {
     setIsModalOpen(false);
   };
 
+  useEffect(() => {
+    if (name && quantity && price) {
+      setCartItems((prevItems) => {
+        // Check if the item already exists in the cart
+        const itemExists = prevItems.some((item) => item.name === name);
+  
+        if (itemExists) {
+          // Update the quantity of the existing item
+          return prevItems.map((item) =>
+            item.name === name
+              ? { ...item, quantity: item.quantity}
+              : item
+          );
+        } else {
+          // Add the new item to the cart
+          return [...prevItems, { id: prevItems.length + 1, name, quantity, price }];
+        }
+      });
+    }
+  }, [name, quantity, price]);
+  
+
   const handleDeleteMedicines = (id) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
+  
 
   return (
     <>
