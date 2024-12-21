@@ -1,67 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Pill } from 'lucide-react';
 import SearchBar from '../components/SearchBar';
 import MedicineCard from '../components/MedicineCard';
 import CartButton from '../components/CartButton';
 import PromoBanner from '../components/PromoBanner';
+import axios from 'axios';
+import { baseURL } from '../main';
 
-const medicines = [
-  {
-    id: 1,
-    name: 'Amoxicillin',
-    manufacturer: 'PharmaCorp Inc.',
-    dosage: '500mg',
-    type: 'Capsules',
-    price: 12.99,
-    stock: 150
-  },
-  {
-    id: 2,
-    name: 'Lisinopril',
-    manufacturer: 'HealthPharm Ltd.',
-    dosage: '10mg',
-    type: 'Tablets',
-    price: 15.49,
-    stock: 200
-  },
-  {
-    id: 3,
-    name: 'Metformin',
-    manufacturer: 'MediCare Solutions',
-    dosage: '850mg',
-    type: 'Tablets',
-    price: 8.99,
-    stock: 0
-  },
-  {
-    id: 4,
-    name: 'Omeprazole',
-    manufacturer: 'PharmaCorp Inc.',
-    dosage: '20mg',
-    type: 'Capsules',
-    price: 19.99,
-    stock: 75
-  },
-  {
-    id: 5,
-    name: 'Sertraline',
-    manufacturer: 'HealthPharm Ltd.',
-    dosage: '50mg',
-    type: 'Tablets',
-    price: 24.99,
-    stock: 100
-  }
-];
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [cartCount, setCartCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [medicines, setMedicines] = useState([]);
+
+  const fetchmedicines = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${baseURL}/allmedicines`);
+      console.log(response.data); // Debug API response
+      setMedicines(response.data.pharmacy || []); // Ensure default to empty array
+    } catch (err) {
+      console.error('Error loading medicines:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchmedicines();
+  }, []);
+
 
   const filteredMedicines = medicines.filter((medicine) =>
     medicine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     medicine.manufacturer.toLowerCase().includes(searchTerm.toLowerCase()) ||
     medicine.type.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+
 
   return (
     <div className="min-h-screen bg-gray-50 relative">

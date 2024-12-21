@@ -2,6 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const User = require("../models/user");
 const Doctor = require("../models/doctor");
 const Admin = require("../models/admin");
+const Pharmacy = require("../models/pharmacy");
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 // const shortid = require("shortid");
@@ -599,8 +600,19 @@ const fetchDoctors = async (req, res) => {
     }
 };
 
+const fetchpharmacymedicines = async (req, res) => {
+    try {
+        // Query to find all medicines 
+        const medicines = await Pharmacy.find({});
+        res.status(200).json({ success: true, pharmacy: medicines });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+}
+
 
 module.exports = {
     signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus
-    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors
+    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines
 };

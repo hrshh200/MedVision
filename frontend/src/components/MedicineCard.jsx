@@ -9,7 +9,7 @@ const MedicineCard = ({ id, name, manufacturer, dosage, price, stock, type, onAd
   
   const handleaddtocart = () =>{
     console.log(`${name} added to cart with ${id} quantity price is ${price}`);
-    setAddCart(true);
+    // setAddCart(true);
   }
 
   return (
