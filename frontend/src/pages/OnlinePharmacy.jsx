@@ -13,6 +13,7 @@ function App() {
   const [cartCount, setCartCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [medicines, setMedicines] = useState([]);
+  const [userData, setUserData] = useState([]);
 
   const fetchmedicines = async () => {
     try {
@@ -26,6 +27,28 @@ function App() {
       setLoading(false);
     }
   };
+
+  const fetchDataFromApi = async () => {
+    try {
+      const token = localStorage.getItem('medVisionToken');
+      const response = await axios.get(`${baseURL}/fetchdata`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const fetchedData = response.data.userData;
+      setUserData(fetchedData);
+
+      localStorage.setItem('userData', JSON.stringify(fetchedData));
+    } catch (error) {
+      console.error("Error fetching data:", error.message);
+    }
+  };
+
+
+  useEffect(() => {
+    fetchDataFromApi();
+  }, []);
 
   useEffect(() => {
     fetchmedicines();
@@ -46,7 +69,7 @@ function App() {
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-center gap-3">
             <Pill className="w-8 h-8 text-blue-600" />
-            <h1 className="text-2xl font-bold text-gray-900">Online Pharmacy</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Online Pharmacy (MedEasy)</h1>
           </div>
         </div>
       </div>
@@ -70,10 +93,10 @@ function App() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredMedicines.map((medicine) => (
-                <MedicineCard 
-                  key={medicine.id} 
-                  {...medicine} 
-                  onAddToCart={() => setCartCount(prev => prev + 1)}
+                <MedicineCard
+                  key={medicine.id}
+                  {...medicine}
+                  onAddToCart={() => setCartCount((prev) => prev + 1)}
                 />
               ))}
             </div>
