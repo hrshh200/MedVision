@@ -6,6 +6,7 @@ import { FaNotesMedical, FaUserMd, FaHome, FaFilePrescription, FaHistory, FaVide
 import { LineChart, Line, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { baseURL } from '../main';
 import { FaPerson } from 'react-icons/fa6';
+import { MdLocalPharmacy } from 'react-icons/md';
 
 
 // const baseURL = 'https://api.example.com'; // Replace with your actual API base URL
@@ -93,6 +94,7 @@ const Dashboard = () => {
         [
             { icon: FaHome, text: "Home", onClick: () => navigate('/'), disabled: false },
             { icon: FaPerson, text: "Profile", onClick: () => navigate(''), disabled: false },
+            { icon: MdLocalPharmacy, text: "Add Medicines", onClick: () => navigate('/addmedicine'), disabled: false },
         ]
 
 

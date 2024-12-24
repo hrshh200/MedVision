@@ -18,6 +18,7 @@ import ConfirmationPage from './pages/ConfirmationPage';
 import HeartPrediction from './pages/HeartPrediction';
 import PatientProfile from './pages/PatientProfile';
 import EmergencyCare from './pages/EmergencyCare';
+import AddMedicine from './pages/AddMedicine';
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
           <Route path="/confirm/:id" element={<ConfirmationPage />} />
           <Route path="/heart-disease" element={<HeartPrediction />} />
           <Route path="/emergencyguidelines" element={<EmergencyCare />} />
+          <Route path="/addmedicine" element={<AddMedicine />} />
         </Route>
       </Routes>
     </>

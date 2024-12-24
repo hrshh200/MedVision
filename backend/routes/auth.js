@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { signUp, signIn, fetchData, AdminfetchData, UpdateDoctorProfile, adminsignIn, doctorListAssigned, updatedoctorstatus,fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines, updateorderedmedicines } = require("../controllers/auth");
+const { signUp, signIn, fetchData, AdminfetchData, UpdateDoctorProfile, adminsignIn, doctorListAssigned, updatedoctorstatus,fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines, updateorderedmedicines, updatecartquantity } = require("../controllers/auth");
 
 // Define routes for authentication
 router.post("/login", signIn);
@@ -22,6 +22,7 @@ router.post("/confirmstatus", confirmstatus);
 router.post("/uploadpres", uploadpres);
 router.post("/fetchdoctors", fetchDoctors);
 router.post("/updateorderedmedicines", updateorderedmedicines);
+router.post("/updatecartquantity", updatecartquantity);
 router.get("/allmedicines", fetchpharmacymedicines);
 
 module.exports = router;
