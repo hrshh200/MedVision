@@ -79,6 +79,17 @@ const userSchema = new mongoose.Schema({
       }]],
       default: [] // Initialize as an empty array
    },
+   orderedmedicines: {
+      type: [
+        {
+          medicine: { type: String, required: true },
+          quantity: {type: Number, required: true},
+          price: {type: Number, required: true}
+        },
+      ],
+      default: [], // Default to an empty array
+    },
+    
 }, { timestamps: true });
 //For get fullName from when we get data from database
 

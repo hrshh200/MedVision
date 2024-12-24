@@ -441,7 +441,7 @@ const getnames = async (req, res) => {
         // Fetch names based on regNo from the database
         console.log(regNos); // Logs regNos to check what is being received
         const doctors = await Doctor.find({ regNo: { $in: regNos } }, 'regNo name');
-        
+
         // Send the response back to the client
         res.status(200).json(doctors);  // Use res.json to send the data as JSON
     } catch (error) {
@@ -515,10 +515,10 @@ const uploadpres = async (req, res) => {
         // Save the updated user
         await user.save();
 
-        return res.status(200).json({ 
-            success: true, 
-            message: 'Prescription uploaded successfully', 
-            user 
+        return res.status(200).json({
+            success: true,
+            message: 'Prescription uploaded successfully',
+            user
         });
     } catch (error) {
         console.error('Error uploading prescription:', error);
@@ -530,10 +530,10 @@ const confirmstatus = async (req, res) => {
     const { regNo, patientName } = req.body;
 
     // Check if the required fields are provided
-    try {   
+    try {
         // Find the patient by name
         const user = await User.findOne({ name: patientName });
-        const doctor = await Doctor.findOne( { regNo: regNo });
+        const doctor = await Doctor.findOne({ regNo: regNo });
 
         // Check if the user exists
         if (!user || !doctor) {
@@ -611,8 +611,51 @@ const fetchpharmacymedicines = async (req, res) => {
     }
 }
 
+const updateorderedmedicines = async (req, res) => {
+    try {
+        const { name, price, id } = req.body;
+
+        if (!name || !price || !id) {
+            return res.status(400).json({ error: 'Name, Price, and User ID are required' });
+        }
+
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Check if the medicine already exists in the user's orderedmedicines array
+        const existingMedicine = user.orderedmedicines.find(medicine => medicine.medicine === name);
+
+        if (existingMedicine) {
+            // Increment the quantity if the medicine exists
+            existingMedicine.quantity += 1;
+        } else {
+            // Add a new medicine entry if it doesn't exist
+            user.orderedmedicines.push({
+                medicine: name,
+                quantity: 1, // Default quantity
+                price: price,
+            });
+        }
+
+        // Save the user document
+        await user.save();
+
+        // console.log(`Updated orderedmedicines for user ${id}`);
+        res.status(200).json({ 
+            message: 'Medicine updated successfully', 
+            orderedmedicines: user.orderedmedicines 
+        });
+    } catch (error) {
+        console.error('Error updating orderedmedicines:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 
 module.exports = {
     signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus
-    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines
+    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines, updateorderedmedicines
 };
