@@ -659,7 +659,36 @@ const updatecartquantity = async (req, res) => {
     console.log(cartItems);
 }
 
+const addmedicinetodb = async (req, res) => {
+    const { name, manufacturer, dosage, type, price, stock } = req.body;
+
+    try {
+        // Validate the request body
+        if (!name || !manufacturer || !dosage || !type || !price || !stock) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+
+        // Create a new medicine document
+        const newMedicine = new Pharmacy({
+            name,
+            manufacturer,
+            dosage,
+            type,
+            price,
+            stock,
+        });
+
+        // Save to database
+        await newMedicine.save();
+
+        res.status(200).json({ message: 'Medicine added successfully', medicine: newMedicine });
+    } catch (error) {
+        console.error('Error adding medicine:', error.message);
+        res.status(500).json({ error: 'Failed to add medicine' });
+    }
+};
+
 module.exports = {
     signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus
-    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines, updateorderedmedicines, updatecartquantity
+    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines, updateorderedmedicines, updatecartquantity, addmedicinetodb
 };

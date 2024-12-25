@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
+import axios from 'axios';
+import { baseURL } from '../../main';
 
 const MEDICINE_TYPES = [
   'Tablet', 'Capsule', 'Syrup', 'Injection', 'Cream', 'Drops'
@@ -25,20 +27,22 @@ export function MedicineForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
-      // Here you would make your API call
-      console.log(formData);
-      
-      setMessage({ text: 'Medicine added successfully!', type: 'success' });
-      setFormData({
-        name: '',
-        manufacturer: '',
-        dosage: '',
-        type: '',
-        price: '',
-        stock: ''
-      });
+      const response = await axios.post(`${baseURL}/addmedicine`, formData);
+      console.log(response);
+
+      if (response.status === 200) {
+        setMessage({ text: 'Medicine added successfully!', type: 'success' });
+        setFormData({
+          name: '',
+          manufacturer: '',
+          dosage: '',
+          type: '',
+          price: '',
+          stock: ''
+        });
+      }
     } catch (error) {
       setMessage({ text: 'Failed to add medicine', type: 'error' });
     } finally {
@@ -50,9 +54,8 @@ export function MedicineForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {message.text && (
-        <div className={`p-4 rounded-md ${
-          message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
-        }`}>
+        <div className={`p-4 rounded-md ${message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+          }`}>
           {message.text}
         </div>
       )}
