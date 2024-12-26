@@ -95,7 +95,19 @@ const CartButton = () => {
     }
   };
 
+  const handleDeleteMedicine = async (name) =>{
+    try{
+      const response = await axios.post(`${baseURL}/deletemedicine`, {name, id: userData?._id});
+      console.log(response);
 
+    if(response.status === 200){
+      console.log("Medicine Deleted from cart!")
+    }
+    }catch (error) {
+      console.error('Error deleting the medicine from cart:', error.message);
+    }
+  };
+  
   const handlepayment = () => {
     console.log("Payment to be handled here");
   }
@@ -158,7 +170,7 @@ const CartButton = () => {
                     >
                       <div>
                         <h3 className="font-medium">{item.name}</h3>
-                        <p className="text-sm text-gray-500">Price: ${item.price}</p>
+                        <p className="text-sm text-gray-500">Rs {item.price}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <button
@@ -179,6 +191,7 @@ const CartButton = () => {
                         <button
                           className="text-red-600 hover:text-red-800 transition-colors"
                           aria-label="Delete"
+                          onClick={()=>handleDeleteMedicine(item.name)}
                         >
                           <Trash className="w-5 h-5" />
                         </button>
@@ -191,11 +204,12 @@ const CartButton = () => {
                 <div className="mt-4 flex justify-between items-center border-t pt-4">
                   <h3 className="text-lg font-medium">Total</h3>
                   <p className="text-lg font-medium">
-                    $
+                    Rs{" "}
                     {cartItems.reduce(
                       (total, item) => total + item.price * item.quantity,
                       0
                     )}
+                    /-
                   </p>
                 </div>
               </div>

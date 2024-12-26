@@ -728,6 +728,38 @@ const decreaseupdatecartquantity = async (req, res) => {
     }
 };
 
+const deletemedicine = async (req, res) => {
+    const { name, id } = req.body; // `id` here is the userID
+    try {
+      if (!name || !id) {
+        return res.status(400).json({ message: 'Name and userID are required' });
+      }
+  
+      // Find the user by ID and update the orderedmedicines array
+      const updatedUser = await User.findByIdAndUpdate(
+        id, // Find the user by their ID
+        { $pull: { orderedmedicines: { medicine: name } } }, // Remove the medicine object where 'medicine' matches the 'name'
+        { new: true } // Return the updated document
+      );
+  
+      if (!updatedUser) {
+        return res.status(404).json({ message: 'User not found or medicine not found in order' });
+      }
+  
+      await updatedUser.save();
+  
+      res.status(200).json({
+        message: `Medicine '${name}' successfully deleted from user's orders`,
+        updatedOrders: updatedUser.orderedmedicines,
+      });
+    } catch (error) {
+      console.error('Error deleting medicine:', error);
+      res.status(500).json({ message: 'Server error while deleting medicine', error });
+    }
+  };
+  
+
+
 const addmedicinetodb = async (req, res) => {
     const { name, manufacturer, dosage, type, price, stock } = req.body;
 
@@ -759,5 +791,5 @@ const addmedicinetodb = async (req, res) => {
 
 module.exports = {
     signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus
-    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines, updateorderedmedicines, updatecartquantity, addmedicinetodb, decreaseupdatecartquantity
+    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines, updateorderedmedicines, updatecartquantity, addmedicinetodb, decreaseupdatecartquantity, deletemedicine
 };

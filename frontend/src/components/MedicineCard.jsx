@@ -22,6 +22,10 @@ const MedicineCard = ({ id, name, manufacturer, dosage, price, stock, type, onAd
       if (response.status === 200) {
         console.log(`${name} added to cart with ${id} quantity price is ${price}`);
         setShowAdded(true);
+
+        setTimeout(() => {
+          setShowAdded(false);
+        }, 1000);
   
         // Fetch updated userData
         const token = localStorage.getItem('medVisionToken');
@@ -43,7 +47,6 @@ const MedicineCard = ({ id, name, manufacturer, dosage, price, stock, type, onAd
       console.error("Error adding to cart:", error.message);
     }
   };
-  
   
 
   const fetchDataFromApi = async () => {
@@ -79,9 +82,9 @@ const MedicineCard = ({ id, name, manufacturer, dosage, price, stock, type, onAd
         <div className="flex items-center gap-2 mt-2">
           <Package className="w-4 h-4 text-gray-400" />
           <span className="text-sm text-gray-600">{dosage} • {type}</span>
-        </div>
+        </div> 
         <div className="flex items-center justify-between mt-4">
-          <div className="text-lg font-bold text-blue-600">${price}</div>
+          <div className="text-lg font-bold text-blue-600">Rs {price}/-</div>
           <div className={`text-sm ${stock > 0 ? 'text-green-600' : 'text-red-500'}`}>
             {stock > 0 ? 'In Stock' : 'Out of Stock'}
           </div>
