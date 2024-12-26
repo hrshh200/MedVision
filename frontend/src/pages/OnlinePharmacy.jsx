@@ -101,7 +101,7 @@ function App() {
               </div>
               {!searchTerm && medicines.length > 6 && (
                 <div className="text-center mt-4">
-                  <p className="text-blue-600 font-semibold">Many more medicines available...</p>
+                  <p className="text-blue-600 font-semibold">Many more medicines available...(100+)</p>
                 </div>
               )}
             </div>
