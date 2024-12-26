@@ -655,9 +655,78 @@ const updateorderedmedicines = async (req, res) => {
 };
 
 const updatecartquantity = async (req, res) => {
-    const { cartItems } = req.body;
-    console.log(cartItems);
-}
+    const { name, id } = req.body; // Destructure name from request body
+
+    if (!name) {
+        return res.status(400).json({ error: 'Medicine name is required for updating the quantity' });
+    }
+
+    try {
+        // Find the user and increment the quantity of the specific medicine
+        const updatedUser = await User.findOneAndUpdate(
+            { _id: id, "orderedmedicines.medicine": name }, // Match user and medicine
+            { $inc: { "orderedmedicines.$.quantity": 1 } }, // Increment quantity by 1
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ error: 'Medicine not found in the cart' });
+        }
+
+        return res.status(200).json({ 
+            message: 'Medicine quantity updated successfully', 
+            orderedmedicines: updatedUser.orderedmedicines 
+        });
+    } catch (error) {
+        console.error('Error updating cart quantity:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+const decreaseupdatecartquantity = async (req, res) => {
+    const { name, id } = req.body; // Destructure name from request body
+    
+
+    if (!name) {
+        return res.status(400).json({ error: 'Medicine name is required for updating the quantity' });
+    }
+
+    try {
+        // Find the user and decrease the quantity of the specific medicine
+        const user = await User.findOne({ _id: id });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Find the medicine in the array
+        const medicine = user.orderedmedicines.find(item => item.medicine === name);
+
+        if (!medicine) {
+            return res.status(404).json({ error: 'Medicine not found in the cart' });
+        }
+
+        // Ensure quantity does not go below 1
+        if (medicine.quantity <= 1) {
+            return res.status(400).json({ error: 'Quantity cannot be less than 1' });
+        }
+
+        // Decrease the quantity
+        const updatedUser = await User.findOneAndUpdate(
+            { _id: id, "orderedmedicines.medicine": name }, // Match user and medicine
+            { $inc: { "orderedmedicines.$.quantity": -1 } }, // Decrement quantity by 1
+            { new: true } // Return the updated document
+        );
+
+        return res.status(200).json({ 
+            message: 'Medicine quantity decreased successfully', 
+            orderedmedicines: updatedUser.orderedmedicines 
+        });
+    } catch (error) {
+        console.error('Error updating cart quantity:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
 
 const addmedicinetodb = async (req, res) => {
     const { name, manufacturer, dosage, type, price, stock } = req.body;
@@ -690,5 +759,5 @@ const addmedicinetodb = async (req, res) => {
 
 module.exports = {
     signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus
-    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines, updateorderedmedicines, updatecartquantity, addmedicinetodb
+    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines, updateorderedmedicines, updatecartquantity, addmedicinetodb, decreaseupdatecartquantity
 };

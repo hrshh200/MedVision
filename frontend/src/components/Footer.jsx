@@ -69,7 +69,7 @@ function Footer() {
                         </div>
                         <div className="flex sm:justify-around justify-between w-[98%] lg:w-[70%] sm:gap-[.5rem] gap-[.3rem]">
                             <div className="flex flex-col gap-[.5rem]">
-                            <p className="text-[#3b382d] text-nowrap">Doctor's Login</p>
+                            <p className="text-[.7rem] sm:text-[.9rem]">Doctor's Login</p>
                                 
                                 <Link
                                     onClick={scrollSmooth}
@@ -89,7 +89,7 @@ function Footer() {
                                 </Link>
                             </div>
                             <div className="flex flex-col gap-[.5rem]">
-                                <p className="text-[#3b382d]">About</p>
+                                <p className="text-[.7rem] sm:text-[.9rem]">About</p>
                                 <Link onClick={scrollSmooth} to="/">
                                     <div className="text-[.7rem] sm:text-[.9rem]">Our Blogs</div>
                                 </Link>
@@ -101,7 +101,7 @@ function Footer() {
                                 </Link>
                             </div>
                             <div className="flex flex-col gap-[.5rem]">
-                                <p className="text-[#3b382d] text-nowrap">User's Login</p>
+                                <p className="text-[.7rem] sm:text-[.9rem]">User's Login</p>
                                 
                                 <Link
                                     onClick={scrollSmooth}
@@ -137,7 +137,7 @@ function Footer() {
                 <p className="bg-gray-400 w-[90%] mx-auto h-[.08px] mb-[1rem] "></p>
 
                 <div className="w-[90%] mx-auto text-[.9rem] flex justify-center items-center text-center">
-                    <p>All Rights Reserved © MEDVISION PRIVATE LIMITED,2024</p>
+                    <p>All Rights Reserved © MEDVISION PRIVATE LIMITED 2024</p>
 
                 </div>
             </div>

@@ -7,6 +7,7 @@ const CartButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [userData, setUserData] = useState([]);
+  const [paylock, setPayLock] = useState(false);
 
   const viewCartModal = () => {
     setIsModalOpen(true);
@@ -46,55 +47,53 @@ const CartButton = () => {
         quantity: medicine.quantity || 1,
       }));
       setCartItems(updatedCartItems);
+      setPayLock(true);
     }
   }, [userData?.orderedmedicines]);
 
 
-  const handleIncreaseQuantity = (id) => {
-    setCartItems((prevItems) => {
-      const updatedItems = prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      );
-      // Call API with updated items
-      // updatecartwithquantity(updatedItems);
-      return updatedItems;
-    });
+  const handleIncreaseQuantity = async (name) => {
+
+    //Calling the API for updating the quantity of the medicine
+    try{
+      const response = await axios.post(`${baseURL}/updatecartquantity`, {name, id: userData?._id});
+      console.log(response);
+
+    if(response.status === 200){
+      setCartItems((prevItems) => {
+        const updatedItems = prevItems.map((item) =>
+          item.name === name ? { ...item, quantity: item.quantity + 1 } : item
+        );
+        return updatedItems;
+      }); 
+    }
+    }catch (error) {
+      console.error('Error updating the quantity of medicine:', error.message);
+    }
   };
 
   
-  const handleDecreaseQuantity = (id) => {
-    setCartItems((prevItems) => {
-      const updatedItems = prevItems.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      );
-      // Call API with updated items
-      // updatecartwithquantity(updatedItems);
-      return updatedItems;
-    });
-  };
+  const handleDecreaseQuantity = async (name) => {
 
-  // const updatecartwithquantity = async (updatedCartItems) => {
-  //   try {
-  //     const token = localStorage.getItem('medVisionToken'); // Fetch token from localStorage
-  //     const response = await axios.post(
-  //       `${baseURL}/updatecartquantity`,
-  //       { cartItems: updatedCartItems },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  
-  //     if (response.status === 200) {
-  //       console.log(`Cart updated successfully in the database.`);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error updating cart quantity:', error.message);
-  //   }
-  // };
+    //Calling the API for updating the quantity of the medicine
+    try{
+      const response = await axios.post(`${baseURL}/decreaseupdatecartquantity`, {name, id: userData?._id});
+      console.log(response);
+
+    if(response.status === 200){
+      setCartItems((prevItems) => {
+        const updatedItems = prevItems.map((item) =>
+          item.name === name && item.quantity > 1
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        );
+        return updatedItems;
+      });
+    }
+    }catch (error) {
+      console.error('Error updating the quantity of medicine:', error.message);
+    }
+  };
 
 
   const handlepayment = () => {
@@ -163,14 +162,14 @@ const CartButton = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => handleDecreaseQuantity(item.id)}
+                          onClick={() => handleDecreaseQuantity(item.name)}
                           className="bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
                         >
                           −
                         </button>
                         <span className="text-sm font-medium">{item.quantity}</span>
                         <button
-                          onClick={() => handleIncreaseQuantity(item.id)}
+                          onClick={() => handleIncreaseQuantity(item.name)}
                           className="bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
                         >
                           +
@@ -206,7 +205,11 @@ const CartButton = () => {
 
             <button
               onClick={handlepayment}
-              className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-1"
+              className={`mt-4 w-full bg-blue-600 text-white py-2 rounded-lg transition-colors flex items-center justify-center gap-1  ${paylock
+            ? 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105 active:scale-95'
+            : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+          }`}
+              disabled={!paylock}
             >
               <span>Pay</span>
               <Lock className="w-4 h-4" />
