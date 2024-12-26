@@ -19,6 +19,7 @@ import HeartPrediction from './pages/HeartPrediction';
 import PatientProfile from './pages/PatientProfile';
 import EmergencyCare from './pages/EmergencyCare';
 import AddMedicine from './pages/AddMedicine';
+import Tracking from './pages/Tracking';
 
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
           <Route path="/heart-disease" element={<HeartPrediction />} />
           <Route path="/emergencyguidelines" element={<EmergencyCare />} />
           <Route path="/addmedicine" element={<AddMedicine />} />
+          <Route path="/tracking" element={<Tracking />} />
         </Route>
       </Routes>
     </>

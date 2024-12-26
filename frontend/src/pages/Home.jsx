@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { baseURL } from '../main';
 import axios from 'axios';
+import TestimonialCarousel from '../components/Testimonials/TestimonialCarousel';
 
 const Home = () => {
 
@@ -37,6 +38,11 @@ const Home = () => {
     console.log("Clicked on Search Doctor");
   }
 
+  const handleConsultation = () => {
+    navigate('/searchdoctor');
+    console.log("Clicked on Search Doctor");
+  }
+
   const handleOnlinePharmacy = () => {
     navigate('/onlinepharmacy');
     console.log("Clicked on Online Pharmacy");
@@ -50,6 +56,11 @@ const Home = () => {
   const handleEmergencyPharmacy = () => {
     navigate('/emergencyguidelines');
     console.log("Clicked on predicted ML");
+  }
+
+  const handleTracking = () => {
+    navigate('/tracking');
+    console.log("Clicked on tracking order");
   }
 
   const submitHandler = async () => {
@@ -154,7 +165,7 @@ const Home = () => {
                 <p className='text-[#7D7987] text-[.9rem]'>Buy  your medicines with our mobile application with a simple delivery system</p>
               </div>
               {/* Consultation */}
-              <div className='bg-[#FFFFFF] w-fit max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
+              <div onClick={handleConsultation} className='bg-[#FFFFFF] w-fit max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
                 <img src={consultation} alt="Consultation" className='h-[80px] aspect-auto' />
                 <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>Consultation</p>
                 <p className='text-[#7D7987] text-[.9rem]'>Free consultation with our trusted doctors and get the best recomendations</p>
@@ -172,7 +183,7 @@ const Home = () => {
                 <p className='text-[#7D7987] text-[.9rem]'>You can get 24/7 urgent care for yourself or your children and your lovely family</p>
               </div>
               {/* Details info */}
-              <div className='bg-[#FFFFFF] w-fit  max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
+              <div onClick={handleTracking} className='bg-[#FFFFFF] w-fit  max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
                 <img src={tracking} alt="tracking" className='h-[80px] aspect-auto' />
                 <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>Tracking</p>
                 <p className='text-[#7D7987] text-[.9rem]'>Track and save your medical history and health data </p>
