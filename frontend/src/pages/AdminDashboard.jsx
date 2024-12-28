@@ -95,6 +95,8 @@ const Dashboard = () => {
             { icon: FaHome, text: "Home", onClick: () => navigate('/'), disabled: false },
             { icon: FaPerson, text: "Profile", onClick: () => navigate(''), disabled: false },
             { icon: MdLocalPharmacy, text: "Add Medicines", onClick: () => navigate('/addmedicine'), disabled: false },
+            { icon: MdLocalPharmacy, text: "Update Medicines", onClick: () => navigate('/updatemedicine'), disabled: false },
+            { icon: MdLocalPharmacy, text: "Delete Medicines", onClick: () => navigate('/deletemedicine'), disabled: false },
         ]
 
 

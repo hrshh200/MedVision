@@ -8,6 +8,7 @@ export function PatientAppointmentBanner({ appointments }) {
     const [expandedAppointment, setExpandedAppointment] = useState(null);
     const [isMeetingBlocked, setIsMeetingBlocked] = useState(false);
     const [userData, setUserData] = useState(null);
+    const [isClicked, setIsClicked] = useState(false);
 
     const fetchDataFromApi = async () => {
         try {
@@ -85,6 +86,7 @@ export function PatientAppointmentBanner({ appointments }) {
     const handleJoinMeeting = (videoLink) => {
         if (!isMeetingBlocked) {
             window.open(videoLink, "_blank");
+            setIsClicked(true);
         }
     };
 
@@ -128,18 +130,18 @@ export function PatientAppointmentBanner({ appointments }) {
                                     <div className="flex items-center gap-3">
                                         {appointment.videoLink ? (
                                             <button
-                                                onClick={() => handleJoinMeeting(appointment.videoLink)}
-                                                disabled={isMeetingBlocked}
-                                                className={`inline-flex items-center px-4 py-2 rounded-md transition-colors gap-2 ${
-                                                    isMeetingBlocked
-                                                        ? "bg-gray-400 text-white cursor-not-allowed"
-                                                        : "bg-green-500 text-white hover:bg-green-600"
-                                                }`}
-                                            >
-                                                <Video className="w-4 h-4" />
-                                                Join Meeting
-                                                <ExternalLink className="w-3 h-3 ml-1" />
-                                            </button>
+                                            onClick={() => handleJoinMeeting(appointment.videoLink)}
+                                            disabled={isClicked || isMeetingBlocked}
+                                            className={`inline-flex items-center px-4 py-2 rounded-md transition-colors gap-2 ${
+                                                isClicked || isMeetingBlocked
+                                                    ? "bg-gray-400 text-white cursor-not-allowed"
+                                                    : "bg-green-500 text-white hover:bg-green-600"
+                                            }`}
+                                        >
+                                            <Video className="w-4 h-4" />
+                                            Join Meeting
+                                            <ExternalLink className="w-3 h-3 ml-1" />
+                                        </button>
                                         ) : (
                                             <span className="text-sm text-gray-500 italic">
                                                 Meeting link not available yet
