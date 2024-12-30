@@ -3,6 +3,7 @@ import { ShoppingCart, X, Trash, Lock } from 'lucide-react';
 import axios from 'axios';
 import { baseURL } from '../main';
 import { BrowserProvider, parseEther, formatEther } from 'ethers';
+import { PaymentModal }  from './PaymentModal';
 
 const ethereum = window.ethereum;
 
@@ -13,9 +14,10 @@ const CartButton = () => {
   const [paylock, setPayLock] = useState(false);
   const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState('');
+  const [isModalOpenPayment, setIsModalOpenPayement] = useState(false);
 
 
-  const viewCartModal = () => {
+  const viewCartModal = () => { 
     setIsModalOpen(true);
   };
 
@@ -61,142 +63,146 @@ const CartButton = () => {
   const handleIncreaseQuantity = async (name) => {
 
     //Calling the API for updating the quantity of the medicine
-    try{
-      const response = await axios.post(`${baseURL}/updatecartquantity`, {name, id: userData?._id});
+    try {
+      const response = await axios.post(`${baseURL}/updatecartquantity`, { name, id: userData?._id });
       console.log(response);
 
-    if(response.status === 200){
-      setCartItems((prevItems) => {
-        const updatedItems = prevItems.map((item) =>
-          item.name === name ? { ...item, quantity: item.quantity + 1 } : item
-        );
-        return updatedItems;
-      }); 
-    }
-    }catch (error) {
+      if (response.status === 200) {
+        setCartItems((prevItems) => {
+          const updatedItems = prevItems.map((item) =>
+            item.name === name ? { ...item, quantity: item.quantity + 1 } : item
+          );
+          return updatedItems;
+        });
+      }
+    } catch (error) {
       console.error('Error updating the quantity of medicine:', error.message);
     }
   };
 
-  
+
   const handleDecreaseQuantity = async (name) => {
 
     //Calling the API for updating the quantity of the medicine
-    try{
-      const response = await axios.post(`${baseURL}/decreaseupdatecartquantity`, {name, id: userData?._id});
+    try {
+      const response = await axios.post(`${baseURL}/decreaseupdatecartquantity`, { name, id: userData?._id });
       console.log(response);
 
-    if(response.status === 200){
-      setCartItems((prevItems) => {
-        const updatedItems = prevItems.map((item) =>
-          item.name === name && item.quantity > 1
-            ? { ...item, quantity: item.quantity - 1 }
-            : item
-        );
-        return updatedItems;
-      });
-    }
-    }catch (error) {
+      if (response.status === 200) {
+        setCartItems((prevItems) => {
+          const updatedItems = prevItems.map((item) =>
+            item.name === name && item.quantity > 1
+              ? { ...item, quantity: item.quantity - 1 }
+              : item
+          );
+          return updatedItems;
+        });
+      }
+    } catch (error) {
       console.error('Error updating the quantity of medicine:', error.message);
     }
   };
 
-  const handleDeleteMedicine = async (name) =>{
-    try{
-      const response = await axios.post(`${baseURL}/deletemedicine`, {name, id: userData?._id});
+  const handleDeleteMedicine = async (name) => {
+    try {
+      const response = await axios.post(`${baseURL}/deletemedicine`, { name, id: userData?._id });
       console.log(response);
 
-    if(response.status === 200){
-      console.log("Medicine Deleted from cart!")
-    }
-    }catch (error) {
+      if (response.status === 200) {
+        console.log("Medicine Deleted from cart!")
+      }
+    } catch (error) {
       console.error('Error deleting the medicine from cart:', error.message);
     }
   };
 
-  const connectWallet = async () => {
-    try {
-      if (!window.ethereum) {
-        alert('Please install MetaMask to make payments!');
-        return false;
-      }
+  // const connectWallet = async () => {
+  //   try {
+  //     if (!window.ethereum) {
+  //       alert('Please install MetaMask to make payments!');
+  //       return false;
+  //     }
 
-      setLoading(true);
-      const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts'
-      });
-      
-      setAccount(accounts[0]);
-      setLoading(false);
-      return true;
-    } catch (error) {
-      console.error('Error connecting wallet:', error);
-      setLoading(false);
-      return false;
-    }
-  };
+  //     setLoading(true);
+  //     const accounts = await window.ethereum.request({
+  //       method: 'eth_requestAccounts'
+  //     });
 
-  
-  const handlePayment = async () => {
-    try {
-      // First connect the wallet
-      const isConnected = await connectWallet();
-      if (!isConnected) return;
+  //     setAccount(accounts[0]);
+  //     setLoading(false);
+  //     return true;
+  //   } catch (error) {
+  //     console.error('Error connecting wallet:', error);
+  //     setLoading(false);
+  //     return false;
+  //   }
+  // };
 
-      // Calculate total amount in ETH (you'll need to implement your own conversion rate)
-      const totalAmount = cartItems.reduce(
-        (total, item) => total + item.price * item.quantity,
-        0
-      );
-      
-      // Convert INR to ETH (using a hypothetical conversion rate - you should get this from an API)
-      const ETH_TO_INR_RATE = 200000; // Example rate: 1 ETH = 200,000 INR
-      const amountInEth = totalAmount / ETH_TO_INR_RATE;
-      
-      // Create provider and get signer
-      const provider = new BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      
-      // Replace with your merchant wallet address
-      const merchantAddress = "0x52c7d0701Fa7460552085E406CD33042EaB1eC40";
-      
-      // Create the transaction
-      const tx = {
-        from: account,
-        to: merchantAddress,
-        value: parseEther(amountInEth.toFixed(18)),
-        gasLimit: 21000n
-      };
 
-      setLoading(true);
-      
-      // Send transaction
-      const transaction = await signer.sendTransaction(tx);
-      
-      // Wait for transaction confirmation
-      await transaction.wait();
-      
-      // After successful payment, update the backend
-      const paymentData = {
-        transactionHash: transaction.hash,
-        amount: totalAmount,
-        userId: userData._id,
-        items: cartItems
-      };
-      
-      await axios.post(`${baseURL}/payment-success`, paymentData);
-      
-      // Clear cart and close modal
-      setCartItems([]);
-      setIsModalOpen(false);
-      alert('Payment successful!');
-    } catch (error) {
-      console.error('Payment failed:', error);
-      alert('Payment failed! Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const handlePayment = async () => {
+  //   try {
+  //     // First connect the wallet
+  //     const isConnected = await connectWallet();
+  //     if (!isConnected) return;
+
+  //     // Calculate total amount in ETH (you'll need to implement your own conversion rate)
+  //     const totalAmount = cartItems.reduce(
+  //       (total, item) => total + item.price * item.quantity,
+  //       0
+  //     );
+
+  //     // Convert INR to ETH (using a hypothetical conversion rate - you should get this from an API)
+  //     const ETH_TO_INR_RATE = 200000; // Example rate: 1 ETH = 200,000 INR
+  //     const amountInEth = totalAmount / ETH_TO_INR_RATE;
+
+  //     // Create provider and get signer
+  //     const provider = new BrowserProvider(window.ethereum);
+  //     const signer = await provider.getSigner();
+
+  //     // Replace with your merchant wallet address
+  //     const merchantAddress = "0x52c7d0701Fa7460552085E406CD33042EaB1eC40";
+
+  //     // Create the transaction
+  //     const tx = {
+  //       from: account,
+  //       to: merchantAddress,
+  //       value: parseEther(amountInEth.toFixed(18)),
+  //       gasLimit: 21000n
+  //     };
+
+  //     setLoading(true);
+
+  //     // Send transaction
+  //     const transaction = await signer.sendTransaction(tx);
+
+  //     // Wait for transaction confirmation
+  //     await transaction.wait();
+
+  //     // After successful payment, update the backend
+  //     const paymentData = {
+  //       transactionHash: transaction.hash,
+  //       amount: totalAmount,
+  //       userId: userData._id,
+  //       items: cartItems
+  //     };
+
+  //     await axios.post(`${baseURL}/payment-success`, paymentData);
+
+  //     // Clear cart and close modal
+  //     setCartItems([]);
+  //     setIsModalOpen(false);
+  //     alert('Payment successful!');
+  //   } catch (error) {
+  //     console.error('Payment failed:', error);
+  //     alert('Payment failed! Please try again.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const choicePayment = () => {
+    console.log("Choice payment");
+  }
 
   return (
     <>
@@ -204,8 +210,8 @@ const CartButton = () => {
       <button
         onClick={userData?._id ? viewCartModal : null}
         className={`fixed right-6 top-6 z-50 px-6 py-3 rounded-lg shadow-lg transition-colors flex items-center gap-2 transform duration-200 ${userData?._id
-            ? 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105 active:scale-95'
-            : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+          ? 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105 active:scale-95'
+          : 'bg-gray-400 text-gray-200 cursor-not-allowed'
           }`}
         disabled={!userData?._id}
       >
@@ -277,7 +283,7 @@ const CartButton = () => {
                         <button
                           className="text-red-600 hover:text-red-800 transition-colors"
                           aria-label="Delete"
-                          onClick={()=>handleDeleteMedicine(item.name)}
+                          onClick={() => handleDeleteMedicine(item.name)}
                         >
                           <Trash className="w-5 h-5" />
                         </button>
@@ -303,17 +309,22 @@ const CartButton = () => {
               <p className="text-gray-500">Your cart is empty.</p>
             )}
 
-            <button
-              onClick={handlePayment}
-              className={`mt-4 w-full bg-blue-600 text-white py-2 rounded-lg transition-colors flex items-center justify-center gap-1  ${paylock
-            ? 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105 active:scale-95'
-            : 'bg-gray-400 text-gray-200 cursor-not-allowed'
-          }`}
-              disabled={!paylock}
-            >
-              <span>Pay</span>
-              <Lock className="w-4 h-4" />
-            </button>
+              <button
+                onClick={() => setIsModalOpenPayement(true)}
+                className={`mt-4 w-full bg-blue-600 text-white py-2 rounded-lg transition-colors flex items-center justify-center gap-1  ${paylock
+              ? 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105 active:scale-95'
+              : 'bg-gray-400 text-gray-200 cursor-not-allowed'
+            }`}
+                disabled={!paylock}
+              >
+                Proceed
+                <Lock className='w-4 h-4'/>
+              </button>
+
+              <PaymentModal
+                isOpen={isModalOpenPayment}
+                onClose={() => setIsModalOpenPayement(false)}
+              />
 
           </div>
         </div>
