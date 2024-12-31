@@ -2,20 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { ShoppingCart, X, Trash, Lock } from 'lucide-react';
 import axios from 'axios';
 import { baseURL } from '../main';
+import { useNavigate } from 'react-router-dom';
 import { BrowserProvider, parseEther, formatEther } from 'ethers';
 import { PaymentModal }  from './PaymentModal';
 
-const ethereum = window.ethereum;
+// const ethereum = window.ethereum;
 
 const CartButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [userData, setUserData] = useState([]);
   const [paylock, setPayLock] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [account, setAccount] = useState('');
-  const [isModalOpenPayment, setIsModalOpenPayement] = useState(false);
-
+  const navigate = useNavigate();
 
   const viewCartModal = () => { 
     setIsModalOpen(true);
@@ -116,92 +114,9 @@ const CartButton = () => {
     }
   };
 
-  // const connectWallet = async () => {
-  //   try {
-  //     if (!window.ethereum) {
-  //       alert('Please install MetaMask to make payments!');
-  //       return false;
-  //     }
 
-  //     setLoading(true);
-  //     const accounts = await window.ethereum.request({
-  //       method: 'eth_requestAccounts'
-  //     });
-
-  //     setAccount(accounts[0]);
-  //     setLoading(false);
-  //     return true;
-  //   } catch (error) {
-  //     console.error('Error connecting wallet:', error);
-  //     setLoading(false);
-  //     return false;
-  //   }
-  // };
-
-
-  // const handlePayment = async () => {
-  //   try {
-  //     // First connect the wallet
-  //     const isConnected = await connectWallet();
-  //     if (!isConnected) return;
-
-  //     // Calculate total amount in ETH (you'll need to implement your own conversion rate)
-  //     const totalAmount = cartItems.reduce(
-  //       (total, item) => total + item.price * item.quantity,
-  //       0
-  //     );
-
-  //     // Convert INR to ETH (using a hypothetical conversion rate - you should get this from an API)
-  //     const ETH_TO_INR_RATE = 200000; // Example rate: 1 ETH = 200,000 INR
-  //     const amountInEth = totalAmount / ETH_TO_INR_RATE;
-
-  //     // Create provider and get signer
-  //     const provider = new BrowserProvider(window.ethereum);
-  //     const signer = await provider.getSigner();
-
-  //     // Replace with your merchant wallet address
-  //     const merchantAddress = "0x52c7d0701Fa7460552085E406CD33042EaB1eC40";
-
-  //     // Create the transaction
-  //     const tx = {
-  //       from: account,
-  //       to: merchantAddress,
-  //       value: parseEther(amountInEth.toFixed(18)),
-  //       gasLimit: 21000n
-  //     };
-
-  //     setLoading(true);
-
-  //     // Send transaction
-  //     const transaction = await signer.sendTransaction(tx);
-
-  //     // Wait for transaction confirmation
-  //     await transaction.wait();
-
-  //     // After successful payment, update the backend
-  //     const paymentData = {
-  //       transactionHash: transaction.hash,
-  //       amount: totalAmount,
-  //       userId: userData._id,
-  //       items: cartItems
-  //     };
-
-  //     await axios.post(`${baseURL}/payment-success`, paymentData);
-
-  //     // Clear cart and close modal
-  //     setCartItems([]);
-  //     setIsModalOpen(false);
-  //     alert('Payment successful!');
-  //   } catch (error) {
-  //     console.error('Payment failed:', error);
-  //     alert('Payment failed! Please try again.');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  const choicePayment = () => {
-    console.log("Choice payment");
+  const handletoAddress = () =>{
+    navigate('/addresspage');
   }
 
   return (
@@ -310,7 +225,7 @@ const CartButton = () => {
             )}
 
               <button
-                onClick={() => setIsModalOpenPayement(true)}
+                onClick={() => handletoAddress()}
                 className={`mt-4 w-full bg-blue-600 text-white py-2 rounded-lg transition-colors flex items-center justify-center gap-1  ${paylock
               ? 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105 active:scale-95'
               : 'bg-gray-400 text-gray-200 cursor-not-allowed'
@@ -321,10 +236,10 @@ const CartButton = () => {
                 <Lock className='w-4 h-4'/>
               </button>
 
-              <PaymentModal
+              {/* <PaymentModal
                 isOpen={isModalOpenPayment}
                 onClose={() => setIsModalOpenPayement(false)}
-              />
+              /> */}
 
           </div>
         </div>

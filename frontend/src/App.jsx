@@ -22,7 +22,9 @@ import AddMedicine from './pages/AddMedicine';
 import DeleteMedicine from './pages/DeleteMedicine';
 import UpdateMedicine from './pages/UpdateMedicine';
 import Tracking from './pages/Tracking';
-
+import { AddressPage } from './pages/AddressPage';
+import { PaymentPage } from './pages/PaymentPage';
+import { OrderConfirmationPage } from './pages/OrderConfirmationPage';
 
 function App() {
 
@@ -49,6 +51,10 @@ function App() {
           <Route path="/updatemedicine" element={<UpdateMedicine />} />
           <Route path="/deletemedicine" element={<DeleteMedicine />} />
           <Route path="/tracking" element={<Tracking />} />
+          <Route path="/addresspage" element={<AddressPage />} />
+          <Route path="/payments" element={<PaymentPage />} />
+          <Route path="/orderconfirmation" element={<OrderConfirmationPage />} />
+
         </Route>
       </Routes>
     </>
