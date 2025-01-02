@@ -644,9 +644,9 @@ const updateorderedmedicines = async (req, res) => {
         await user.save();
 
         // console.log(`Updated orderedmedicines for user ${id}`);
-        res.status(200).json({ 
-            message: 'Medicine updated successfully', 
-            orderedmedicines: user.orderedmedicines 
+        res.status(200).json({
+            message: 'Medicine updated successfully',
+            orderedmedicines: user.orderedmedicines
         });
     } catch (error) {
         console.error('Error updating orderedmedicines:', error.message);
@@ -673,9 +673,9 @@ const updatecartquantity = async (req, res) => {
             return res.status(404).json({ error: 'Medicine not found in the cart' });
         }
 
-        return res.status(200).json({ 
-            message: 'Medicine quantity updated successfully', 
-            orderedmedicines: updatedUser.orderedmedicines 
+        return res.status(200).json({
+            message: 'Medicine quantity updated successfully',
+            orderedmedicines: updatedUser.orderedmedicines
         });
     } catch (error) {
         console.error('Error updating cart quantity:', error);
@@ -685,7 +685,7 @@ const updatecartquantity = async (req, res) => {
 
 const decreaseupdatecartquantity = async (req, res) => {
     const { name, id } = req.body; // Destructure name from request body
-    
+
 
     if (!name) {
         return res.status(400).json({ error: 'Medicine name is required for updating the quantity' });
@@ -718,9 +718,9 @@ const decreaseupdatecartquantity = async (req, res) => {
             { new: true } // Return the updated document
         );
 
-        return res.status(200).json({ 
-            message: 'Medicine quantity decreased successfully', 
-            orderedmedicines: updatedUser.orderedmedicines 
+        return res.status(200).json({
+            message: 'Medicine quantity decreased successfully',
+            orderedmedicines: updatedUser.orderedmedicines
         });
     } catch (error) {
         console.error('Error updating cart quantity:', error);
@@ -731,34 +731,32 @@ const decreaseupdatecartquantity = async (req, res) => {
 const deletemedicine = async (req, res) => {
     const { name, id } = req.body; // `id` here is the userID
     try {
-      if (!name || !id) {
-        return res.status(400).json({ message: 'Name and userID are required' });
-      }
-  
-      // Find the user by ID and update the orderedmedicines array
-      const updatedUser = await User.findByIdAndUpdate(
-        id, // Find the user by their ID
-        { $pull: { orderedmedicines: { medicine: name } } }, // Remove the medicine object where 'medicine' matches the 'name'
-        { new: true } // Return the updated document
-      );
-  
-      if (!updatedUser) {
-        return res.status(404).json({ message: 'User not found or medicine not found in order' });
-      }
-  
-      await updatedUser.save();
-  
-      res.status(200).json({
-        message: `Medicine '${name}' successfully deleted from user's orders`,
-        updatedOrders: updatedUser.orderedmedicines,
-      });
-    } catch (error) {
-      console.error('Error deleting medicine:', error);
-      res.status(500).json({ message: 'Server error while deleting medicine', error });
-    }
-  };
-  
+        if (!name || !id) {
+            return res.status(400).json({ message: 'Name and userID are required' });
+        }
 
+        // Find the user by ID and update the orderedmedicines array
+        const updatedUser = await User.findByIdAndUpdate(
+            id, // Find the user by their ID
+            { $pull: { orderedmedicines: { medicine: name } } }, // Remove the medicine object where 'medicine' matches the 'name'
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found or medicine not found in order' });
+        }
+
+        await updatedUser.save();
+
+        res.status(200).json({
+            message: `Medicine '${name}' successfully deleted from user's orders`,
+            updatedOrders: updatedUser.orderedmedicines,
+        });
+    } catch (error) {
+        console.error('Error deleting medicine:', error);
+        res.status(500).json({ message: 'Server error while deleting medicine', error });
+    }
+};
 
 const addmedicinetodb = async (req, res) => {
     const { name, manufacturer, dosage, type, price, stock } = req.body;
@@ -789,7 +787,47 @@ const addmedicinetodb = async (req, res) => {
     }
 };
 
+const finalitems = async (req, res) => {
+    const { id, items } = req.body; 
+    console.log(items, id);
+  
+    // Validate the request
+    if (!id) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+  
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ error: 'Items field is required and must be an array' });
+    }
+  
+    try {
+
+      const user = await User.findById(id);
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      // Push items into the `order` array
+      const newOrder = {
+        orderId: '', // Generate a unique orderId (can be replaced with a UUID generator)
+        items, // Add the items from the request
+        totalPrice: items.reduce((total, item) => total + item.price * item.quantity, 0), // Calculate total price
+        payment: '', // Placeholder for payment method (to be updated later)
+        address: '', // Placeholder for address (to be updated later)
+      };
+  
+      user.order.push(newOrder); // Push the new order into the user's `order` array
+      await user.save(); // Save the updated user document
+  
+      return res.status(200).json({ message: 'Medicine added successfully to orders', order: newOrder });
+    } catch (error) {
+      console.error('Error adding items to order:', error.message);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  };
+  
 module.exports = {
     signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus
-    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines, updateorderedmedicines, updatecartquantity, addmedicinetodb, decreaseupdatecartquantity, deletemedicine
+    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines, updateorderedmedicines, updatecartquantity, addmedicinetodb, decreaseupdatecartquantity, deletemedicine, finalitems
 };

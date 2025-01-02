@@ -114,10 +114,25 @@ const CartButton = () => {
     }
   };
 
-
-  const handletoAddress = () =>{
-    navigate('/addresspage');
-  }
+  const handletoAddress = async () => {
+    try {
+      console.log("Cart Items being sent:", cartItems); // Debug log
+  
+      const response = await axios.post(`${baseURL}/additemstocart`, {
+        id: userData._id, // Passing user ID if required
+        items: cartItems, // Passing the array
+      });
+  
+      console.log(response);
+  
+      if (response.status === 200) {
+        console.log("Success");
+        // navigate('/addresspage');
+      }
+    } catch (error) {
+      console.error('Error updating the quantity of medicine:', error.message);
+    }
+  };
 
   return (
     <>

@@ -89,7 +89,26 @@ const userSchema = new mongoose.Schema({
       ],
       default: [], // Default to an empty array
     },
-    
+
+   order: {
+      type: [
+        {
+          orderId: { type: String, required: true },
+          items: [
+            {
+              id: { type: String, required: true }, // Unique identifier for each item
+              medicine: { type: String, required: true },  // Name of the item
+              quantity: { type: Number, required: true }, // Quantity ordered
+              price: { type: Number, required: true }, // Price of the individual item
+            },
+          ],
+          totalPrice: { type: Number, required: true }, // Total price for the order
+          payment: { type: String, required: true }, // Payment method
+          address: { type: String, required: true }, // Delivery address
+        },
+      ],
+      default: [], // Default to an empty array
+   },
 }, { timestamps: true });
 //For get fullName from when we get data from database
 

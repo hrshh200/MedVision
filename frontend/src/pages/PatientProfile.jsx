@@ -64,7 +64,7 @@ const DoctorProfile = () => {
                                             value={formData.name}
                                             onChange={handleChange}
                                             className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                            placeholder="Enter full address"
+                                            placeholder="Enter full name"
                                         />
                                     </div>
                                     <div>
