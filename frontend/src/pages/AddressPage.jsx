@@ -3,11 +3,12 @@ import { MapPin, Phone, User, Mail } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { baseURL } from '../main';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export function AddressPage() {
   const navigate = useNavigate();
   const [userdata, setUserData] = useState([]);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: userdata?.name || '',
     email: userdata?.email || '',
@@ -17,6 +18,7 @@ export function AddressPage() {
     state: '',
     zipCode: ''
   });
+
 
   const fetchDataFromApi = async () => {
     try {
@@ -32,7 +34,7 @@ export function AddressPage() {
         ...formData,
         fullName: fetchedData?.name || '',
         email: fetchedData?.email || '',
-        phone : fetchedData?.mobile || '',
+        phone: fetchedData?.mobile || '',
         address: fetchedData?.address || '',
       });
 
@@ -53,15 +55,28 @@ export function AddressPage() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Start loading
-    setTimeout(() => {
-      setLoading(false); // Stop loading after 3 seconds
-      localStorage.setItem('orderDetails', JSON.stringify(formData));
-      navigate('/payments'); // Navigate after the loader
-    }, 1000);
-  };
+    setLoading(true);
+    // localStorage.setItem('orderDetails', JSON.stringify(formData));
+    try {
+      const response = await axios.post(`${baseURL}/addaddress`, {
+        id: userdata?._id,
+        orderid: userdata?.order?.[userdata.order.length - 1]?.orderId,
+        address: userdata?.address
+      });
+
+      if (response.status === 200) {
+        setTimeout(() => {
+          setLoading(false);
+          toast.success(response.data.message);
+          navigate('/payments')
+        }, 1000)
+      }
+    } catch (error) {
+      console.log("Error updating the address to order");
+    }
+  }
 
   return (
     <div className="mt-[10vh] min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -69,7 +84,7 @@ export function AddressPage() {
         <h1 className="text-3xl font-bold text-gray-900 text-center mb-8">
           Shipping Details
         </h1>
-        
+
         {loading ? ( // Show loader if loading is true
           <div className="flex justify-center items-center">
             <div className="loader w-16 h-16 border-4 border-t-blue-600 border-gray-300 rounded-full animate-spin"></div>

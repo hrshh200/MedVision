@@ -25,6 +25,7 @@ import Tracking from './pages/Tracking';
 import { AddressPage } from './pages/AddressPage';
 import { PaymentPage } from './pages/PaymentPage';
 import { OrderConfirmationPage } from './pages/OrderConfirmationPage';
+import Orders from './pages/Orders';
 
 function App() {
 
@@ -54,7 +55,7 @@ function App() {
           <Route path="/addresspage" element={<AddressPage />} />
           <Route path="/payments" element={<PaymentPage />} />
           <Route path="/orderconfirmation" element={<OrderConfirmationPage />} />
-
+          <Route path="/orders" element={<Orders />} />
         </Route>
       </Routes>
     </>

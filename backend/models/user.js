@@ -97,7 +97,7 @@ const userSchema = new mongoose.Schema({
           items: [
             {
               id: { type: String, required: true }, // Unique identifier for each item
-              medicine: { type: String, required: true },  // Name of the item
+              name: { type: String, required: true },  // Name of the item
               quantity: { type: Number, required: true }, // Quantity ordered
               price: { type: Number, required: true }, // Price of the individual item
             },

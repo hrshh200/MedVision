@@ -5,6 +5,7 @@ import { baseURL } from '../main';
 import { useNavigate } from 'react-router-dom';
 import { BrowserProvider, parseEther, formatEther } from 'ethers';
 import { PaymentModal }  from './PaymentModal';
+import toast from 'react-hot-toast';
 
 // const ethereum = window.ethereum;
 
@@ -117,17 +118,20 @@ const CartButton = () => {
   const handletoAddress = async () => {
     try {
       console.log("Cart Items being sent:", cartItems); // Debug log
-  
+      
       const response = await axios.post(`${baseURL}/additemstocart`, {
-        id: userData._id, // Passing user ID if required
+        id: userData?._id, // Passing user ID if required
         items: cartItems, // Passing the array
       });
   
       console.log(response);
   
       if (response.status === 200) {
-        console.log("Success");
-        // navigate('/addresspage');
+        navigate('/addresspage');
+      }
+      else if(response.status === 201){
+        navigate('/addresspage');
+        toast.success(response.data.message);
       }
     } catch (error) {
       console.error('Error updating the quantity of medicine:', error.message);

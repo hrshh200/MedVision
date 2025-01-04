@@ -67,7 +67,7 @@ function App() {
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-center gap-3">
             <Pill className="w-8 h-8 text-blue-600" />
-            <h1 className="text-2xl font-bold text-gray-900">Online Pharmacy (MedEasy)</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Online Pharmacy (Generic Medicine)</h1>
           </div>
         </div>
       </div>

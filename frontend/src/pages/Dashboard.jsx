@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaNotesMedical, FaUserMd, FaHome, FaFilePrescription, FaHistory, FaVideo, FaUser, FaEnvelope, FaPhone, FaCalendar, FaMapMarkerAlt, FaIdCard, FaGraduationCap, FaHospital, FaWeight, FaRulerVertical } from 'react-icons/fa';
+import { FaNotesMedical, FaUserMd, FaHome, FaFilePrescription, FaHistory, FaExclamationTriangle, FaVideo, FaUser, FaEnvelope, FaPhone, FaCalendar, FaMapMarkerAlt, FaIdCard, FaGraduationCap, FaHospital, FaWeight, FaRulerVertical } from 'react-icons/fa';
 import { LineChart, Line, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { baseURL } from '../main';
 import { FaPerson } from 'react-icons/fa6';
@@ -77,7 +77,8 @@ const Dashboard = () => {
             { icon: FaUserMd, text: "Book Appointments", onClick: () => navigate('/searchdoctor') },
             { icon: FaFilePrescription, text: "Search Medicine", onClick: () => navigate('/onlinepharmacy') },
             { icon: FaHistory, text: "Recent Transactions", onClick: () => setShowRecentTransactions(true) },
-            { icon: FaUserMd, text: "Check for diseases", onClick: () => navigate('/disease') }
+            { icon: FaUserMd, text: "Check for diseases", onClick: () => navigate('/disease') },
+            { icon: FaHistory, text: "Your Orders", onClick: () => navigate('/orders') }
         ];
 
     const renderUserInfo = () => {
@@ -115,33 +116,48 @@ const Dashboard = () => {
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="flex items-center space-x-2">
                         <FaUser className="text-blue-600" />
-                        <span>{userData?.name || 'N/A'}</span>
+                        <span>
+                            {userData?.name ? userData.name : <FaExclamationTriangle className="text-red-600" />}
+                        </span>
                     </div>
                     <div className="flex items-center space-x-2">
                         <FaEnvelope className="text-blue-600" />
-                        <span>{userData?.email || 'N/A'}</span>
+                        <span>
+                            {userData?.email ? userData.email : <FaExclamationTriangle className="text-red-600" />}
+                        </span>
                     </div>
                     <div className="flex items-center space-x-2">
                         <FaPhone className="text-blue-600" />
-                        <span>{userData?.mobile || '+91 9020326676'}</span>
+                        <span>
+                            {userData?.mobile ? userData.mobile : <FaExclamationTriangle className="text-red-600" />}
+                        </span>
                     </div>
                     <div className="flex items-center space-x-2">
                         <FaCalendar className="text-blue-600" />
-                        <span>DOB: {userData?.dob || '1990-01-01'}</span>
+                        <span>
+                            {userData?.dob ? `DOB: ${userData.dob}` : <FaExclamationTriangle className="text-red-600" />}
+                        </span>
                     </div>
                     <div className="flex items-center space-x-2">
                         <FaWeight className="text-blue-600" />
-                        <span>Weight: {userData?.weight || '75'} kg</span>
+                        <span>
+                            {userData?.weight ? `Weight: ${userData.weight} kg` : <FaExclamationTriangle className="text-red-600" />}
+                        </span>
                     </div>
                     <div className="flex items-center space-x-2">
                         <FaRulerVertical className="text-blue-600" />
-                        <span>Height: {userData?.height || '175'} foot</span>
+                        <span>
+                            {userData?.height ? `Height: ${userData.height} foot` : <FaExclamationTriangle className="text-red-600" />}
+                        </span>
                     </div>
                     <div className="flex items-center space-x-2">
                         <FaMapMarkerAlt className="text-blue-600" />
-                        <span>{userData?.address || '123 Main Street, Cityville, USA'}</span>
+                        <span>
+                            {userData?.address ? userData.address : <FaExclamationTriangle className="text-red-600" />}
+                        </span>
                     </div>
                 </div>
+
             );
         }
     };

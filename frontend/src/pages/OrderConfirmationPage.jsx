@@ -1,16 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { CheckCircle, Package, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { baseURL } from '../main';
+import axios from 'axios';
 
 export function OrderConfirmationPage() {
-  const [orderDetails, setOrderDetails] = useState(null);
+  const [userdata, setUserData] = useState([]);
+
+  const fetchDataFromApi = async () => {
+    try {
+      const token = localStorage.getItem('medVisionToken');
+      const response = await axios.get(`${baseURL}/fetchdata`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const fetchedData = response.data.userData;
+      setUserData(fetchedData);
+      localStorage.setItem('userData', JSON.stringify(fetchedData));
+    } catch (error) {
+      console.error('Error fetching data:', error.message);
+    }
+  };
 
   useEffect(() => {
-    const details = JSON.parse(localStorage.getItem('orderDetails') || '{}');
-    setOrderDetails(details);
+    fetchDataFromApi();
   }, []);
 
-  if (!orderDetails) return null;
+
+  // if (!orderDetails) return null;
 
   return (
     <div className="mt-[10vh] min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -32,12 +50,12 @@ export function OrderConfirmationPage() {
           <div className="bg-gray-50 p-6 rounded-lg">
             <div className="flex items-center justify-center space-x-2 text-gray-700">
               <Package className="w-5 h-5" />
-              <span>Order #{orderDetails.orderId}</span>
+              <span>Order #{userdata?.order?.[userdata.order.length - 1]?.orderId}</span>
             </div>
             
             <div className="mt-4 text-sm text-gray-600">
               <p>A confirmation email has been sent to:</p>
-              <p className="font-medium">{orderDetails.email}</p>
+              <p className="font-medium">{userdata.email}</p>
             </div>
           </div>
 

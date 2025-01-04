@@ -788,46 +788,177 @@ const addmedicinetodb = async (req, res) => {
 };
 
 const finalitems = async (req, res) => {
-    const { id, items } = req.body; 
-    console.log(items, id);
-  
+    const { id, items } = req.body;
+
     // Validate the request
     if (!id) {
-      return res.status(400).json({ error: 'User ID is required' });
+        return res.status(400).json({ error: 'User ID is required' });
     }
-  
-    if (!items || !Array.isArray(items) || items.length === 0) {
-      return res.status(400).json({ error: 'Items field is required and must be an array' });
-    }
-  
-    try {
 
-      const user = await User.findById(id);
-  
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-  
-      // Push items into the `order` array
-      const newOrder = {
-        orderId: '', // Generate a unique orderId (can be replaced with a UUID generator)
-        items, // Add the items from the request
-        totalPrice: items.reduce((total, item) => total + item.price * item.quantity, 0), // Calculate total price
-        payment: '', // Placeholder for payment method (to be updated later)
-        address: '', // Placeholder for address (to be updated later)
-      };
-  
-      user.order.push(newOrder); // Push the new order into the user's `order` array
-      await user.save(); // Save the updated user document
-  
-      return res.status(200).json({ message: 'Medicine added successfully to orders', order: newOrder });
-    } catch (error) {
-      console.error('Error adding items to order:', error.message);
-      return res.status(500).json({ error: 'Internal server error' });
+    if (!items || !Array.isArray(items) || items.length === 0) {
+        return res.status(400).json({ error: 'Items field is required and must be an array' });
     }
-  };
-  
+
+    try {
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Validate existing orders
+        if (user.order && user.order.length > 0) {
+            const incompleteOrder = user.order.some(order => 
+                !order.orderId || 
+                !order.items || order.items.length === 0 || 
+                !order.totalPrice || 
+                order.payment === 'Pending' ||
+                !order.address
+            );
+
+            if (incompleteOrder) {
+                return res.status(201).json({
+                    message: 'Kindly proceed with the payment',
+                });
+            }
+        }
+
+        // Generate a unique order ID
+        const orderId = Math.random().toString(36).substr(2, 9).toUpperCase();
+
+        // Push items into the `order` array
+        const newOrder = {
+            orderId,
+            items, // Add the items from the request
+            totalPrice: items.reduce((total, item) => total + item.price * item.quantity, 0), // Calculate total price
+            payment: 'Pending', // Placeholder for payment method
+            address: 'TBD', // Placeholder for address
+        };
+
+        user.order.push(newOrder); // Push the new order into the user's `order` array
+        await user.save(); // Save the updated user document
+
+        return res.status(200).json({
+            message: 'Medicine added successfully to orders',
+            order: newOrder,
+        });
+    } catch (error) {
+        console.error('Error adding items to order:', error.message);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+const finaladdress = async (req, res) => {
+    const { id, orderid, address } = req.body;
+
+    // Validate the request
+    if (!id || !orderid || !address) {
+        return res.status(400).json({ error: 'User ID, Order ID, and Address are required' });
+    }
+
+    try {
+        // Find the user by ID
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Find the order by orderid in the user's order array
+        const orderIndex = user.order.findIndex(order => order.orderId === orderid);
+
+        if (orderIndex === -1) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+
+        // Update the address field
+        user.order[orderIndex].address = address;
+
+        // Save the updated user document
+        await user.save();
+
+        return res.status(200).json({
+            message: 'Address added successfully',
+            updatedOrder: user.order[orderIndex],
+        });
+    } catch (error) {
+        console.error('Error updating address:', error.message);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+const finalpayment = async (req, res) => {
+    const {id, orderid, payment} = req.body;
+
+    // Validate the request
+    if (!id || !orderid || !payment) {
+        return res.status(400).json({ error: 'User ID, Order ID, and payment are required' });
+    }
+
+    try {
+        // Find the user by ID
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Find the order by orderid in the user's order array
+        const orderIndex = user.order.findIndex(order => order.orderId === orderid);
+
+        if (orderIndex === -1) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+
+        // Update the address field
+        user.order[orderIndex].payment = payment;
+
+        // Save the updated user document
+        await user.save();
+
+        return res.status(200).json({
+            message: 'Payment successfull!',
+            updatedOrder: user.order[orderIndex],
+        });
+    } catch (error) {
+        console.error('Error updating address:', error.message);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+
+}
+
+const deletecartItems = async (req, res) => {
+    const { id } = req.body;
+
+    // Validate the request
+    if (!id) {
+        return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    try {
+        // Find the user by ID
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Clear the `orderedmedicines` array
+        user.orderedmedicines = []; // Set the array to an empty array
+
+        // Save the updated user document
+        await user.save();
+
+        return res.status(200).json({ message: 'Ordered medicines have been cleared successfully.' });
+    } catch (error) {
+        console.error('Error clearing ordered medicines:', error.message);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+
+
 module.exports = {
     signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus
-    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines, updateorderedmedicines, updatecartquantity, addmedicinetodb, decreaseupdatecartquantity, deletemedicine, finalitems
+    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines, updateorderedmedicines, updatecartquantity, addmedicinetodb, decreaseupdatecartquantity, deletemedicine, finalitems, finaladdress, finalpayment, deletecartItems
 };

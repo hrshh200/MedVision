@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreditCard, Wallet, Truck, QrCode } from 'lucide-react';
 import Loader from '../components/Loader';
+import toast from 'react-hot-toast';
+import { baseURL } from '../main';
+import axios from 'axios';
 
 const paymentMethods = [
   {
@@ -34,20 +37,64 @@ export function PaymentPage() {
   const navigate = useNavigate();
   const [selectedMethod, setSelectedMethod] = useState('card');
   const [loading, setLoading] = useState(false);
+  const [userdata, setUserData] = useState([]);
 
-  const handlePayment = (e) => {
+  const fetchDataFromApi = async () => {
+    try {
+      const token = localStorage.getItem('medVisionToken');
+      const response = await axios.get(`${baseURL}/fetchdata`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const fetchedData = response.data.userData;
+      setUserData(fetchedData);
+
+      localStorage.setItem('userData', JSON.stringify(fetchedData));
+    } catch (error) {
+      console.error('Error fetching data:', error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchDataFromApi();
+  }, []);
+
+  const handlePayment = async (e) => {
     // In a real app, you'd process the payment here
     e.preventDefault();
     setLoading(true);
-    setTimeout(()=>{
-      setLoading(false);
-      const orderDetails = JSON.parse(localStorage.getItem('orderDetails') || '{}');
-      orderDetails.paymentMethod = selectedMethod;
-      orderDetails.orderId = Math.random().toString(36).substr(2, 9).toUpperCase();
-      localStorage.setItem('orderDetails', JSON.stringify(orderDetails));
-      navigate('/orderconfirmation');
-    }, 3000)
+    try {
+      const response = await axios.post(`${baseURL}/addpayment`, {
+        id: userdata?._id,
+        orderid: userdata?.order?.[userdata.order.length - 1]?.orderId,
+        payment: selectedMethod
+      });
+
+      if (response.status === 200) {
+        setTimeout(() => {
+        deletecartitems();
+        setLoading(false);
+          toast.success(response.data.message);
+          navigate('/orderconfirmation')
+        }, 1000)
+      }
+    } catch (error) {
+      console.log("Error updating the address to order");
+    }
   };
+
+  const deletecartitems = async () => {
+      try {
+        const response = await axios.post(`${baseURL}/deletefullcart`,{id: userdata?._id});
+  
+        if (response.status === 200) {
+          console.log("Items from cart has been deleted");
+        }
+      } catch (error) {
+        console.log("Error deleting the items from the cart");
+      }
+  }
 
   return (
     <div className="mt-[10vh] min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
