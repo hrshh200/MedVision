@@ -833,6 +833,7 @@ const finalitems = async (req, res) => {
             totalPrice: items.reduce((total, item) => total + item.price * item.quantity, 0), // Calculate total price
             payment: 'Pending', // Placeholder for payment method
             address: 'TBD', // Placeholder for address
+            status: 'Pending'
         };
 
         user.order.push(newOrder); // Push the new order into the user's `order` array
@@ -912,6 +913,7 @@ const finalpayment = async (req, res) => {
 
         // Update the address field
         user.order[orderIndex].payment = payment;
+        user.order[orderIndex].status = "Booked";
 
         // Save the updated user document
         await user.save();

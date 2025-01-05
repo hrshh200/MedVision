@@ -105,6 +105,7 @@ const userSchema = new mongoose.Schema({
           totalPrice: { type: Number, required: true }, // Total price for the order
           payment: { type: String, required: true }, // Payment method
           address: { type: String, required: true }, // Delivery address
+          status: {type: String, required: true}
         },
       ],
       default: [], // Default to an empty array

@@ -1,10 +1,14 @@
 import React from 'react';
+import { useParams } from 'react-router-dom'; // Import useParams
 import { Package, Truck, CheckCircle, Clock, MapPin } from 'lucide-react';
 
 function Tracking() {
-  // Example tracking data
+  // Retrieve the id from the URL parameters
+  const { id } = useParams();
+
+  // Example tracking data (replace this with API data based on the id)
   const trackingStatus = {
-    orderNumber: "ORD123456789",
+    orderNumber: id || "ORD123456789", // Use the id as the order number if available
     currentStatus: "in-transit",
     estimatedDelivery: "January 15, 2025",
     location: "Kolkata Distribution Center",

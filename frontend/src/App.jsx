@@ -51,7 +51,7 @@ function App() {
           <Route path="/addmedicine" element={<AddMedicine />} />
           <Route path="/updatemedicine" element={<UpdateMedicine />} />
           <Route path="/deletemedicine" element={<DeleteMedicine />} />
-          <Route path="/tracking" element={<Tracking />} />
+          <Route path="/tracking/:id" element={<Tracking />} />
           <Route path="/addresspage" element={<AddressPage />} />
           <Route path="/payments" element={<PaymentPage />} />
           <Route path="/orderconfirmation" element={<OrderConfirmationPage />} />
