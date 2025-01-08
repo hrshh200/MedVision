@@ -33,13 +33,16 @@ const CartButton = () => {
         },
       });
       const fetchedData = response.data.userData;
-      setUserData(fetchedData);
-
-      localStorage.setItem('userData', JSON.stringify(fetchedData));
+  
+      if (fetchedData) {
+        setUserData(fetchedData); // State update
+        localStorage.setItem('userData', JSON.stringify(fetchedData));
+      }
     } catch (error) {
       console.error('Error fetching data:', error.message);
     }
   };
+  
 
   useEffect(() => {
     fetchDataFromApi();
@@ -48,7 +51,7 @@ const CartButton = () => {
   useEffect(() => {
     if (userData?.orderedmedicines?.length > 0) {
       const updatedCartItems = userData.orderedmedicines.map((medicine, index) => ({
-        id: index, // Adding index as ID (can be replaced with a unique identifier)
+        id: index,
         name: medicine.medicine,
         price: medicine.price,
         quantity: medicine.quantity || 1,
@@ -56,7 +59,8 @@ const CartButton = () => {
       setCartItems(updatedCartItems);
       setPayLock(true);
     }
-  }, [userData?.orderedmedicines]);
+  }, [userData?.orderedmedicines?.length]);
+  
 
 
   const handleIncreaseQuantity = async (name) => {
@@ -78,7 +82,6 @@ const CartButton = () => {
       console.error('Error updating the quantity of medicine:', error.message);
     }
   };
-
 
   const handleDecreaseQuantity = async (name) => {
 
