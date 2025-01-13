@@ -92,7 +92,7 @@ const Navbar = () => {
             <div className='flex justify-between items-center px-[5rem] py-[1rem] w-full h-fit fixed top-0 z-[1000] bg-[#E1EEFF]'>
                 <p onClick={() => {
                     navigate('/');
-                }} className=' font-ibm text-[#0360D9] font-[600] text-[2rem] leading-[41.6px]'>MedVision</p>
+                }} className=' font-ibm text-[#0360D9] font-[600] text-[2rem] leading-[41.6px]'>MedCare</p>
 
                 <div className='flex justify-between items-center gap-[2rem]'>
                     <p onClick={() => {

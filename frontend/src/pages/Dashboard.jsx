@@ -77,7 +77,7 @@ const Dashboard = () => {
             { icon: FaUserMd, text: "Book Appointments", onClick: () => navigate('/searchdoctor') },
             { icon: FaFilePrescription, text: "Search Medicine", onClick: () => navigate('/onlinepharmacy') },
             { icon: FaHistory, text: "Recent Transactions", onClick: () => setShowRecentTransactions(true) },
-            { icon: FaUserMd, text: "Check for diseases", onClick: () => navigate('/disease') },
+            // { icon: FaUserMd, text: "Check for diseases", onClick: () => navigate('/disease') },
             { icon: FaHistory, text: "My Orders", onClick: () => navigate('/orders') }
         ];
 

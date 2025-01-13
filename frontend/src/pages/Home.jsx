@@ -171,7 +171,7 @@ const Home = () => {
                 <p className='text-[#7D7987] text-[.9rem]'>Free consultation with our trusted doctors and get the best recomendations</p>
               </div>
               {/* Details info */}
-              <div onClick={handleMLPharmacy} className='bg-[#FFFFFF] w-fit  max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
+              <div className='bg-[#FFFFFF] w-fit  max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
                 <img src={info} alt="info" className='h-[80px] aspect-auto' />
                 <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>Predict with ML</p>
                 <p className='text-[#7D7987] text-[.9rem]'>We have many ML models traied to predict various diseases</p>
