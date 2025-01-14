@@ -13,6 +13,7 @@ export default function BookingPage() {
   const [selectedSlot, setSelectedSlot] = useState('');
   const [availableslots, setSlotsAvailable] = useState([]);
   const [userData, setUserData] = useState([]);
+  const [message, setMessage] = useState('');
 
   // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split('T')[0];
@@ -94,72 +95,72 @@ export default function BookingPage() {
   //       document.body.appendChild(script);
   //     });
   //   }
-  
-    // const handlePayment = async (e) => {
-    //   e.preventDefault();
-    
-    //   // Ensure the Razorpay script loads
-    //   const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
-    //   if (!res) {
-    //     alert("Razorpay SDK failed to load. Are you online?");
-    //     return;
-    //   }
-    
-    //   try {
-    //     // Create an order in your backend
-    //     const { data } = await axios.post(
-    //       "https://newmodel-backend.onrender.com/api/PlusCare/Home/orderCreate",
-    //       { amount: fee * 100 }
-    //     );
-    
-    //     // Options for Razorpay payment
-    //     const options = {
-    //       key: "rzp_test_uYrPqO3bGviMYh", // Use Razorpay's test key
-    //       amount: data.amount,
-    //       currency: data.currency,
-    //       name: "MedVision",
-    //       description: "Consultation fee",
-    //       order_id: data.id,
-    //       handler: async (response) => {
-    //         try {
-    //           // Verify payment on your backend
-    //           const verifyUrl =
-    //             "https://newmodel-backend.onrender.com/api/PlusCare/Home/payment/paymentverify";
-    //           const { data: verificationData } = await axios.post(verifyUrl, {
-    //             razorpay_order_id: response.razorpay_order_id,
-    //             razorpay_payment_id: response.razorpay_payment_id,
-    //             razorpay_signature: response.razorpay_signature,
-    //           });
-    //           console.log("Payment Verified:", verificationData);
-    
-    //           // Redirect or show success
-    //           alert("Payment Successful!");
-    //           window.open("https://www.videosdk.live/prebuilt/demo");
-    //         } catch (error) {
-    //           console.error("Payment Verification Failed:", error);
-    //         }
-    //       },
-    //       prefill: {
-    //         name: "John Doe",
-    //         email: "john.doe@example.com",
-    //         contact: "9876543210",
-    //       },
-    //       theme: {
-    //         color: "#3399cc",
-    //       },
-    //     };
-    
-    //     const rzp1 = new window.Razorpay(options);
-    //     rzp1.open();
-    
-    //     // Prevent default form submission
-    //     e.preventDefault();
-    //   } catch (error) {
-    //     console.error("Error in payment process:", error);
-    //   }
-    // };
-    
-  
+
+  // const handlePayment = async (e) => {
+  //   e.preventDefault();
+
+  //   // Ensure the Razorpay script loads
+  //   const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+  //   if (!res) {
+  //     alert("Razorpay SDK failed to load. Are you online?");
+  //     return;
+  //   }
+
+  //   try {
+  //     // Create an order in your backend
+  //     const { data } = await axios.post(
+  //       "https://newmodel-backend.onrender.com/api/PlusCare/Home/orderCreate",
+  //       { amount: fee * 100 }
+  //     );
+
+  //     // Options for Razorpay payment
+  //     const options = {
+  //       key: "rzp_test_uYrPqO3bGviMYh", // Use Razorpay's test key
+  //       amount: data.amount,
+  //       currency: data.currency,
+  //       name: "MedVision",
+  //       description: "Consultation fee",
+  //       order_id: data.id,
+  //       handler: async (response) => {
+  //         try {
+  //           // Verify payment on your backend
+  //           const verifyUrl =
+  //             "https://newmodel-backend.onrender.com/api/PlusCare/Home/payment/paymentverify";
+  //           const { data: verificationData } = await axios.post(verifyUrl, {
+  //             razorpay_order_id: response.razorpay_order_id,
+  //             razorpay_payment_id: response.razorpay_payment_id,
+  //             razorpay_signature: response.razorpay_signature,
+  //           });
+  //           console.log("Payment Verified:", verificationData);
+
+  //           // Redirect or show success
+  //           alert("Payment Successful!");
+  //           window.open("https://www.videosdk.live/prebuilt/demo");
+  //         } catch (error) {
+  //           console.error("Payment Verification Failed:", error);
+  //         }
+  //       },
+  //       prefill: {
+  //         name: "John Doe",
+  //         email: "john.doe@example.com",
+  //         contact: "9876543210",
+  //       },
+  //       theme: {
+  //         color: "#3399cc",
+  //       },
+  //     };
+
+  //     const rzp1 = new window.Razorpay(options);
+  //     rzp1.open();
+
+  //     // Prevent default form submission
+  //     e.preventDefault();
+  //   } catch (error) {
+  //     console.error("Error in payment process:", error);
+  //   }
+  // };
+
+
 
   // Time slots
   const timeSlots = [
@@ -200,13 +201,12 @@ export default function BookingPage() {
                   <button
                     key={formattedDate}
                     onClick={() => isToday && setSelectedDate(formattedDate)}
-                    className={`p-3 rounded-lg text-center transition-all duration-200 ${
-                      isToday
+                    className={`p-3 rounded-lg text-center transition-all duration-200 ${isToday
                         ? isSelected
                           ? 'bg-blue-600 text-white'
                           : 'hover:bg-blue-50 border border-gray-200'
                         : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    }`}
+                      }`}
                     disabled={!isToday}
                   >
                     <div className="text-sm font-medium">
@@ -235,13 +235,12 @@ export default function BookingPage() {
                     <button
                       key={time}
                       onClick={() => isAvailable && setSelectedSlot(time)}
-                      className={`p-3 rounded-lg text-center transition-all duration-200 ${
-                        isSelected
+                      className={`p-3 rounded-lg text-center transition-all duration-200 ${isSelected
                           ? 'bg-green-600 text-white'
                           : isAvailable
                             ? 'bg-green-50 border border-green-500 hover:bg-green-100'
                             : 'border border-red-500 text-red-500 cursor-not-allowed'
-                      }`}
+                        }`}
                       disabled={!isAvailable}
                     >
                       {time}
@@ -251,15 +250,20 @@ export default function BookingPage() {
               </div>
             </div>
           )}
-
+          <input
+            type="text"
+            placeholder="Enter your message to the doctor about your concern"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
           <button
             onClick={handleConfirm}
             disabled={!selectedDate || !selectedSlot}
-            className={`w-full py-3 rounded-lg font-medium transition-all duration-200 ${
-              selectedDate && selectedSlot
+            className={`mt-4 w-full py-3 rounded-lg font-medium transition-all duration-200 ${selectedDate && selectedSlot
                 ? 'bg-blue-600 hover:bg-blue-700 text-white'
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-            }`}
+              }`}
           >
             Confirm Booking
           </button>

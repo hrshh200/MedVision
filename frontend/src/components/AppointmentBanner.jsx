@@ -112,7 +112,7 @@ export const AppointmentBanner = ({ appointments, regNo, userData }) => {
             console.error('Error updating confirm status to the backend:', error);
         }
     };
-    
+
 
     return (
         <div className="bg-white rounded-lg shadow-lg p-6">
@@ -136,11 +136,10 @@ export const AppointmentBanner = ({ appointments, regNo, userData }) => {
                                 <div className="space-x-3">
                                     <button
                                         onClick={() => handleJoin(appointment)}
-                                        className={`inline-flex items-center px-4 py-2 rounded-md transition-colors ${
-                                            isJoined || isBlocked
-                                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                                : 'bg-green-500 text-white hover:bg-green-600'
-                                        }`}
+                                        className={`inline-flex items-center px-4 py-2 rounded-md transition-colors ${isJoined || isBlocked
+                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                            : 'bg-green-500 text-white hover:bg-green-600'
+                                            }`}
                                         disabled={isJoined || isBlocked}
                                     >
                                         <Video className="w-4 h-4 mr-2" />
@@ -148,11 +147,10 @@ export const AppointmentBanner = ({ appointments, regNo, userData }) => {
                                     </button>
                                     <button
                                         onClick={() => handlePrescribe(appointment)}
-                                        className={`inline-flex items-center px-4 py-2 bg-yellow-400 text-gray-800 rounded-md hover:bg-yellow-500 transition-colors ${
-                                            isPrescribed || isBlocked
-                                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                                : ''
-                                        }`}
+                                        className={`inline-flex items-center px-4 py-2 bg-yellow-400 text-gray-800 rounded-md hover:bg-yellow-500 transition-colors ${isPrescribed || isBlocked
+                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                            : ''
+                                            }`}
                                         disabled={isPrescribed || isBlocked}
                                     >
                                         <Pill className="w-4 h-4 mr-2" />
@@ -160,6 +158,13 @@ export const AppointmentBanner = ({ appointments, regNo, userData }) => {
                                     </button>
                                 </div>
                             </div>
+                            <div class="flex justify-end">
+                                <button class="inline-flex items-center px-4 py-2 rounded-md transition-colors bg-blue-500 text-white hover:bg-blue-600 animate-blink">
+                                   View DropBox
+                                </button>
+                            </div>
+
+
                         </div>
                     );
                 })}
