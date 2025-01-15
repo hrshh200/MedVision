@@ -10,6 +10,7 @@ const Navbar = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState(null);
     const [adminData, setAdminData] = useState(null);
+    const [currentTime, setCurrentTime] = useState(new Date());
     // console.log(medVisionToken);
 
 
@@ -68,6 +69,13 @@ const Navbar = () => {
         }
     };
 
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000); // Update every second
+        return () => clearInterval(intervalId); // Cleanup on component unmount
+    }, []);
+
 
     useEffect(() => {
         if (token) {
@@ -87,9 +95,13 @@ const Navbar = () => {
         navigate('/');
     };
 
+    const options = { weekday: 'short', day: '2-digit', month: 'short', year: '2-digit' };
+    const formattedDate = currentTime.toLocaleDateString(undefined, options);
+    const formattedTime = currentTime.toLocaleTimeString();
+
     return (
         <>
-            <div className='flex justify-between items-center px-[5rem] py-[1rem] w-full h-fit fixed top-0 z-[1000] bg-[#E1EEFF]'>
+            <div className='flex justify-between items-center px-[2rem] py-[1rem] w-full h-fit fixed top-0 z-[1000] bg-[#E1EEFF]'>
                 <p onClick={() => {
                     navigate('/');
                 }} className=' font-ibm text-[#0360D9] font-[600] text-[2rem] leading-[41.6px]'>MedCare</p>
@@ -132,6 +144,11 @@ const Navbar = () => {
                         <button onClick={handleLogout} className='font-ibm bg-white text-[#0360D9] border-2 border-[#0360D9] px-[1rem] py-[.5rem] rounded-[25px] font-[500] text-[1.1rem] leading-[26px]'>Logout</button>
                     </div>
                 )}
+                <div className="p-4  text-blue-500 rounded-lg  text-center">
+                    <p className="text-sm">{formattedDate}</p>
+                    <p className="text-lg font-bold mt-1">{formattedTime}</p>
+                </div>
+
             </div>
         </>
     )

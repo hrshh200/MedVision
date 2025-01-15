@@ -41,6 +41,7 @@ export default function BookingPage() {
 
   // Handling confirmation page
   const handleConfirm = async (e) => {
+    console.log(message);
     e.preventDefault();
     try {
       const payload = {
@@ -202,10 +203,10 @@ export default function BookingPage() {
                     key={formattedDate}
                     onClick={() => isToday && setSelectedDate(formattedDate)}
                     className={`p-3 rounded-lg text-center transition-all duration-200 ${isToday
-                        ? isSelected
-                          ? 'bg-blue-600 text-white'
-                          : 'hover:bg-blue-50 border border-gray-200'
-                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      ? isSelected
+                        ? 'bg-blue-600 text-white'
+                        : 'hover:bg-blue-50 border border-gray-200'
+                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                       }`}
                     disabled={!isToday}
                   >
@@ -236,10 +237,10 @@ export default function BookingPage() {
                       key={time}
                       onClick={() => isAvailable && setSelectedSlot(time)}
                       className={`p-3 rounded-lg text-center transition-all duration-200 ${isSelected
-                          ? 'bg-green-600 text-white'
-                          : isAvailable
-                            ? 'bg-green-50 border border-green-500 hover:bg-green-100'
-                            : 'border border-red-500 text-red-500 cursor-not-allowed'
+                        ? 'bg-green-600 text-white'
+                        : isAvailable
+                          ? 'bg-green-50 border border-green-500 hover:bg-green-100'
+                          : 'border border-red-500 text-red-500 cursor-not-allowed'
                         }`}
                       disabled={!isAvailable}
                     >
@@ -261,8 +262,8 @@ export default function BookingPage() {
             onClick={handleConfirm}
             disabled={!selectedDate || !selectedSlot}
             className={`mt-4 w-full py-3 rounded-lg font-medium transition-all duration-200 ${selectedDate && selectedSlot
-                ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              ? 'bg-blue-600 hover:bg-blue-700 text-white'
+              : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               }`}
           >
             Confirm Booking

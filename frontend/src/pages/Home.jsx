@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import arrow from '../assets/arrow.png';
 import semicircle from '../assets/semicircle.png';
 import doctor from '../assets/doctor.png';
@@ -28,10 +28,10 @@ const Home = () => {
   // const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
     setFormData({
-        ...formData,
-        [e.target.name]: e.target.value,
+      ...formData,
+      [e.target.name]: e.target.value,
     });
-};
+  };
 
   const handleClickSearch = () => {
     navigate('/searchdoctor');
@@ -66,18 +66,18 @@ const Home = () => {
   const submitHandler = async () => {
     event.preventDefault(e);
     try {
-        const response = await axios.post(`${baseURL}/fetchdoctors`, formData);
-        if(response === 200){
-          console.log("Data fetched successfully:", response.data);
-          toast.success('Doctor Found!')
-        }
-        else{
-          toast.error('Error founding doctor');
-        }
+      const response = await axios.post(`${baseURL}/fetchdoctors`, formData);
+      if (response === 200) {
+        console.log("Data fetched successfully:", response.data);
+        toast.success('Doctor Found!')
+      }
+      else {
+        toast.error('Error founding doctor');
+      }
     } catch (error) {
-        console.error("Error fetching data:", error.message);
+      console.error("Error fetching data:", error.message);
     }
-};
+  };
 
 
   return (
@@ -153,8 +153,8 @@ const Home = () => {
             <div className='w-[90%] mx-auto h-fit flex flex-wrap justify-between gap-[1rem] items-center mt-[2rem] z-[100]'>
               {/* Search */}
               <div onClick={handleClickSearch} className='bg-[#FFFFFF] w-fit max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
-                <img src={search} alt="doctor" className='h-[80px] aspect-auto' />
-                <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>Search doctor</p>
+                <img src={consultation} alt="Consultation" className='h-[80px] aspect-auto' />
+                <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>Book Appointments</p>
                 <p className='text-[#7D7987] text-[.9rem]'>Choose your doctor from thousands of specialist, general, and trusted hospitals</p>
               </div>
 
@@ -166,7 +166,7 @@ const Home = () => {
               </div>
               {/* Consultation */}
               <div onClick={handleConsultation} className='bg-[#FFFFFF] w-fit max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
-                <img src={consultation} alt="Consultation" className='h-[80px] aspect-auto' />
+                <img src={search} alt="doctor" className='h-[80px] aspect-auto' />
                 <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>Consultation</p>
                 <p className='text-[#7D7987] text-[.9rem]'>Free consultation with our trusted doctors and get the best recomendations</p>
               </div>
