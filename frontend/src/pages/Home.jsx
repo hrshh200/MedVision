@@ -161,7 +161,7 @@ const Home = () => {
               {/* Online pharmacy */}
               <div onClick={handleOnlinePharmacy} className='bg-[#FFFFFF] w-fit max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
                 <img src={pharm} alt="pharm" className='h-[80px] aspect-auto' />
-                <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>Online pharmacy</p>
+                <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>Online Pharmacy</p>
                 <p className='text-[#7D7987] text-[.9rem]'>Buy  your medicines with our mobile application with a simple delivery system</p>
               </div>
               {/* Consultation */}
