@@ -7,18 +7,39 @@ import { baseURL } from '../main';
 const AvailabilitySection = ({ regno }) => {
     const [isAvailable, setIsAvailable] = useState(false);
     const [selectedSlots, setSelectedSlots] = useState([]);
+     const [currentTime, setCurrentTime] = useState(new Date());
     const [userData, setUserData] = useState(null);
     const timeSlots = [
         '09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM',
         '11:00 AM', '11:30 AM', '02:00 PM', '02:30 PM',
-        '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM'
+        '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM',
+        '05:00 PM', '05:30 PM', '06:00 PM', '06:30 PM',
+        '07:00 PM', '07:30PM'
     ];
 
+    // Function to convert 12-hour time to 24-hour time
+    const convertTo24Hour = (time) => {
+        const [hours, minutes] = time.split(/[: ]/);
+        const isPM = time.includes('PM');
+        return `${isPM && hours !== '12' ? +hours + 12 : hours === '12' && !isPM ? '00' : hours}:${minutes}`;
+    };
+
+    // Filter time slots to only include those greater than the current time
+    const formattedTime = currentTime.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+    });
+
+    const filteredSlots = timeSlots.filter((slot) => {
+        const slot24 = convertTo24Hour(slot); // Convert the slot to 24-hour format
+        const current24 = convertTo24Hour(formattedTime); // Convert current time to 24-hour format
+        return slot24 > current24; // Compare times
+    });
+
     const handleSlotToggle = (slot) => {
-        setSelectedSlots(prev =>
-            prev.includes(slot)
-                ? prev.filter(s => s !== slot)
-                : [...prev, slot]
+        setSelectedSlots((prev) =>
+            prev.includes(slot) ? prev.filter((s) => s !== slot) : [...prev, slot]
         );
     };
 
@@ -26,48 +47,50 @@ const AvailabilitySection = ({ regno }) => {
         try {
             const token = localStorage.getItem('medVisionToken');
             const response = await axios.get(`${baseURL}/fetchdata`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
             });
             const fetchedData = response.data.userData;
             setUserData(fetchedData);
-    
+
             if (fetchedData?.available?.length > 0) {
-                setSelectedSlots(fetchedData.available); // Set the existing slots
-                setIsAvailable(false); // Default to showing ExistingSlotsView
+                setSelectedSlots(fetchedData.available);
+                setIsAvailable(false); // Show ExistingSlotsView by default
             } else {
-                setIsAvailable(true); // Default to availability selector if no slots exist
+                setIsAvailable(true); // Show AvailabilitySelectorView if no slots exist
             }
-    
+
             localStorage.setItem('userData', JSON.stringify(fetchedData));
         } catch (error) {
-            console.error("Error fetching data:", error.message);
+            console.error('Error fetching data:', error.message);
         }
     };
-    
 
     useEffect(() => {
         fetchDataFromApi();
     }, []);
 
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000); // Update every second
+        return () => clearInterval(intervalId); // Cleanup
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const payload = {
-                regno,
-                slots: selectedSlots,
-            };
+            const payload = { regno, slots: selectedSlots };
             const response = await axios.post(`${baseURL}/updateslots`, payload);
             if (response.status === 200) {
                 toast.success('Slots updated for today!');
-                fetchDataFromApi(); // Refresh data after update
+                fetchDataFromApi(); // Refresh data
             }
         } catch (error) {
             toast.error('Error updating slots');
             console.error(error);
         }
     };
+
 
     // Render existing slots view
     const ExistingSlotsView = () => (
@@ -127,32 +150,40 @@ const AvailabilitySection = ({ regno }) => {
                     </button>
                 </div>
             </div>
-
+    
             {isAvailable && (
                 <div className="space-y-4">
                     <div className="flex items-center gap-2 text-gray-600">
                         <Clock className="w-5 h-5 text-blue-600" />
                         <span className="font-medium">Select your available time slots</span>
                     </div>
-
+    
                     <div className="grid grid-cols-4 gap-3">
                         {timeSlots.map((slot) => {
+                            const slot24 = convertTo24Hour(slot);
+                            const current24 = convertTo24Hour(formattedTime);
+                            const isAvailableForBooking = slot24 > current24; // Check if slot is greater than current time
                             const isSelected = selectedSlots.includes(slot);
+    
                             return (
                                 <button
                                     key={slot}
-                                    onClick={() => handleSlotToggle(slot)}
-                                    className={`p-3 rounded-lg text-center transition-all duration-200 ${isSelected
+                                    onClick={() => isAvailableForBooking && handleSlotToggle(slot)} // Only allow toggling for future slots
+                                    className={`p-3 rounded-lg text-center transition-all duration-200 
+                                        ${isSelected
                                             ? 'bg-blue-600 text-white shadow-sm'
-                                            : 'hover:bg-blue-50 border border-gray-200'
+                                            : isAvailableForBooking
+                                                ? 'hover:bg-blue-50 border border-gray-200'
+                                                : 'bg-red-100 text-red-600 cursor-not-allowed'
                                         }`}
+                                    disabled={!isAvailableForBooking} // Disable past slots
                                 >
                                     {slot}
                                 </button>
                             );
                         })}
                     </div>
-
+    
                     <div className="flex justify-end mt-6">
                         <button
                             onClick={handleSubmit}
@@ -165,6 +196,7 @@ const AvailabilitySection = ({ regno }) => {
             )}
         </>
     );
+    
 
     return (
         <div className="bg-white rounded-lg shadow p-6">
