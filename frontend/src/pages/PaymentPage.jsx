@@ -152,7 +152,6 @@ export function PaymentPage() {
     if (selectedMethod === 'metamask') {
       await handleMetaMaskWallet();
     }
-    onClose();
     setLoading(true);
     try {
       const response = await axios.post(`${baseURL}/addpayment`, {
