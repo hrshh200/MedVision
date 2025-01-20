@@ -38,6 +38,8 @@ export function PaymentPage() {
   const [selectedMethod, setSelectedMethod] = useState('card');
   const [loading, setLoading] = useState(false);
   const [userdata, setUserData] = useState([]);
+  const [account, setAccount] = useState('');
+  const ethereum = window.ethereum;
 
   const fetchDataFromApi = async () => {
     try {
@@ -60,9 +62,97 @@ export function PaymentPage() {
     fetchDataFromApi();
   }, []);
 
+  const connectWallet = async () => {
+    try {
+      if (!window.ethereum) {
+        alert('Please install MetaMask to make payments!');
+        return false;
+      }
+
+      setLoading(true);
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts'
+      });
+
+      setAccount(accounts[0]);
+      setLoading(false);
+      return true;
+    } catch (error) {
+      console.error('Error connecting wallet:', error);
+      setLoading(false);
+      return false;
+    }
+  };
+
+
+  const handleMetaMaskWallet = async () => {
+    try {
+      // First connect the wallet
+      const isConnected = await connectWallet();
+      if (!isConnected) return;
+
+      // Calculate total amount in ETH (you'll need to implement your own conversion rate)
+      const totalAmount = cartItems.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      );
+
+      // Convert INR to ETH (using a hypothetical conversion rate - you should get this from an API)
+      const ETH_TO_INR_RATE = 200000; // Example rate: 1 ETH = 200,000 INR
+      const amountInEth = totalAmount / ETH_TO_INR_RATE;
+
+      // Create provider and get signer
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+
+      // Replace with your merchant wallet address
+      const merchantAddress = "0x52c7d0701Fa7460552085E406CD33042EaB1eC40";
+
+      // Create the transaction
+      const tx = {
+        from: account,
+        to: merchantAddress,
+        value: parseEther(amountInEth.toFixed(18)),
+        gasLimit: 21000n
+      };
+
+      setLoading(true);
+
+      // Send transaction
+      const transaction = await signer.sendTransaction(tx);
+
+      // Wait for transaction confirmation
+      await transaction.wait();
+
+      // After successful payment, update the backend
+      const paymentData = {
+        transactionHash: transaction.hash,
+        amount: totalAmount,
+        userId: userData._id,
+        items: cartItems
+      };
+
+      await axios.post(`${baseURL}/payment-success`, paymentData);
+
+      // Clear cart and close modal
+      setCartItems([]);
+      setIsModalOpen(false);
+      alert('Payment successful!');
+    } catch (error) {
+      console.error('Payment failed:', error);
+      alert('Payment failed! Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handlePayment = async (e) => {
     // In a real app, you'd process the payment here
     e.preventDefault();
+    if (selectedMethod === 'metamask') {
+      await handleMetaMaskWallet();
+    }
+    onClose();
     setLoading(true);
     try {
       const response = await axios.post(`${baseURL}/addpayment`, {
@@ -73,8 +163,8 @@ export function PaymentPage() {
 
       if (response.status === 200) {
         setTimeout(() => {
-        deletecartitems();
-        setLoading(false);
+          deletecartitems();
+          setLoading(false);
           toast.success(response.data.message);
           navigate('/orderconfirmation')
         }, 1000)
@@ -85,15 +175,15 @@ export function PaymentPage() {
   };
 
   const deletecartitems = async () => {
-      try {
-        const response = await axios.post(`${baseURL}/deletefullcart`,{id: userdata?._id});
-  
-        if (response.status === 200) {
-          console.log("Items from cart has been deleted");
-        }
-      } catch (error) {
-        console.log("Error deleting the items from the cart");
+    try {
+      const response = await axios.post(`${baseURL}/deletefullcart`, { id: userdata?._id });
+
+      if (response.status === 200) {
+        console.log("Items from cart has been deleted");
       }
+    } catch (error) {
+      console.log("Error deleting the items from the cart");
+    }
   }
 
   return (
@@ -114,19 +204,17 @@ export function PaymentPage() {
                 <div
                   key={method.id}
                   onClick={() => setSelectedMethod(method.id)}
-                  className={`p-4 rounded-lg cursor-pointer transition-all ${
-                    selectedMethod === method.id
+                  className={`p-4 rounded-lg cursor-pointer transition-all ${selectedMethod === method.id
                       ? 'bg-blue-50 border-2 border-blue-500'
                       : 'border-2 border-gray-200 hover:border-blue-200'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center space-x-4">
                     <div
-                      className={`${
-                        selectedMethod === method.id
+                      className={`${selectedMethod === method.id
                           ? 'text-blue-500'
                           : 'text-gray-600'
-                      }`}
+                        }`}
                     >
                       {method.icon}
                     </div>
