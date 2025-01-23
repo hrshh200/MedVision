@@ -39,7 +39,7 @@ const Home = () => {
   }
 
   const handleConsultation = () => {
-    navigate('/searchdoctor');
+    navigate('/');
     console.log("Clicked on Search Doctor");
   }
 
@@ -167,8 +167,8 @@ const Home = () => {
               {/* Consultation */}
               <div onClick={handleConsultation} className='bg-[#FFFFFF] w-fit max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
                 <img src={search} alt="doctor" className='h-[80px] aspect-auto' />
-                <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>Consultation</p>
-                <p className='text-[#7D7987] text-[.9rem]'>Free consultation with our trusted doctors and get the best recomendations</p>
+                <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>24/7 Health Support</p>
+                <p className='text-[#7D7987] text-[.9rem]'>Access round-the-clock consultations with trusted medical professionals for timely care and guidance.</p>
               </div>
               {/* Details info */}
               <div onClick={handleMLPharmacy}className='bg-[#FFFFFF] w-fit  max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
@@ -183,10 +183,11 @@ const Home = () => {
                 <p className='text-[#7D7987] text-[.9rem]'>You can get 24/7 urgent care for yourself or your children and your lovely family</p>
               </div>
               {/* Details info */}
-              <div onClick={handleTracking} className='bg-[#FFFFFF] w-fit  max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
+              <div  className='bg-[#FFFFFF] w-fit  max-w-[320px] cursor-pointer h-fit min-h-[220px] p-[1rem] rounded-[20px] shadow-lg '>
                 <img src={tracking} alt="tracking" className='h-[80px] aspect-auto' />
-                <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>Tracking</p>
-                <p className='text-[#7D7987] text-[.9rem]'>Track and save your medical history and health data </p>
+                <p className='font-mulish font-[700] text-[1.5rem] leading-[56px]'>View Doctors</p>
+                <p className='text-[#7D7987] text-[.9rem]'>Browse through available doctors, schedule appointments, and maintain a timeline of your consultations.</p>
+
               </div>
 
             </div>

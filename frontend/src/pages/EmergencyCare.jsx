@@ -17,7 +17,7 @@ export default function EmergencyCare() {
   ]
 
   return (
-    <div className="mt-[10vh] min-h-screen bg-blue-50">
+    <div className="mt-[20vh] min-h-screen bg-blue-50">
       <header className="bg-blue-600 text-white py-6">
         <div className="container mx-auto px-4">
           <h1 className="text-3xl font-bold">Emergency Care</h1>
