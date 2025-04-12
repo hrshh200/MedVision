@@ -11,6 +11,12 @@ const SearchFilters = ({ onSpecialtyChange, onSearchChange }) => {
     'Orthopedic',
   ];
 
+  const locations = [
+    'West Bengal',
+    'Bihar',
+    'Kolkata',
+  ];
+
   return (
     <div className="mb-8 space-y-4">
       <div className="relative">
@@ -23,6 +29,24 @@ const SearchFilters = ({ onSpecialtyChange, onSearchChange }) => {
         />
       </div>
 
+      {/* button filter for specialist */}
+      <div className="w-full max-w-xs">
+        <select
+          onChange={(e) => onSpecialtyChange(e.target.value)}
+          className="px-4 py-2 rounded-md border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200"
+        >
+          {specialties.map((specialty) => (
+            <option key={specialty} value={specialty}>
+              {specialty}
+            </option>
+          ))}
+        </select>
+
+        
+      </div>
+
+
+      {/* button filter for locations  */}
       <div className="flex gap-3 overflow-x-auto pb-2">
         {specialties.map((specialty) => (
           <button

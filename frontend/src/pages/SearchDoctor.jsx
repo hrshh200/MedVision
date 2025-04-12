@@ -33,6 +33,7 @@ const SearchDoctor = () => {
 
   const filteredDoctors = Array.isArray(doctors)
   ? doctors.filter((doctor) => {
+    console.log(doctor);
       const matchesSearch = doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         doctor.specialist.toLowerCase().includes(searchTerm.toLowerCase()); // Fixed field name
       const matchesSpecialty = selectedSpecialty === 'All Specialists' ||
