@@ -64,6 +64,12 @@ const PromoBanner = () => {
     }
   };
 
+  const handleSubmitMedicine = (medicinename) => {
+    console.log("Medicine Found :", medicinename);
+    setOpenModal(false);
+    navigate('/onlinepharmacy', { state: { medicinename } });
+  }
+
   return (
     <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6 mt-8"
     >
@@ -127,20 +133,29 @@ const PromoBanner = () => {
               )}
 
               {loading ? (
-                <div className="flex justify-center items-center mt-6">
+                <div className="flex justify-center items-center mt-6 gap-2">
                   <MedLoader />
-                  Scanning..
+                  <span className="text-sm font-medium text-gray-600">Scanning...</span>
                 </div>
               ) : prescriptionmedicines.length > 0 && (
                 <div className="mt-6">
                   <h3 className="text-lg font-semibold text-blue-700 mb-2">Medicines Found</h3>
-                  <ul className="list-disc list-inside text-sm text-gray-800 space-y-1 max-h-40 overflow-y-auto">
+                  <ul className="text-sm text-gray-800 space-y-2 max-h-40 overflow-y-auto">
                     {prescriptionmedicines.map((medicine, index) => (
-                      <li key={index}>{medicine}</li>
+                      <li key={index} className="flex justify-between items-center bg-gray-50 px-3 py-2 rounded shadow-sm">
+                        <span>{medicine}</span>
+                        <button
+                          className="bg-blue-500 text-white text-xs px-3 py-1 rounded hover:bg-blue-600"
+                          onClick={() => handleSubmitMedicine(medicine)}
+                        >
+                          Search
+                        </button>
+                      </li>
                     ))}
                   </ul>
                 </div>
               )}
+
 
 
 

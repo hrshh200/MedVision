@@ -6,13 +6,18 @@ import CartButton from '../components/CartButton';
 import PromoBanner from '../components/PromoBanner';
 import axios from 'axios';
 import { baseURL } from '../main';
+import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-function App() {
+function OnlinePharmacy() {
   const [searchTerm, setSearchTerm] = useState('');
   const [cartCount, setCartCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [medicines, setMedicines] = useState([]);
   const [userData, setUserData] = useState([]);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [medicinename, setMedicineName] = useState(location.state?.medicinename || null);
 
   const fetchmedicines = async () => {
     try {
@@ -52,11 +57,38 @@ function App() {
     fetchmedicines();
   }, []);
 
-  const filteredMedicines = medicines.filter((medicine) =>
-    medicine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    medicine.manufacturer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    medicine.type.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    if (location.state?.medicinename) {
+      // Save the value locally and clear the state
+      setMedicineName(location.state.medicinename);
+      navigate(location.pathname, { replace: true, state: null });
+    }
+  }, [location, navigate]);
+
+  useEffect(() => {
+    if (medicinename) {
+      // Find a medicine that includes the medicinename (case insensitive)
+      const matchedMedicine = medicines.find(med =>
+        med.name.toLowerCase().includes(medicinename.toLowerCase())
+      );
+      
+      if (matchedMedicine) {
+        setSearchTerm(matchedMedicine.name); // Set full official name
+      } else {
+        setSearchTerm(medicinename); // Fallback to provided name
+      }
+    }
+  }, [medicinename, medicines]);
+  
+
+  const filteredMedicines = medicines.filter((medicine) => {
+    const firstWord = searchTerm.toLowerCase().split(" ")[0]; // Only use the first word
+    const combinedFields = `${medicine.name} ${medicine.manufacturer} ${medicine.type}`.toLowerCase();
+  
+    return combinedFields.includes(firstWord);
+  });
+  
+  
 
   // Limit the display to the first 6 medicines if no search term is entered
   const displayedMedicines = searchTerm ? filteredMedicines : medicines.slice(0, 6);
@@ -114,4 +146,4 @@ function App() {
   );
 }
 
-export default App;
+export default OnlinePharmacy;
