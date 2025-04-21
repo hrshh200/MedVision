@@ -130,7 +130,11 @@ const CartButton = () => {
       console.log(response);
   
       if (response.status === 200) {
-        navigate('/addresspage');
+        navigate('/addresspage', {
+          state: {
+            cartItems: cartItems,
+          },
+        });
       }
       else if(response.status === 201){
         navigate('/addresspage');

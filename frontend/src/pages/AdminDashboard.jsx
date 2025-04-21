@@ -97,6 +97,7 @@ const Dashboard = () => {
             { icon: MdLocalPharmacy, text: "Add Medicines", onClick: () => navigate('/addmedicine'), disabled: false },
             { icon: MdLocalPharmacy, text: "Update Medicines", onClick: () => navigate('/updatemedicine'), disabled: false },
             { icon: MdLocalPharmacy, text: "Delete Medicines", onClick: () => navigate('/deletemedicine'), disabled: false },
+            { icon: MdLocalPharmacy, text: "Online Tracking Update", onClick: () => navigate('/admintracking'), disabled: false },
         ]
 
 

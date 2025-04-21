@@ -86,7 +86,7 @@ const MedicineCard = ({ id, name, manufacturer, dosage, price, stock, type, onAd
         <div className="flex items-center justify-between mt-4">
           <div className="text-lg font-bold text-blue-600">Rs {price}/-</div>
           <div className={`text-sm ${stock > 0 ? 'text-green-600' : 'text-red-500'}`}>
-            {stock > 0 ? 'In Stock' : 'Out of Stock'}
+            {stock > 0 ? `In Stock (${stock} left)` : 'Out of Stock'}
           </div>
         </div>
         <div>

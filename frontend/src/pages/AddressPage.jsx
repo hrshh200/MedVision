@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { baseURL } from '../main';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useLocation } from 'react-router-dom';
 
 export function AddressPage() {
   const navigate = useNavigate();
@@ -18,7 +19,8 @@ export function AddressPage() {
     state: '',
     zipCode: ''
   });
-
+  const location = useLocation();
+  const cartItems = location.state?.cartItems || [];
 
   const fetchDataFromApi = async () => {
     try {
@@ -70,7 +72,11 @@ export function AddressPage() {
         setTimeout(() => {
           setLoading(false);
           toast.success(response.data.message);
-          navigate('/payments')
+          navigate('/payments', {
+            state: {
+              cartItems: cartItems
+            }
+          })
         }, 1000)
       }
     } catch (error) {

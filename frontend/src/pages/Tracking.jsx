@@ -9,13 +9,13 @@ function Tracking() {
   // Example tracking data (replace this with API data based on the id)
   const trackingStatus = {
     orderNumber: id || "ORD123456789", // Use the id as the order number if available
-    currentStatus: "in-transit",
+    currentStatus: "ordered",
     estimatedDelivery: "January 15, 2025",
     location: "Kolkata Distribution Center",
-    statuses: [
+    statuses: [ 
       { id: 1, status: "ordered", completed: true, time: "March 10, 2024 09:30 AM", text: "Order Placed" },
-      { id: 2, status: "shipped", completed: true, time: "March 11, 2024 02:15 PM", text: "Order Shipped" },
-      { id: 3, status: "in-transit", completed: true, time: "March 13, 2024 10:45 AM", text: "In Transit" },
+      { id: 2, status: "shipped", completed: false, time: "March 11, 2024 02:15 PM", text: "Order Shipped" },
+      { id: 3, status: "in-transit", completed: false, time: "March 13, 2024 10:45 AM", text: "In Transit" },
       { id: 4, status: "out-delivery", completed: false, time: "Pending", text: "Out for Delivery" },
       { id: 5, status: "delivered", completed: false, time: "Pending", text: "Delivered" }
     ]

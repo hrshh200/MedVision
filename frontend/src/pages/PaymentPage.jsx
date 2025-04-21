@@ -5,6 +5,7 @@ import Loader from '../components/Loader';
 import toast from 'react-hot-toast';
 import { baseURL } from '../main';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 const paymentMethods = [
   {
@@ -40,6 +41,8 @@ export function PaymentPage() {
   const [userdata, setUserData] = useState([]);
   const [account, setAccount] = useState('');
   const ethereum = window.ethereum;
+  const location = useLocation();
+  const cartItems = location.state?.cartItems || [];
 
   const fetchDataFromApi = async () => {
     try {
@@ -166,6 +169,11 @@ export function PaymentPage() {
           setLoading(false);
           toast.success(response.data.message);
           navigate('/orderconfirmation')
+
+          //If its success, then i have to remove the stock based on cartItems
+          
+          console.log(cartItems);
+
         }, 1000)
       }
     } catch (error) {
