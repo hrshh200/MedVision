@@ -1,25 +1,71 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { useParams } from 'react-router-dom'; // Import useParams
 import { Package, Truck, CheckCircle, Clock, MapPin } from 'lucide-react';
+import { baseURL } from '../main';
+import axios from 'axios';
 
 function Tracking() {
   // Retrieve the id from the URL parameters
   const { id } = useParams();
+  const [userdata, setUserData] = useState([]);
+  const [status, useStatus] = useState('');
 
   // Example tracking data (replace this with API data based on the id)
-  const trackingStatus = {
-    orderNumber: id || "ORD123456789", // Use the id as the order number if available
-    currentStatus: "ordered",
+  const [trackingStatus, setTrackingStatus] = useState({
+    orderNumber: id || "ORD123456789",
     estimatedDelivery: "January 15, 2025",
-    location: "Kolkata Distribution Center",
-    statuses: [ 
-      { id: 1, status: "ordered", completed: true, time: "March 10, 2024 09:30 AM", text: "Order Placed" },
-      { id: 2, status: "shipped", completed: false, time: "March 11, 2024 02:15 PM", text: "Order Shipped" },
-      { id: 3, status: "in-transit", completed: false, time: "March 13, 2024 10:45 AM", text: "In Transit" },
+    currentStatus: "",
+    statuses: [
+      { id: 1, status: "Booked", completed: false, time: "Pending", text: "Order Placed" },
+      { id: 2, status: "shipped", completed: false, time: "Pending", text: "Order Shipped" },
+      { id: 3, status: "in-transit", completed: false, time: "Pending", text: "In Transit" },
       { id: 4, status: "out-delivery", completed: false, time: "Pending", text: "Out for Delivery" },
       { id: 5, status: "delivered", completed: false, time: "Pending", text: "Delivered" }
     ]
-  };
+  });
+  const statusOrder = ['Booked', 'shipped', 'in-transit', 'out-delivery', 'delivered'];
+
+  
+  const fetchDataFromApi = async () => {
+      try {
+        const token = localStorage.getItem('medVisionToken');
+        const response = await axios.get(`${baseURL}/fetchdata`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const fetchedData = response.data.userData;
+        setUserData(fetchedData);
+        console.log(fetchedData);
+        const matchedId = fetchedData.order.find(order => order.orderId === id);
+
+        if (matchedId) {
+          const currentStatus = matchedId.status;
+          const updatedStatuses = trackingStatus.statuses.map((item) => ({
+            ...item,
+            completed: statusOrder.indexOf(item.status) <= statusOrder.indexOf(currentStatus),
+            time: statusOrder.indexOf(item.status) <= statusOrder.indexOf(currentStatus)
+              ? new Date().toLocaleString()
+              : "TBD"
+          }));
+        
+          setTrackingStatus(prev => ({
+            ...prev,
+            currentStatus: currentStatus,
+            statuses: updatedStatuses
+          }));
+        }        
+        // Extract orders from userdata
+        console.log(matchedId.status);
+        localStorage.setItem('userData', JSON.stringify(fetchedData));
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
+      }
+    };
+  
+    useEffect(() => {
+      fetchDataFromApi();
+    }, []);
 
   return (
     <div className="mt-[12vh] min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -40,9 +86,9 @@ function Tracking() {
                 <p className="mt-1 text-sm text-blue-700">{trackingStatus.location}</p>
               </div>
             </div>
-            <p className="mt-2 text-sm text-blue-700">
+            {/* <p className="mt-2 text-sm text-blue-700">
               Estimated Delivery: {trackingStatus.estimatedDelivery}
-            </p>
+            </p> */}
           </div>
 
           {/* Timeline */}
@@ -62,7 +108,7 @@ function Tracking() {
                         <div>
                           <span className={`h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white
                             ${status.completed ? 'bg-green-500' : 'bg-gray-300'}`}>
-                            {status.status === 'ordered' && <Clock className="h-5 w-5 text-white" />}
+                            {status.status === 'Booked' && <Clock className="h-5 w-5 text-white" />}
                             {status.status === 'shipped' && <Package className="h-5 w-5 text-white" />}
                             {status.status === 'in-transit' && <Truck className="h-5 w-5 text-white" />}
                             {status.status === 'out-delivery' && <MapPin className="h-5 w-5 text-white" />}

@@ -808,10 +808,10 @@ const finalitems = async (req, res) => {
 
         // Validate existing orders
         if (user.order && user.order.length > 0) {
-            const incompleteOrder = user.order.some(order => 
-                !order.orderId || 
-                !order.items || order.items.length === 0 || 
-                !order.totalPrice || 
+            const incompleteOrder = user.order.some(order =>
+                !order.orderId ||
+                !order.items || order.items.length === 0 ||
+                !order.totalPrice ||
                 order.payment === 'Pending' ||
                 !order.address
             );
@@ -889,7 +889,7 @@ const finaladdress = async (req, res) => {
 };
 
 const finalpayment = async (req, res) => {
-    const {id, orderid, payment} = req.body;
+    const { id, orderid, payment } = req.body;
 
     // Validate the request
     if (!id || !orderid || !payment) {
@@ -958,7 +958,22 @@ const deletecartItems = async (req, res) => {
     }
 };
 
+const doctorchatbotfetchdata = async (req, res) => {
+  const { doctorspecialist } = req.body;
+  console.log("Specialist:", doctorspecialist);
+
+  try {
+    const doctors = await Doctor.find({ specialist: doctorspecialist });
+
+    return res.status(200).json({ doctors }); // ✅ send to frontend
+  } catch (error) {
+    console.error("Error fetching doctors:", error.message);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
 module.exports = {
     signUp, signIn, fetchData, UpdateDoctorProfile, adminsignIn, AdminfetchData, doctorListAssigned, updatedoctorstatus
-    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines, updateorderedmedicines, updatecartquantity, addmedicinetodb, decreaseupdatecartquantity, deletemedicine, finalitems, finaladdress, finalpayment, deletecartItems
+    , fetchupdateddoctors, updateavailability, fetchavailableslots, confirmslot, getnames, linkgiven, uploadpres, confirmstatus, UpdatePatientProfile, fetchDoctors, fetchpharmacymedicines, updateorderedmedicines, updatecartquantity, addmedicinetodb, decreaseupdatecartquantity, deletemedicine, finalitems, finaladdress, finalpayment, deletecartItems, doctorchatbotfetchdata
 };

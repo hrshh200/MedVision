@@ -17,6 +17,7 @@ import toast from 'react-hot-toast';
 import { baseURL } from '../main';
 import axios from 'axios';
 import TestimonialCarousel from '../components/Testimonials/TestimonialCarousel';
+import Chatbot from '../../../chatbot-app/frontend/src/components/chatbot';
 
 const Home = () => {
 
@@ -146,6 +147,7 @@ const Home = () => {
         {/* section2 */}
         <div id='about' className='w-full h-fit  px-[5rem] py-[1rem] relative '>
           <p className='font-mulish my-[1rem] font-[700]  text-[2.1rem] leading-[56px] text-center'>Our services</p>
+          <Chatbot />
           <p className='w-[80%] mx-auto font-mulish  font-[300]  text-[1.1rem] leading-[30px] text-center'>We provide to you the best choiches for you. Adjust it to your health needs and make sure your undergo treatment with our highly qualified doctors you can consult with us which type of service is suitable for your health</p>
           <div className=''>
             <img src={bgelement} alt="bgelement" className='w-[50%] aspect-auto absolute top-[-5vh] left-0 z-[-1]' />
