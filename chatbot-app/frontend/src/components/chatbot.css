@@ -1,173 +1,144 @@
 .chatbot-icon {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #007bff;
-  color: #fff;
+  bottom: 30px;
+  right: 30px;
   font-size: 28px;
-  padding: 14px;
-  border-radius: 50%;
   cursor: pointer;
-  z-index: 1000;
-  transition: transform 0.3s ease, background 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
-}
-
-.chatbot-icon:hover {
-  transform: scale(1.15);
-  background: #0056b3;
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  border-radius: 50%;
+  z-index: 999;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
 .chatbot-container {
   position: fixed;
   bottom: 80px;
   right: 20px;
-  width: 320px;
-  max-width: 90vw;
-  height: 480px;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  width: 350px;
+  height: 500px; /* 👈 fixed height */
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   z-index: 1000;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .chatbot-header {
-  background: linear-gradient(90deg, #007bff, #0056b3);
+  background-color: #007bff;
   color: white;
-  padding: 12px;
-  text-align: center;
-  font-weight: bold;
+  padding: 14px;
   font-size: 18px;
+  font-weight: bold;
+  text-align: center;
 }
 
 .chatbot-messages {
   flex: 1;
-  padding: 12px;
   overflow-y: auto;
-  background-color: #f1f4f6;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.chatbot-user,
-.chatbot-bot {
-  margin: 6px 0;
+.chatbot-message {
+  max-width: 80%;
   padding: 10px 14px;
   border-radius: 16px;
-  max-width: 80%;
-  word-wrap: break-word;
-  line-height: 1.4;
   font-size: 14px;
+  line-height: 1.4;
 }
 
-.chatbot-user {
-  margin-left: auto;
-  background: #d1e7dd;
-  color: #0f5132;
+.chatbot-message.user {
+  align-self: flex-end;
+  background-color: #dcf8c6;
+  color: #000;
+  border-bottom-right-radius: 2px;
 }
 
-.chatbot-bot {
-  margin-right: auto;
-  background: #e2e3e5;
-  color: #343a40;
+.chatbot-message.bot {
+  align-self: flex-start;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  color: #333;
+  border-bottom-left-radius: 2px;
+}
+
+.typing .dot {
+  display: inline-block;
+  height: 6px;
+  width: 6px;
+  background: #999;
+  border-radius: 50%;
+  margin: 0 2px;
+  animation: blink 1s infinite alternate;
+}
+
+@keyframes blink {
+  0% { opacity: 0.2; }
+  100% { opacity: 1; }
 }
 
 .chatbot-input {
   display: flex;
-  padding: 12px;
-  border-top: 1px solid #ccc;
-  background-color: #f9f9f9;
+  padding: 10px;
+  border-top: 1px solid #ddd;
 }
 
 .chatbot-input input {
   flex: 1;
-  padding: 10px 12px;
+  padding: 8px 12px;
+  border-radius: 20px;
   border: 1px solid #ccc;
-  border-radius: 10px;
   outline: none;
-  font-size: 14px;
 }
 
 .chatbot-input button {
-  margin-left: 6px;
-  padding: 10px 14px;
-  background: #007bff;
-  color: white;
+  margin-left: 8px;
+  background-color: #007bff;
   border: none;
-  border-radius: 10px;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 20px;
   cursor: pointer;
-  transition: background 0.3s ease;
 }
 
-.chatbot-input button:hover {
-  background: #0056b3;
-}
-
-/* Typing animation */
-.typing {
+.doctor-list {
+  margin-top: 10px;
   display: flex;
-  align-items: center;
-  gap: 5px;
-  margin: 8px 0;
-  padding: 10px 14px;
-  background-color: #e2e3e5;
-  border-radius: 16px;
-  max-width: 80%;
-  color: #666;
-  font-size: 14px;
-}
-
-.dot {
-  width: 6px;
-  height: 6px;
-  background-color: #666;
-  border-radius: 50%;
-  animation: blink 1.4s infinite both;
-}
-
-.dot:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.dot:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes blink {
-  0%, 80%, 100% {
-    opacity: 0;
-  }
-  40% {
-    opacity: 1;
-  }
-}
-
-/* Scrollbar styling for messages */
-.chatbot-messages::-webkit-scrollbar {
-  width: 6px;
-}
-.chatbot-messages::-webkit-scrollbar-thumb {
-  background-color: #ccc;
-  border-radius: 8px;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .doctor-card {
-  background: #f1f1f1;
-  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 14px;
   border-radius: 10px;
-  margin-bottom: 10px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.doctor-card h4 {
-  margin: 0 0 5px;
-  color: #333;
+.doctor-card h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  color: #007bff;
 }
 
-.doctor-card p {
-  margin: 3px 0;
+.appointment-button {
+  display: inline-block;
+  margin-top: 10px;
+  background-color: #28a745;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
   font-size: 14px;
-  color: #555;
+}
+
+.appointment-button:hover {
+  background-color: #218838;
 }
