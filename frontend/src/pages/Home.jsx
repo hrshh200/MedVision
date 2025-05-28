@@ -99,13 +99,11 @@ const Home = () => {
                 </div>
                 <p className='font-ibm  font-[700]  text-[4rem] leading-[80.2px]'> Doctor</p>
               </div>
-
-              <p className='w-[80%] font-ibm  font-[400]  text-[.9rem] mt-[.5rem] leading-[20.2px] text-[#163048]'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima maxime debitis distinctio animi enim neque</p>
             </div>
 
 
             {/* Searching for doctor by name and location */}
-            <form onSubmit={submitHandler}>
+            {/* <form onSubmit={submitHandler}>
               <div className='w-[80%] h-fit flex justify-between items-center bg-white rounded-[30px] px-[1rem] py-[.5rem] mt-[2rem]'>
                 <FaUserCircle className='text-[#0360D9] text-[2rem]' />
                 <input
@@ -131,7 +129,7 @@ const Home = () => {
                 </button>
 
               </div>
-            </form>
+            </form> */}
 
 
 

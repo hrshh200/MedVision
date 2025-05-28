@@ -27,6 +27,8 @@ import { PaymentPage } from './pages/PaymentPage';
 import { OrderConfirmationPage } from './pages/OrderConfirmationPage';
 import Orders from './pages/Orders';
 import AdminTracking from './pages/AdminTracking';
+import LungCancer from './pages/LungCancer';
+import KidneyPrediction from './pages/KidneyPrediction';
 
 function App() {
 
@@ -58,6 +60,8 @@ function App() {
           <Route path="/orderconfirmation" element={<OrderConfirmationPage />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/admintracking" element={<AdminTracking />} />
+          <Route path="/lungcancerprediction" element={<LungCancer />} />
+          <Route path="/kidneyprediction" element={<KidneyPrediction />} />
         </Route>
       </Routes>
     </>

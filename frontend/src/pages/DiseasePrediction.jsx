@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom'
 export default function DiseasePrediction() {
   const diseases = [
     { name: 'Heart Disease', icon: HeartIcon, available: true, route: '/heart-disease' },
-    { name: 'Brain Tumor', icon: BrainIcon, available: false },
-    { name: 'Lung Cancer', icon: LungIcon, available: false },
-    { name: 'Kidney Disease', icon: KidneyIcon, available: false },
+    // { name: 'Brain Tumor', icon: BrainIcon, available: false },
+    { name: 'Lung Cancer', icon: LungIcon, available: true, route: '/lungcancerprediction' },
+    { name: 'Kidney Disease', icon: KidneyIcon, available: true, route: '/kidneyprediction' },
   ]
 
   return (

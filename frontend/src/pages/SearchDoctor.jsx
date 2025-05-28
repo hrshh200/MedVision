@@ -11,6 +11,7 @@ const SearchDoctor = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState('All Specialists');
+  
 
   // Fetch doctors from the backend
   const fetchDoctors = async () => {
@@ -40,7 +41,7 @@ const SearchDoctor = () => {
         doctor.specialist === selectedSpecialty; // Fixed field name
       return matchesSearch && matchesSpecialty;
     })
-  : [];
+  : []; 
 
   return (
     <div className="min-h-screen bg-gray-50">

@@ -57,11 +57,10 @@ const Chatbot = () => {
   return (
     <>
       <div className="chatbot-icon" onClick={() => setShowChat(!showChat)}>💬</div>
-
+      
       {showChat && (
         <div className="chatbot-container">
           <div className="chatbot-header">MedAssist</div>
-
           <div className="chatbot-messages">
             {messages.map((msg, idx) => (
               <div
@@ -71,7 +70,7 @@ const Chatbot = () => {
                 {msg.content}
               </div>
             ))}
-
+            
             {isTyping && (
               <div className="chatbot-message bot typing">
                 <span className="dot"></span>
