@@ -13,7 +13,7 @@ export default function LungCancer() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/predictlungcancer', formData);
+      const response = await axios.post('http://localhost:5003/predictlungcancer', formData);
       console.log('Response from API:', response.data);
       setResult(response.data.Output);
     } catch (error) {

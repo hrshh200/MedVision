@@ -13,7 +13,7 @@ export default function HeartPrediction() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/predict', formData);
+      const response = await axios.post('http://localhost:5001/predict', formData);
       console.log('Response from API:', response.data);
       setResult(response.data.Output);
     } catch (error) {

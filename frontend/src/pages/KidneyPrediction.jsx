@@ -13,7 +13,7 @@ export default function KidneyPrediction() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/predictkidney', formData);
+      const response = await axios.post('http://localhost:5002/predictkidney', formData);
       console.log('Response from API:', response.data);
       setResult(response.data.Output);
     } catch (error) {
@@ -29,7 +29,7 @@ export default function KidneyPrediction() {
   };
 
   const inputFields = [
-    { name: 'age', label: 'Age' },
+    { name: 'age', label: 'Age' },  
     { name: 'bp', label: 'bp' },
     { name: 'al', label: 'al' },
     { name: 'su', label: 'su' },
