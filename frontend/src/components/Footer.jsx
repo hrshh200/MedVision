@@ -37,8 +37,8 @@ function Footer() {
                 <div className="w-[95%] sm:w-[80%] mx-auto">
                     <div className="">
                         <div className="w-[90%] mx-auto text-[.9rem] flex-row  flex justify-between items-center ">
-                            <p className='text-[1.2rem]'>MedCare
-
+                            <p className='text-[1.2rem]'>
+                                    {/* Empty space for some content to be added */}
                             </p>
                             {/* <p className='mt-[1.8rem]'>Made by Harsh, Rohit & Shiwang</p> */}
                         </div>
@@ -109,6 +109,7 @@ function Footer() {
                                     onClick={scrollSmooth}
                                     to="/login"
                                 >
+                                    
                                     <div className="text-[.7rem] sm:text-[.9rem]">
                                         Login User
                                     </div>
@@ -139,7 +140,7 @@ function Footer() {
                 <p className="bg-gray-400 w-[90%] mx-auto h-[.08px] mb-[1rem] "></p>
 
                 <div className="w-[90%] mx-auto text-[.9rem] flex justify-center items-center text-center">
-                    <p>All Rights Reserved © MEDCARE PRIVATE LIMITED 2024</p>
+                    <p>All Rights Reserved ©MEDVISION PRIVATE LIMITED 2024</p>
 
                 </div>
             </div>

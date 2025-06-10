@@ -71,7 +71,7 @@ function OnlinePharmacy() {
       const matchedMedicine = medicines.find(med =>
         med.name.toLowerCase().includes(medicinename.toLowerCase())
       );
-      
+
       if (matchedMedicine) {
         setSearchTerm(matchedMedicine.name); // Set full official name
       } else {
@@ -79,16 +79,16 @@ function OnlinePharmacy() {
       }
     }
   }, [medicinename, medicines]);
-  
+
 
   const filteredMedicines = medicines.filter((medicine) => {
     const firstWord = searchTerm.toLowerCase().split(" ")[0]; // Only use the first word
     const combinedFields = `${medicine.name} ${medicine.manufacturer} ${medicine.type}`.toLowerCase();
-  
+
     return combinedFields.includes(firstWord);
   });
-  
-  
+
+
 
   // Limit the display to the first 6 medicines if no search term is entered
   const displayedMedicines = searchTerm ? filteredMedicines : medicines.slice(0, 6);
@@ -99,7 +99,8 @@ function OnlinePharmacy() {
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-center gap-3">
             <Pill className="w-8 h-8 text-blue-600" />
-            <h1 className="text-2xl font-bold text-gray-900">Online Pharmacy (Generic Medicine)</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Online Pharmacy</h1>
+
           </div>
         </div>
       </div>

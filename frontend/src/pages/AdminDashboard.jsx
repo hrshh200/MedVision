@@ -71,7 +71,7 @@ const Dashboard = () => {
                 assign: false,
                 status: "accepted",
             });
-    
+
             console.log(response);
             if (response.status === 200) {
                 console.log(`Doctor with regno ${regno} has been accepted successfully.`);
@@ -83,17 +83,17 @@ const Dashboard = () => {
             console.error(`Error accepting doctor with regno ${regno}:`, error.message);
         }
     };
-    
+
 
     //if admin rejects the doctor then this function should reject
-    const rejectDoctor = (regno) =>{
+    const rejectDoctor = (regno) => {
         console.log(`Doctor Rejected with ${regno}`);
     }
 
     const sidebarItems =
         [
             { icon: FaHome, text: "Home", onClick: () => navigate('/'), disabled: false },
-            { icon: FaPerson, text: "Profile", onClick: () => navigate(''), disabled: false },
+            // { icon: FaPerson, text: "Profile", onClick: () => navigate(''), disabled: false },
             { icon: MdLocalPharmacy, text: "Add Medicines", onClick: () => navigate('/addmedicine'), disabled: false },
             { icon: MdLocalPharmacy, text: "Update Medicines", onClick: () => navigate('/updatemedicine'), disabled: false },
             { icon: MdLocalPharmacy, text: "Delete Medicines", onClick: () => navigate('/deletemedicine'), disabled: false },
@@ -162,14 +162,14 @@ const Dashboard = () => {
                                     <div className="flex gap-4">
                                         <button
                                             className="flex-1 flex items-center justify-center gap-2 bg-green-50 hover:bg-green-100 text-green-600 font-medium py-2 px-4 rounded-lg transition-colors duration-200"
-                                            onClick={()=> acceptDoctor(doctor.regNo)}
+                                            onClick={() => acceptDoctor(doctor.regNo)}
                                         >
                                             <CheckCircle2 className="w-5 h-5" />
                                             Approve
                                         </button>
                                         <button
                                             className="flex-1 flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 font-medium py-2 px-4 rounded-lg transition-colors duration-200"
-                                            onClick={()=> rejectDoctor(doctor.regNo)}
+                                            onClick={() => rejectDoctor(doctor.regNo)}
                                         >
                                             <XCircle className="w-5 h-5" />
                                             Reject
