@@ -67,6 +67,31 @@ This project requires the following dependencies:
 ---
 
 ### Installation
+cd MedVision
+Install the dependencies:
+
+npm install
+
+Usage
+Run the project with:
+
+npm start
+
+Testing
+MedVision uses the {test_framework} test framework. Run the test suite with:
+
+npm test
+
+⬆ Return to Top
+
+---
+
+# ✔️ Notes:
+- Replace `{test_framework}` with the actual testing framework you use (e.g., Jest, Mocha).
+- You can copy-paste this `.md` into your `README.md` file.
+- All images, badges, and structure preserved for GitHub display.
+
+**Want me to auto-generate a README for another project?** Just share project name, stack, features — I’ll co
 
 Build MedVision from the source and install dependencies:
 
