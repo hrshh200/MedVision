@@ -45,8 +45,8 @@ const start = async () => {
     app.listen(process.env.PORT, '0.0.0.0', () => {
       console.log(`Server is running on port ${process.env.PORT}`);
     });
-  } catch (error) {
-    console.log("error =>", error);
+  } catch (err) {
+    console.log("error =>", err);
   }
 };
 
