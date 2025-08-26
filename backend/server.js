@@ -7,7 +7,10 @@ const authRouter = require("./routes/auth");
 
 const cors = require("cors");
 
-const allowedOrigins = ['http://localhost:3000', 'https://medvision-1.onrender.com'];
+const allowedOrigins = [
+  "https://medvision-silk.vercel.app", // Your Vercel frontend
+  "http://localhost:3000" // For local development
+];
 // const corsOptions = {
 //     origin: 'https://medvision-1.onrender.com', // Frontend URL
 //     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
